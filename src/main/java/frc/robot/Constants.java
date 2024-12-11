@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -23,6 +24,22 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    /** Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
+    * (log replay from a file).
+    */
+    public static final RunMode simMode = RunMode.SIM;
+    public static final RunMode currentMode = RobotBase.isReal() ? RunMode.REAL : simMode;
+  
+    public static enum RunMode {
+  
+      REAL, // Running on a real robot.
+  
+      SIM, // Running a physics simulator.
+  
+      REPLAY // Replaying from a log file.
+    }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
