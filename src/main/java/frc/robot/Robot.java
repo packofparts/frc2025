@@ -39,7 +39,7 @@ public class Robot extends LoggedRobot {
                 new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
 
             case SIM :
-                Logger.addDataReceiver(new NT4Publisher()); // Running a physics sim, log to NT
+                Logger.addDataReceiver(new NT4Publisher()); // Running a physics sim, log to NetworkTables
                 break;
 
             case REPLAY :
