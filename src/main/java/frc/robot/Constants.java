@@ -28,7 +28,7 @@ public final class Constants {
   }
 
   public static class Ports {
-    public static final String CANIVORE_NAME = "";
+    public static final String CANIVORE_NAME = "rio";
   }
 
       public static final class Swerve {
@@ -43,14 +43,14 @@ public final class Constants {
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0)
+            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)
         );
 
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
             25,
             false, // Make true if we have a stroke
-            PIDConfig.getPid(0.1), // TODO: retune
+            PIDConfig.getPid(5.0), // TODO: retune
             Mode.COAST
         );
 
@@ -58,26 +58,20 @@ public final class Constants {
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             60,
             true,
-            PIDConfig.getPid(0.1, 0.06),
+            PIDConfig.getPid(0.0, 0.06),
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
 
-        public static final boolean SWERVE_TUNING_MODE = false;
+        public static final boolean SWERVE_TUNING_MODE = true;
 
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
-                Rotation2d.fromDegrees(219.287109), // 42.2
-                Rotation2d.fromDegrees(135.527344), // 315.4
-                Rotation2d.fromDegrees(275.361328), // 95.09
-                Rotation2d.fromDegrees(277.470703) // 101.95 THIS ONE
-            },
-            new Integer[] {
-                1, 22, 8, //Module 0 (front left on 1294 comp robot) CORRECT
-                7, 23, 3, // Module 1 (front right on 1294 comp robot) CORRECT
-                9, 20, 4, // Module 2 (back left on 1294 comp robot) CORRECT
-                5, 21, 6 // Module 3 (back right on 1294 comp robot)
+                Rotation2d.fromDegrees(131.5), // 42.2
+                Rotation2d.fromDegrees(36.47), // 315.4
+                Rotation2d.fromDegrees(231.0), // 95.09
+                Rotation2d.fromDegrees(344.53) // 101.95 THIS ONE
             },
             MODULE_TYPE, 
             SWERVE_TUNING_MODE, 
@@ -85,6 +79,6 @@ public final class Constants {
             ANGLE_CONFIG
         );
 
-        public static final int PIGEON_ID = 25;
+        public static final int PIGEON_ID = 13;
     }
 }
