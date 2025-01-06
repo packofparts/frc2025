@@ -58,7 +58,7 @@ public final class Constants {
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             60,
             true,
-            PIDConfig.getPid(0.0, 0.06),
+            PIDConfig.getPid(0.01, 0.2), // Tuned 01/05/25 with a shit battery
             Mode.BRAKE
         );
 
@@ -70,7 +70,7 @@ public final class Constants {
             new Rotation2d[] {
                 Rotation2d.fromDegrees(131.5), // 42.2
                 Rotation2d.fromDegrees(36.47), // 315.4
-                Rotation2d.fromDegrees(231.0), // 95.09
+                Rotation2d.fromDegrees(227.46), // 95.09
                 Rotation2d.fromDegrees(344.53) // 101.95 THIS ONE
             },
             MODULE_TYPE, 
