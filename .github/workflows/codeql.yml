@@ -47,7 +47,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      submodules: 'recursive'
+      with:
+        submodules: 'recursive'
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
