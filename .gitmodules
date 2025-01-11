@@ -1,0 +1,3 @@
+[submodule "POPLib"]
+	path = POPLib
+	url = https://github.com/packofparts/poplib
