@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import POPLib.Motor.MotorConfig;
+import POPLib.SmartDashboard.TunableNumber;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,34 +27,34 @@ public class Elevator extends SubsystemBase {
 
     private SparkMax rightMotor;
     private SparkMax leftMotor;
+    private TunableNumber setpoint;
 
     private Elevator() {        
         rightMotor = Constants.Elevator.rightMotorConfig.createSparkMax();
         leftMotor = Constants.Elevator.leftMotorConfig.createSparkMax(rightMotor);
+        setpoint = new TunableNumber("Elevator Setpoint", 0, false); 
     }
     
     public Command moveElevator(double setPoint) {
-        PIDController pid = Constants.Elevator.rightMotorConfig.pid.getPIDController();
-        pid.setSetpoint(Constants.Elevator.upperSetpoint);
+        // PIDController pid = Constants.Elevator.rightMotorConfig.pid.getPIDController();
+        // pid.setSetpoint(Constants.Elevator.upperSetpoint);
 
         return run(() -> {
-            rightMotor.set(pid.calculate(rightMotor.getEncoder().getPosition()));
-        }).
-
-        until(pid::atSetpoint).
-        
-        andThen(() -> {rightMotor.set(0);});
+            rightMotor.getClosedLoopController().setReference(setPoint, null);
+        }).until(() -> {
+            return Math.abs(rightMotor.getEncoder().getPosition() - setPoint) < 0.2;
+        });
     }
 
     public Command moveUp() {
         return runOnce(() -> {
-            rightMotor.set(0.5);
+            rightMotor.set(0.3);
         });
     }
 
     public Command moveDown() {
         return runOnce(() -> {
-            rightMotor.set(-0.5);
+            rightMotor.set(-0.3);
         });
     }
 

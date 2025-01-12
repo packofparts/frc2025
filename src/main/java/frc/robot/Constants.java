@@ -34,7 +34,7 @@ public final class Constants {
 
   public static class Elevator {
     public static final MotorConfig rightMotorConfig = new MotorConfig(22, 20, false, new PIDConfig(0.0, 0, 0, 0), Mode.BRAKE);
-    public static final FollowerConfig leftMotorConfig = new FollowerConfig(rightMotorConfig, true, 23);
+    public static final FollowerConfig leftMotorConfig = new FollowerConfig(rightMotorConfig, false, 23);
     public static final double upperSetpoint = 1.0;
     public static final double lowerSetpoint = 0.0;
   }
