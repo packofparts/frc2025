@@ -5,11 +5,13 @@
 package frc.robot;
 
 import POPLib.Control.PIDConfig;
+import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,22 +26,31 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+    public static class Ports {
+        public static final String CANIVORE_NAME = "rio";
+    }
 
-  public static class Ports {
-    public static final String CANIVORE_NAME = "rio";
-  }
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = false;
 
-  public static class Elevator {
-    public static final MotorConfig rightMotorConfig = new MotorConfig(22, 20, false, new PIDConfig(0.0, 0, 0, 0), Mode.BRAKE);
-    public static final FollowerConfig leftMotorConfig = new FollowerConfig(rightMotorConfig, false, 23);
-    public static final double upperSetpoint = 1.0;
-    public static final double lowerSetpoint = 0.0;
-  }
+        public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
+            22, 
+            20, 
+            false, 
+            new PIDConfig(0.0, 0, 0, 0),
+            Mode.BRAKE
+        );
 
-      public static final class Swerve {
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0);
+
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
+        public static final double upperSetpoint = 1.0;
+        public static final double lowerSetpoint = 0.0;
+
+        public static final double MAX_ERROR = 0.1;
+    }
+
+    public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
         public static final double TRACK_WIDTH = Units.inchesToMeters(23);

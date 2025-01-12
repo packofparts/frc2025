@@ -4,8 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.signals.ControlModeValue;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import POPLib.Math.MathUtil;
 import POPLib.Motor.MotorConfig;
 import POPLib.SmartDashboard.TunableNumber;
 import edu.wpi.first.math.controller.PIDController;
@@ -15,6 +19,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
+    private final SparkMax rightMotor;
+    private final SparkMax leftMotor;
+    private final TunableNumber setpoint;
+
     private static Elevator instance;
 
     public static Elevator getInstance() {
@@ -25,25 +33,17 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
-    private SparkMax rightMotor;
-    private SparkMax leftMotor;
-    private TunableNumber setpoint;
-
     private Elevator() {        
-        rightMotor = Constants.Elevator.rightMotorConfig.createSparkMax();
-        leftMotor = Constants.Elevator.leftMotorConfig.createSparkMax(rightMotor);
-        setpoint = new TunableNumber("Elevator Setpoint", 0, false); 
+        rightMotor = Constants.Elevator.RIGHT_MOTOR.createSparkMax();
+        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax();
+
+        setpoint = new TunableNumber("Elevator Setpoint", 0, Constants.Elevator.TUNNING_MODE); 
     }
     
     public Command moveElevator(double setPoint) {
-        // PIDController pid = Constants.Elevator.rightMotorConfig.pid.getPIDController();
-        // pid.setSetpoint(Constants.Elevator.upperSetpoint);
-
         return run(() -> {
-            rightMotor.getClosedLoopController().setReference(setPoint, null);
-        }).until(() -> {
-            return Math.abs(rightMotor.getEncoder().getPosition() - setPoint) < 0.2;
-        });
+            setpoint.setDefault(setPoint);
+        }).until(() ->  MathUtil.getError(rightMotor, setPoint) < Constants.Elevator.MAX_ERROR);
     }
 
     public Command moveUp() {
@@ -67,6 +67,16 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("elevatorPos", rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Right Elevetor Position", rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Left Elevetor Position", leftMotor.getEncoder().getPosition());
+
+        if (false) { // TODO: Remove if statment after done testing open loop
+            rightMotor.getClosedLoopController().setReference(
+                setpoint.get(), 
+                ControlType.kPosition,
+                ClosedLoopSlot.kSlot0,
+                Constants.Elevator.FF.calculate(0.0)
+            );
+        }
     }
 }
