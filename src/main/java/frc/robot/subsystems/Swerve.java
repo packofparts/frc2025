@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import POPLib.Sensors.Camera.Camera;
+import POPLib.Sensors.Camera.CameraConfig;
+import POPLib.Sensors.Camera.Limelight;
+import POPLib.Sensors.Camera.LimelightConfig;
 import POPLib.Sensors.Gyro.Pigeon;
 import POPLib.Swerve.SwerveModules.SwerveModuleTalon;
 import POPLib.Swerve.SwerveTemplates.VisionBaseSwerve;
@@ -25,7 +30,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
-            Constants.Swerve.SWERVE_KINEMATICS
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
     }
 
