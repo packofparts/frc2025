@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
+import java.util.stream.Collectors;
 import POPLib.Sensors.Gyro.Pigeon;
 import POPLib.Swerve.SwerveModules.SwerveModuleTalon;
 import POPLib.Swerve.SwerveTemplates.VisionBaseSwerve;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
 
+    private final Field2d field;
+    
     public static Swerve getInstance() {
         if (instance == null) {
             instance = new Swerve();
         }
-
         return instance;
     }
 
@@ -27,6 +30,16 @@ public class Swerve extends VisionBaseSwerve {
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
             Constants.Swerve.SWERVE_KINEMATICS
         );
+
+        field = new Field2d();
+        field.getObject("April Tag Layout").setPoses(
+            Constants.Vision.APRIL_TAG_FIELD_LAYOUT.getTags().stream().map(
+                (tag) -> tag.pose.toPose2d()
+            )
+            .collect(Collectors.toList())
+        );
+
+        //what is location lock
     }
 
     

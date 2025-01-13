@@ -4,15 +4,21 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import POPLib.Control.PIDConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -23,15 +29,15 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+    public static class OperatorConstants {
+        public static final int kDriverControllerPort = 0;
+    }
 
-  public static class Ports {
-    public static final String CANIVORE_NAME = "rio";
-  }
+    public static class Ports {
+        public static final String CANIVORE_NAME = "rio";
+    }
 
-      public static final class Swerve {
+    public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
         public static final double TRACK_WIDTH = Units.inchesToMeters(23);
@@ -80,5 +86,40 @@ public final class Constants {
         );
 
         public static final int PIGEON_ID = 13;
+    }
+    public static class Vision {
+        public static final double AMBIGUITY_THRESHOLD = -1;
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
+        
+        /**
+         * Since the april tag field layout constructor throws something, we need
+         * create a method to handle it.
+         */ 
+        private static AprilTagFieldLayout createFieldLayout() {
+            try {
+                return new AprilTagFieldLayout(Filesystem
+                    .getDeployDirectory()
+                    .toPath()
+                    .resolve("april-tag-layout.json")
+                );
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
+        public static final Translation3d CAMERA_POS_METERS =
+            new Translation3d(
+                -1, //meters
+                -1,
+                -1);
+        public static final Rotation3d CAMERA_ANGLE_DEGREES = 
+            new Rotation3d(
+                -1, //radians
+                -1,
+                -1).unaryMinus(); //what is this
+
+        public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = 
+            new Transform3d(
+                CAMERA_POS_METERS.unaryMinus(), 
+                CAMERA_ANGLE_DEGREES); 
     }
 }
