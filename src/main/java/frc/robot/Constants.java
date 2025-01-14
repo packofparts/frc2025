@@ -11,6 +11,7 @@ import POPLib.Motor.MotorConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -87,6 +88,40 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
     }
+
+    public static class AutoAlign {
+        public static final Rotation2d DEFAULT_ROTATION = Rotation2d.fromDegrees(-1); //180 or 0
+        
+
+        /** PID tolerance. */ // TODO : to be tuned
+        public static final double X_TOLERANCE = 0.0;
+        public static final double Y_TOLERANCE = 0.0;
+        public static final double THETA_TOLERANCE = 0.0;
+
+        /* Pid values */ // TODO : to be tuned
+        public static final double X_P = 0.0;
+        public static final double X_I = 0.0;
+        public static final double X_D = 0.0;
+
+        public static final double Y_P = 0.0;
+        public static final double Y_I = 0.0;
+        public static final double Y_D = 0.0;
+                
+        public static final double THETA_P = 0.0;
+        public static final double THETA_I = 0.0;
+        public static final double THETA_D = 0.0;
+
+        public static final double ERROR = 0.0;
+
+        /** Default offset value. */
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.0, 0.0);
+
+        /*Scoring poses */ // TODO : get the scoring alignments and coordinates
+        public static final Pose2d[] SCORING_POSES = {
+            new Pose2d(-1, -1, Rotation2d.fromDegrees(-1))
+        };
+    }
+
     public static class Vision {
         public static final double AMBIGUITY_THRESHOLD = -1;
         public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
