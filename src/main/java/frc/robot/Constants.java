@@ -15,7 +15,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -31,17 +31,17 @@ public final class Constants {
     }
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = false;
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             22, 
             20, 
             false, 
-            new PIDConfig(0.0, 0, 0, 0),
+            new PIDConfig(0.07, 0, 0, 0),
             Mode.BRAKE
         );
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0, 0);
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
         public static final double upperSetpoint = 1.0;
@@ -53,8 +53,8 @@ public final class Constants {
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final double TRACK_WIDTH = Units.inchesToMeters(23);
-        public static final double WHEEL_BASE = Units.inchesToMeters(23);
+        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
+        public static final double WHEEL_BASE =  edu.wpi.first.math.util.Units.inchesToMeters(23);
 
         public static final double DRIVE_BASE_RADIUS = Math
             .sqrt(TRACK_WIDTH * TRACK_WIDTH + WHEEL_BASE * WHEEL_BASE) / 2;

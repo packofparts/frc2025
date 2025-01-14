@@ -40,8 +40,8 @@ public class RobotContainer {
     // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
     // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
-    oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.moveUp()).onFalse(elevator.stop());
-    oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
+    oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
+    // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
 
   }
 
