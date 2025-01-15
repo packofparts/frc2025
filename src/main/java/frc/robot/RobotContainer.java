@@ -6,11 +6,14 @@ package frc.robot;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
+import com.pathplanner.lib.auto.AutoBuilder;
 import POPLib.Controllers.OI.OI;
 import POPLib.Controllers.OI.XboxOI;
 import POPLib.Swerve.Commands.SysIdSwerve;
 import POPLib.Swerve.Commands.TeleopSwerveDrive;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
@@ -24,11 +27,15 @@ public class RobotContainer {
   // Swerve swerve;
   Elevator elevator;
   OI oi;
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
     elevator = Elevator.getInstance();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }
@@ -51,6 +58,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }

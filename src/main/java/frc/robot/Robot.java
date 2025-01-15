@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    System.out.println(m_robotContainer.getAutonomousCommand().toString());
   }
 
   /** This function is called periodically during autonomous. */

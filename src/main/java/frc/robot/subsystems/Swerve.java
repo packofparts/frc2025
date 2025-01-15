@@ -39,15 +39,22 @@ public class Swerve extends VisionBaseSwerve {
             Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
 
-        RobotConfig config;
-        config = new RobotConfig(0.0,0.0, new ModuleConfig(Cons, null, MAX_SKID_ACCEL, null, null, 0));
+        RobotConfig config = null;
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
+        // RobotConfig config;
+        // config = new RobotConfig(0.0,0.0, new ModuleConfig(SwerveModuleConstants.wheelCircumference.in(Units.Meters), Constants.Swerve.MODULE_TYPE.maxSpeed, MAX_SKID_ACCEL, null, null);
         
         // Configure AutoBuilder last
         AutoBuilder.configure(
                 this::getOdomPose, // Robot pose supplier
                 this::setOdomPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> driveRobotOriented(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                (speeds, feedforwards) -> driveChassis(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
