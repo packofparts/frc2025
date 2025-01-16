@@ -4,15 +4,21 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import POPLib.Control.PIDConfig;
+import POPLib.Motor.ConversionConfig;
+import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -23,19 +29,35 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+    public static class Ports {
+        public static final String CANIVORE_NAME = "rio";
+    }
 
-  public static class Ports {
-    public static final String CANIVORE_NAME = "rio";
-  }
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = true;
 
-      public static final class Swerve {
+        public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
+            22, 
+            20, 
+            false, 
+            new PIDConfig(0.07, 0, 0, 0),
+            Mode.BRAKE
+        );
+
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
+
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
+        public static final double upperSetpoint = 1.0;
+        public static final double lowerSetpoint = 0.0;
+
+        public static final double MAX_ERROR = 0.1;
+    }
+
+    public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final double TRACK_WIDTH = Units.inchesToMeters(23);
-        public static final double WHEEL_BASE = Units.inchesToMeters(23);
+        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
+        public static final double WHEEL_BASE =  edu.wpi.first.math.util.Units.inchesToMeters(23);
 
         public static final double DRIVE_BASE_RADIUS = Math
             .sqrt(TRACK_WIDTH * TRACK_WIDTH + WHEEL_BASE * WHEEL_BASE) / 2;
@@ -80,5 +102,16 @@ public final class Constants {
         );
 
         public static final int PIGEON_ID = 13;
+
+        public static final double ROBOT_MASS_KG = 59; // estimate with bumpers & battery
+        public static final double ROBOT_MOI = 0; // gotta ask CAD
+        public static final double WHEEL_RADIUS_METERS = 0.0508; // 2 inch radius
+        public static final double MAX_DRIVE_VELOCITY_MPS = 5; // meters per second
+        public static final double WHEEL_COF = 1.0; // suggested value if unsure as per docs
+
+        public static RobotConfig getRobotConfig(){
+            RobotConfig config = new RobotConfig(ROBOT_MASS_KG, ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS_METERS, MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, DCMotor.getKrakenX60(4), 60, 4), TRACK_WIDTH);
+            return config;
+        }
     }
 }
