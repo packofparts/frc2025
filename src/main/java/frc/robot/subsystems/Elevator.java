@@ -44,7 +44,7 @@ public class Elevator extends SubsystemBase {
 
     private Elevator() {        
         rightMotor = Constants.Elevator.RIGHT_MOTOR.createSparkMax();
-        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax();
+        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax(rightMotor);
         tuning = Constants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", Constants.Elevator.TUNNING_MODE);
 
         rightMotor.getEncoder().setPosition(0.0);

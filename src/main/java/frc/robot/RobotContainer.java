@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import POPLib.Controllers.OI.OI;
 import POPLib.Controllers.OI.XboxOI;
 import POPLib.Swerve.Commands.SysIdSwerve;
@@ -24,33 +26,36 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // Swerve swerve;
-  Elevator elevator;
+  Swerve swerve;
+  // Elevator elevator;
   OI oi;
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    // swerve = Swerve.getInstance();
+    swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
-    elevator = Elevator.getInstance();
-
+    // elevator = Elevator.getInstance();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+    autoChooser.addOption("line_2meters", makeAuto("line_2meters"));
+    swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }
 
 
   private void configureBindings() {
-    // SysIdSwerve sys = new SysIdSwerve(swerve);
+    SysIdSwerve sys = new SysIdSwerve(swerve);
 
-    // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
-    // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
+    oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
+    oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
-    oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
+    // oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
     // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
-
   }
+
+  private Command makeAuto(String path) {
+    return new PathPlannerAuto(path);
+  } 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
