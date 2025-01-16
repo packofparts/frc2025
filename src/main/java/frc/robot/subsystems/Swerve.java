@@ -39,15 +39,7 @@ public class Swerve extends VisionBaseSwerve {
             Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
 
-        RobotConfig config = null;
-        try{
-            config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-            // Handle exception as needed
-            e.printStackTrace();
-        }
-        // RobotConfig config;
-        // config = new RobotConfig(0.0,0.0, new ModuleConfig(SwerveModuleConstants.wheelCircumference.in(Units.Meters), Constants.Swerve.MODULE_TYPE.maxSpeed, MAX_SKID_ACCEL, null, null);
+        RobotConfig config = Constants.Swerve.getRobotConfig();
         
         // Configure AutoBuilder last
         AutoBuilder.configure(

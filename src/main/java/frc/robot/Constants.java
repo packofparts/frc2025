@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import POPLib.Control.PIDConfig;
 import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 
 /**
@@ -99,5 +102,16 @@ public final class Constants {
         );
 
         public static final int PIGEON_ID = 13;
+
+        public static final double ROBOT_MASS_KG = 59; // estimate with bumpers & battery
+        public static final double ROBOT_MOI = 0; // gotta ask CAD
+        public static final double WHEEL_RADIUS_METERS = 0.0508; // 2 inch radius
+        public static final double MAX_DRIVE_VELOCITY_MPS = 5; // meters per second
+        public static final double WHEEL_COF = 1.0; // suggested value if unsure as per docs
+
+        public static RobotConfig getRobotConfig(){
+            RobotConfig config = new RobotConfig(ROBOT_MASS_KG, ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS_METERS, MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, DCMotor.getKrakenX60(4), 60, 4), TRACK_WIDTH);
+            return config;
+        }
     }
 }
