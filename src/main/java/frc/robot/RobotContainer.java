@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
+import frc.robot.subsystems.Swerve;
 import POPLib.Controllers.OI.OI;
 import POPLib.Controllers.OI.XboxOI;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,12 +22,13 @@ public class RobotContainer {
   // Swerve swerve;
   Elevator elevator;
   OI oi;
+  Manipulator manipulator;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
     elevator = Elevator.getInstance();
-    Manipulator.getInstance();
+    manipulator = Manipulator.getInstance();
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }

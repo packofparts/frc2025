@@ -5,6 +5,7 @@
 package frc.robot;
 
 import POPLib.Control.PIDConfig;
+import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -25,6 +27,43 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class Ports {
+        public static final String CANIVORE_NAME = "rio";
+    }
+
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = false;
+
+        public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
+            22, 
+            20, 
+            false, 
+            new PIDConfig(0.07, 0, 0, 0),
+            Mode.COAST
+        );
+
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
+
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
+        public static final double upperSetpoint = 1.0;
+        public static final double lowerSetpoint = 0.0;
+
+        public static final double MOTOR_SPEED = 0.5;
+        public static final double MAX_ERROR = 0.1;
+    }
+
+    public static final class Manipualtor {
+        public static final MotorConfig MOTOR = new MotorConfig(
+            24, 
+            40, 
+            false, 
+            Mode.COAST
+        );    
+
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(1);
+
+        public static final double SPEED = 0.8;
+    }
     public static class ManipulatorConstants {
         public static BeamBreakConfig breakConfig = new BeamBreakConfig(0);
     }

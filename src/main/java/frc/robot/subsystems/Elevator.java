@@ -10,6 +10,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import POPLib.Math.MathUtil;
 import POPLib.SmartDashboard.PIDTuning;
 import POPLib.SmartDashboard.TunableNumber;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -59,13 +61,13 @@ public class Elevator extends SubsystemBase {
 
     public Command moveUp() {
         return runOnce(() -> {
-            rightMotor.set(0.5);
+            rightMotor.set(Math.abs(Constants.Elevator.MOTOR_SPEED));
         });
     }
 
     public Command moveDown() {
         return runOnce(() -> {
-            rightMotor.set(-0.5);
+            rightMotor.set(-Math.abs(Constants.Elevator.MOTOR_SPEED));
         });
     }
 
@@ -96,8 +98,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevetor Position Meters", rightMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Left Elevetor Position", leftMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Elevator Position Meters", rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Left Elevator Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
         if (!resetSequence) { 
