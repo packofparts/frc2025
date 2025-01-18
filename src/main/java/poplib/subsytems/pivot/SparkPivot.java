@@ -13,17 +13,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SparkPivot extends Pivot {
     private final SparkMax leadMotor;
     @SuppressWarnings("unused")
-    private final SparkMax followerMotor;
+    private SparkMax followerMotor;
     private final PIDTuning pid;
 
-    public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
+    public SparkPivot(MotorConfig leadConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
         super(ffConfig, absoluteConfig, tuningMode, subsytemName);
         leadMotor = leadConfig.createSparkMax();
-        followerMotor = followerConfig.createSparkMax(leadMotor);
-
+        followerMotor = null;
         pid = leadConfig.genPIDTuning("Pivot Motor " + subsytemName, tuningMode);
 
         resetToAbsolutePosition();
+    }
+
+    public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
+        this(leadConfig, gearRatio, ffConfig, absoluteConfig, tuningMode, subsytemName);
+        followerMotor = followerConfig.createSparkMax(leadMotor);
     }
 
     public boolean atSetpoint(double error, double setpoint) {
