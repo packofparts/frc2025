@@ -6,6 +6,7 @@ import POPLib.SmartDashboard.TunableNumber;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
     private static Intake instance;
@@ -16,7 +17,7 @@ public class Intake extends SubsystemBase {
     private double error;
     private PIDController pidController;
     public static Intake getInstance() {
-      
+
         if (instance == null) {
             instance = new Intake();
         }
@@ -25,8 +26,8 @@ public class Intake extends SubsystemBase {
     }
 
     private Intake() {
-      pivotMotor = new SparkMax(0, MotorType.kBrushless);
-      rollerMotor = new SparkMax(0, MotorType.kBrushless);
+      pivotMotor = Constants.Intake.PIVOT_MOTOR_CONFIG.createSparkMax();
+      rollerMotor = Constants.Intake.ROLLER_MOTOR_CONFIG.createSparkMax();
       error = setpoint.get() - pivotMotor.getEncoder().getPosition();
       pidController = new PIDController(0,0,0);
     }
@@ -39,14 +40,17 @@ public class Intake extends SubsystemBase {
   public boolean reachedSetPoint() {
     if (Math.abs(error) < 0.1) {
         return true;
-    }else return false;
-}
+    }
+    else {
+      return false;
+    }
+  }
 
     public Command runIntake() {
       return run(() -> {
-        rollerMotor.set(1);
+        rollerMotor.set(Constants.Intake.ROLLER_MOTOR_SPEED);
       } ).until(this::reachedSetPoint)
-      .andThen(() -> {rollerMotor.set(0);});
+      .andThen(() -> {rollerMotor.set(Constants.Intake.ROLLER_MOTOR_STOP_SPEED);});
     }
 
     public Command rotateIntake(double setpoint) {
