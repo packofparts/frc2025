@@ -4,17 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.util.ResourceBundle.Control;
-import com.ctre.phoenix6.signals.ControlModeValue;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import POPLib.Math.MathUtil;
-import POPLib.Motor.MotorConfig;
 import POPLib.SmartDashboard.PIDTuning;
 import POPLib.SmartDashboard.TunableNumber;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -26,9 +21,10 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase {
     private final SparkMax rightMotor;
     private final SparkMax leftMotor;
+    private final DigitalInput limitSwitch;
+
     private final TunableNumber setpoint;
     private final PIDTuning tuning;
-    private final DigitalInput limitSwitch;
 
     private boolean resetSequence;
 
@@ -57,10 +53,6 @@ public class Elevator extends SubsystemBase {
         setpoint = new TunableNumber("Elevator Setpoint", 0, Constants.Elevator.TUNNING_MODE); 
     }
 
-    private Distance getPosition() {
-        return Units.Meters.of(rightMotor.getEncoder().getPosition());
-    }
-    
     public Command moveElevator(double setPoint) {
         return run(() -> {
             setpoint.setDefault(setPoint);
@@ -104,14 +96,13 @@ public class Elevator extends SubsystemBase {
         });
     }
 
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevetor Position Meters", rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Left Elevetor Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
-        if (!resetSequence) { // TODO: Remove if statment after done testing open loop
+        if (!resetSequence) { 
             rightMotor.getClosedLoopController().setReference(
                 setpoint.get(), 
                 ControlType.kPosition,
