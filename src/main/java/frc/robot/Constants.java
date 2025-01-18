@@ -9,6 +9,7 @@ import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
+import POPLib.Sensors.BeamBreak.BeamBreakConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -26,6 +27,10 @@ import edu.wpi.first.units.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class ManipulatorConstants {
+        public static BeamBreakConfig breakConfig = new BeamBreakConfig(0);
+    }
+
     public static class Ports {
         public static final String CANIVORE_NAME = "rio";
     }
