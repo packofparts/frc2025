@@ -5,7 +5,6 @@
 package frc.robot;
 
 import POPLib.Control.PIDConfig;
-import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
@@ -16,7 +15,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
