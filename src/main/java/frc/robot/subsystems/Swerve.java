@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import POPLib.Sensors.Camera.CameraConfig;
+import POPLib.Sensors.Camera.Limelight;
+import POPLib.Sensors.Camera.LimelightConfig;
 import POPLib.Sensors.Gyro.Pigeon;
 import POPLib.SmartDashboard.AllianceColor;
 import POPLib.Swerve.SwerveModules.SwerveModule;
@@ -18,9 +22,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.Vision;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
+    private static List<CameraConfig> cameraConfigs;
+    private static List<LimelightConfig> limelightConfigs;
+
 
     private final Field2d field;
     
@@ -40,7 +48,9 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
-            Constants.Swerve.SWERVE_KINEMATICS
+            Constants.Swerve.SWERVE_KINEMATICS,
+            cameraConfigs,
+            limelightConfigs
         );
 
         field = new Field2d();
@@ -122,29 +132,68 @@ public class Swerve extends VisionBaseSwerve {
         );
     }
 
-    /**
-     * Updates the swerve module values for the swerve.
-     */
-    public void drive(Translation2d translation, 
-        double rotation, boolean fieldRelative, boolean isOpenLoop
-    ) {
-        SwerveModuleState[] swerveModuleStates = Constants.Swerve.SWERVE_KINEMATICS.toSwerveModuleStates(
-            fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                translation.getX(),
-                translation.getY(),
-                rotation,
-                getGyro().getNormalizedRotation2dAngle())
-                : new ChassisSpeeds(
-                translation.getX(),
-                translation.getY(),
-                rotation
-            )
-        );
+    private Pose2d getClosestScoringPos() {
+        Translation2d currentTranslation = odom
+            .getEstimatedPosition()
+            .getTranslation(); 
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, getMaxSpeed());
+        double minDistance = Double.MAX_VALUE;
+        Pose2d closestScoringPos = null;
 
-        for (SwerveModule mod : getSwerveModules()) {
-            //mod.setDesiredState(swerveModuleStates[mod.number]); //mod.number doesn't exist
+        for (Pose2d pos : Constants.AutoAlign.SCORING_POSES) {
+            Translation2d translation = pos.getTranslation();
+            double distance = currentTranslation.getDistance(translation);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestScoringPos = pos;
+            }
         }
+
+        return closestScoringPos; 
     }
+
+    public Command moveToNearestScoringPos(Translation2d tagOffset) {
+        return moveToPose(() -> getClosestScoringPos(), tagOffset);
+    }
+
+    /**
+     * Auto move to april tag.
+     */
+    public Command moveToAprilTag(int tagID, Translation2d tagOffset) {
+        return moveToPose(
+            () -> Constants.Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
+            tagOffset
+        );
+    }
+
+    //TO-DO: implement update with vision
+    @Override
+    public void periodic() {
+        super.periodic(); 
+
+        // // Loop through all measurements and add it to pose estimator
+        // List<VisionMeasurement> measurements = Vision.getVision().getMeasurements();
+        // VisionMeasurement bestMeasurement = Vision.getVision().getBestMeasurement();
+
+        // field.getObject("best")
+        //     .setPoses(measurements.stream().map(
+        //         (measurement) -> measurement.robotPose
+        //     )
+        //     .collect(Collectors.toList()));
+
+        // if (bestMeasurement != null 
+        //     && bestMeasurement.ambiguity < Constants.Vision.AMBIGUITY_THRESHOLD
+        // ) {
+        //     odom.addVisionMeasurement(
+        //         bestMeasurement.robotPose,
+        //         bestMeasurement.timestampSeconds,
+        //         Constants.Vision.VISION_STANDARD_DEVIATION
+        //     );
+        // }
+    }
+
+
+
+    
 }
