@@ -41,7 +41,7 @@ public final class Constants {
             Mode.COAST
         );
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
+        public static final FFConfig FF_CONFIG = new FFConfig(0.26);
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
         public static final double upperSetpoint = 1.0;
