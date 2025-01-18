@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SparkElevator extends Elevator {
-    SparkMax leadMotor;
-    SparkMax followMotor;
+    public SparkMax leadMotor;
+    public SparkMax followMotor;
     boolean usePID;
 
     public SparkElevator(MotorConfig motorConfig, FollowerConfig followerConfig, FFConfig ffConfig, boolean tuningMode, boolean usePID, String subsystemName) {
@@ -26,17 +26,20 @@ public class SparkElevator extends Elevator {
     }
 
     @Override
-    public void periodic() {
+    public void periodic() {            
+        super.tuning.updatePID(leadMotor);
+        SmartDashboard.putNumber("Elevator lead motor pos", getEncoderPos());
+        SmartDashboard.putNumber("Elevator follow motor pos", followMotor.getEncoder().getPosition());
+    }
+
+    public void updatePID() {
         if (usePID) {
-            super.tuning.updatePID(leadMotor);
             leadMotor.getClosedLoopController().setReference(
                 super.setpoint.get(), 
                 ControlType.kPosition, 
                 ClosedLoopSlot.kSlot1, 
                 super.feedforward.calculate(getEncoderPos(), 0.0));
         }
-        SmartDashboard.putNumber("Elevator lead motor pos", getEncoderPos());
-        SmartDashboard.putNumber("Elevator follow motor pos", followMotor.getEncoder().getPosition());
     }
 
     public double getEncoderPos() {
