@@ -6,7 +6,6 @@ import poplib.control.FFConfig;
 import poplib.math.MathUtil;
 import poplib.motor.FollowerConfig;
 import poplib.motor.MotorConfig;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,13 +31,16 @@ public class TalonElevator extends Elevator {
     }
 
     @Override
-    public void periodic() {
-        if (usePID) {
-            super.tuning.updatePID(leadMotor);
-            leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(super.feedforward.getKg()));
-        }
+    public void periodic() {            
+        super.tuning.updatePID(leadMotor);
         SmartDashboard.putNumber("Elevator lead motor pos", getEncoderPos());
         SmartDashboard.putNumber("Elevator follow motor pos", followMotor.getPosition().getValue().in(Units.Rotations));
+    }
+
+    public void updatePID() {
+        if (usePID) {
+            leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(super.feedforward.getKg()));
+        }
     }
 
     public double getEncoderPos() {
