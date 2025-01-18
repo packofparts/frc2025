@@ -32,7 +32,7 @@ public final class Constants {
     }
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             22, 
@@ -48,6 +48,7 @@ public final class Constants {
         public static final double upperSetpoint = 1.0;
         public static final double lowerSetpoint = 0.0;
 
+        public static final double MOTOR_SPEED = 0.5;
         public static final double MAX_ERROR = 0.1;
     }
 

@@ -25,12 +25,13 @@ public class RobotContainer {
   // Swerve swerve;
   Elevator elevator;
   OI oi;
+  Manipulator manipulator;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
     elevator = Elevator.getInstance();
-    Manipulator.getInstance();
+    manipulator = Manipulator.getInstance();
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }

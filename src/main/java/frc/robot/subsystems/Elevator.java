@@ -61,13 +61,13 @@ public class Elevator extends SubsystemBase {
 
     public Command moveUp() {
         return runOnce(() -> {
-            rightMotor.set(0.5);
+            rightMotor.set(Math.abs(Constants.Elevator.MOTOR_SPEED));
         });
     }
 
     public Command moveDown() {
         return runOnce(() -> {
-            rightMotor.set(-0.5);
+            rightMotor.set(-Math.abs(Constants.Elevator.MOTOR_SPEED));
         });
     }
 
@@ -98,8 +98,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevetor Position Meters", rightMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Left Elevetor Position", leftMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Elevator Position Meters", rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Left Elevator Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
         if (!resetSequence) { 
