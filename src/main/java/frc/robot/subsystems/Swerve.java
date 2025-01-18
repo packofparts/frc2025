@@ -132,7 +132,7 @@ public class Swerve extends VisionBaseSwerve {
         );
     }
 
-    private Pose2d getClosestScoringPos() {
+    private Pose2d getNearestScoringPos() {
         Translation2d currentTranslation = odom
             .getEstimatedPosition()
             .getTranslation(); 
@@ -154,7 +154,7 @@ public class Swerve extends VisionBaseSwerve {
     }
 
     public Command moveToNearestScoringPos(Translation2d tagOffset) {
-        return moveToPose(() -> getClosestScoringPos(), tagOffset);
+        return moveToPose(() -> getNearestScoringPos(), tagOffset);
     }
 
     /**
