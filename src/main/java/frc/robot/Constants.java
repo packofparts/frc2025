@@ -113,4 +113,23 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
     }
+     public static class Intake{
+        public static final int PIVOT_MOTOR_ID = 24;
+        public static final int ROLLER_MOTOR_ID = 26;
+        public static final MotorConfig PIVOT_MOTOR_CONFIG = new MotorConfig(
+            PIVOT_MOTOR_ID,
+            20,
+            false,
+            new PIDConfig(0,0,0),
+            Mode.COAST
+        );
+        public static final MotorConfig ROLLER_MOTOR_CONFIG = new MotorConfig(
+            ROLLER_MOTOR_ID,
+            20,
+            false,
+            Mode.COAST
+        );
+        public static final double ROLLER_MOTOR_SPEED = 0.5;
+        public static final int ROLLER_MOTOR_STOP_SPEED = 0; 
+    }
 }
