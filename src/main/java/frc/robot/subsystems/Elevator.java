@@ -7,9 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-import POPLib.Math.MathUtil;
-import POPLib.SmartDashboard.PIDTuning;
-import POPLib.SmartDashboard.TunableNumber;
+import poplib.math.MathUtil;
+import poplib.smart_dashboard.PIDTuning;
+import poplib.smart_dashboard.TunableNumber;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -40,7 +40,7 @@ public class Elevator extends SubsystemBase {
 
     private Elevator() {        
         rightMotor = Constants.Elevator.RIGHT_MOTOR.createSparkMax();
-        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax();
+        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax(rightMotor);
         tuning = Constants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", Constants.Elevator.TUNNING_MODE);
 
         rightMotor.getEncoder().setPosition(0.0);

@@ -4,19 +4,17 @@
 
 package frc.robot;
 
-import POPLib.Control.PIDConfig;
-import POPLib.Motor.ConversionConfig;
-import POPLib.Motor.FollowerConfig;
-import POPLib.Motor.Mode;
-import POPLib.Motor.MotorConfig;
-import POPLib.Sensors.BeamBreak.BeamBreakConfig;
-import POPLib.Swerve.SwerveConstants.SDSModules;
-import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
+import poplib.control.PIDConfig;
+import poplib.motor.FollowerConfig;
+import poplib.motor.Mode;
+import poplib.motor.MotorConfig;
+import poplib.sensors.beam_break.BeamBreakConfig;
+import poplib.swerve.swerve_constants.SDSModules;
+import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -52,7 +50,7 @@ public final class Constants {
         public static final double MAX_ERROR = 0.1;
     }
 
-    public static final class Manipualtor {
+    public static final class Manipulator {
         public static final MotorConfig MOTOR = new MotorConfig(
             24, 
             40, 

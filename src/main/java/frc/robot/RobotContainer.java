@@ -6,9 +6,8 @@ package frc.robot;
 
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
-import frc.robot.subsystems.Swerve;
-import POPLib.Controllers.OI.OI;
-import POPLib.Controllers.OI.XboxOI;
+import poplib.controllers.oi.OI;
+import poplib.controllers.oi.XboxOI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -21,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // Swerve swerve;
   Elevator elevator;
-  OI oi;
   Manipulator manipulator;
+  OI oi;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
