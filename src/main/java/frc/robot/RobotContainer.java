@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import POPLib.Controllers.OI.OI;
 import POPLib.Controllers.OI.XboxOI;
@@ -20,22 +22,30 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  Swerve swerve;
+  // Swerve swerve;
+  Elevator elevator;
   OI oi;
+  Manipulator manipulator;
 
   public RobotContainer() {
-    swerve = Swerve.getInstance();
+    // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
-    swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+    elevator = Elevator.getInstance();
+    manipulator = Manipulator.getInstance();
+    // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }
 
 
   private void configureBindings() {
-    SysIdSwerve sys = new SysIdSwerve(swerve);
+    // SysIdSwerve sys = new SysIdSwerve(swerve);
 
-    oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
-    oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
+    // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
+    // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
+
+    oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
+    // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
+
   }
 
   /**
