@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import POPLib.Sensors.Gyro.Pigeon;
+import POPLib.SmartDashboard.AllianceColor;
 import POPLib.Swerve.SwerveModules.SwerveModule;
 import POPLib.Swerve.SwerveModules.SwerveModuleTalon;
 import POPLib.Swerve.SwerveTemplates.VisionBaseSwerve;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -52,23 +54,9 @@ public class Swerve extends VisionBaseSwerve {
     //poseSupplier = reference to april tag position
     //newOffset = vector relative to poseSupplier/where the robot needs to be
     private Command moveToPose(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
-        PIDController yaxisPid = new PIDController(
-            Constants.AutoAlign.Y_P,
-            Constants.AutoAlign.Y_I,
-            Constants.AutoAlign.Y_D
-        );
-
-        PIDController xaxisPid = new PIDController(
-            Constants.AutoAlign.X_P,
-            Constants.AutoAlign.X_I,
-            Constants.AutoAlign.X_D
-        );
-
-        PIDController thetaPid = new PIDController(
-            Constants.AutoAlign.THETA_P,
-            Constants.AutoAlign.THETA_I,
-            Constants.AutoAlign.THETA_D
-        );
+        PIDController yaxisPid = Constants.AutoAlign.Y_PID_CONTROLLER;
+        PIDController xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
+        PIDController thetaPid = Constants.AutoAlign.THETA_PID_CONTROLLER;
         
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
@@ -108,14 +96,20 @@ public class Swerve extends VisionBaseSwerve {
 
         }).andThen(run(
             () -> {
+                Alliance color;
+                if (AllianceColor.getInstance().isRed() == true) {
+                    color = Alliance.Red;
+                }
+                else {
+                    color = Alliance.Blue;
+                }
                 drive(
                     new Translation2d(
+                        //to-do: figure out how to translate to velocity vectors
                         xaxisPid.calculate(odom.getEstimatedPosition().getX()),
                         yaxisPid.calculate(odom.getEstimatedPosition().getY())),
                     thetaPid.calculate(odom.getEstimatedPosition().getRotation().getRadians()),
-                    true, 
-                    false
-                );
+                    color);
             }
         )).until(
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()

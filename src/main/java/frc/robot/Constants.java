@@ -11,6 +11,7 @@ import POPLib.Motor.MotorConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -98,18 +99,12 @@ public final class Constants {
         public static final double Y_TOLERANCE = 0.0;
         public static final double THETA_TOLERANCE = 0.0;
 
-        /* Pid values */ // TODO : to be tuned
-        public static final double X_P = 0.0;
-        public static final double X_I = 0.0;
-        public static final double X_D = 0.0;
+        /* Pid Controllers */ //TODO: to be tuned
+        public static final PIDController Y_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+        public static final PIDController X_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+        public static final PIDController THETA_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
 
-        public static final double Y_P = 0.0;
-        public static final double Y_I = 0.0;
-        public static final double Y_D = 0.0;
-                
-        public static final double THETA_P = 0.0;
-        public static final double THETA_I = 0.0;
-        public static final double THETA_D = 0.0;
+
 
         public static final double ERROR = 0.0;
 
