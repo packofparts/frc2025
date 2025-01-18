@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import poplib.sensors.beam_break.BeamBreak;
 import poplib.smart_dashboard.TunableNumber;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ManipulatorConstants;
@@ -39,6 +40,10 @@ public class Manipulator extends SubsystemBase {
     setpoint.setDefault(sP);
   }
 
+  public boolean pieceInIntake() {
+    return beamBreak.isBlocked();
+  }
+
   public void runManipulator(double setpoint) {
     pidController.setSetpoint(setpoint);
     double output = pidController.calculate(manipulatorMotor.get());
@@ -65,5 +70,6 @@ public class Manipulator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Coral in", pieceInIntake());
   }
 }

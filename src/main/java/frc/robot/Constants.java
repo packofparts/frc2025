@@ -50,47 +50,7 @@ public final class Constants {
         public static final double MAX_ERROR = 0.1;
     }
 
-    public static final class Manipulator {
-        public static final MotorConfig MOTOR = new MotorConfig(
-            24, 
-            40, 
-            false, 
-            Mode.COAST
-        );    
-
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(1);
-
-        public static final double SPEED = 0.8;
-    }
-    public static class ManipulatorConstants {
-        public static BeamBreakConfig breakConfig = new BeamBreakConfig(0);
-    }
-
-    public static class Ports {
-        public static final String CANIVORE_NAME = "rio";
-    }
-
-    public static class Elevator {
-        public static final boolean TUNNING_MODE = true;
-
-        public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            22, 
-            20, 
-            false, 
-            new PIDConfig(0.07, 0, 0, 0),
-            Mode.COAST
-        );
-
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
-
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
-        public static final double upperSetpoint = 1.0;
-        public static final double lowerSetpoint = 0.0;
-
-        public static final double MAX_ERROR = 0.1;
-    }
-
-    public static final class Manipualtor {
+    public static final class ManipulatorConstants {
         public static final MotorConfig MOTOR = new MotorConfig(
             24, 
             40, 
