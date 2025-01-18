@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import poplib.control.FFConfig;
 import poplib.control.PIDConfig;
 import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
@@ -129,7 +130,10 @@ public final class Constants {
             false,
             Mode.COAST
         );
+        public static final double ARM_UP_SETPOINT = 0.0;
+        public static final double ARM_DOWN_SETPOINT = 5.0;
+        public static final double ERROR = 0.1;
+        public static final FFConfig FF_CONFIG = new FFConfig(0.0);
         public static final double ROLLER_MOTOR_SPEED = 0.5;
-        public static final int ROLLER_MOTOR_STOP_SPEED = 0; 
     }
 }

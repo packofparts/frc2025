@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkMax;
 import poplib.control.FFConfig;
 import poplib.motor.FollowerConfig;
 import poplib.motor.MotorConfig;
-import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.smart_dashboard.PIDTuning;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,17 +15,16 @@ public class SparkPivot extends Pivot {
     private SparkMax followerMotor;
     private final PIDTuning pid;
 
-    public SparkPivot(MotorConfig leadConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
-        super(ffConfig, absoluteConfig, tuningMode, subsytemName);
+    public SparkPivot(MotorConfig leadConfig, FFConfig ffConfig, boolean tuningMode, String subsytemName) {
+        super(ffConfig, tuningMode, subsytemName);
         leadMotor = leadConfig.createSparkMax();
         followerMotor = null;
         pid = leadConfig.genPIDTuning("Pivot Motor " + subsytemName, tuningMode);
-
-        resetToAbsolutePosition();
+        leadMotor.getEncoder().setPosition(0.0);
     }
 
-    public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
-        this(leadConfig, gearRatio, ffConfig, absoluteConfig, tuningMode, subsytemName);
+    public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, FFConfig ffConfig, boolean tuningMode, String subsytemName) {
+        this(leadConfig, ffConfig, tuningMode, subsytemName);
         followerMotor = followerConfig.createSparkMax(leadMotor);
     }
 

@@ -4,6 +4,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import poplib.smart_dashboard.TunableNumber;
@@ -12,11 +13,6 @@ import poplib.subsytems.pivot.SparkPivot;
 public class Intake extends SparkPivot{
     private static Intake instance;
 
-    private SparkMax pivotMotor;
-    private SparkMax rollerMotor;
-    private TunableNumber setpoint;
-    private double error;
-    private PIDController pidController;
     public static Intake getInstance() {
 
         if (instance == null) {
@@ -26,43 +22,31 @@ public class Intake extends SparkPivot{
         return instance;
     }
 
+    private SparkMax rollerMotor;
     private Intake() {
-      super(Constants.Intake.PIVOT_MOTOR_CONFIG, 1, )
+      super(Constants.Intake.PIVOT_MOTOR_CONFIG, Constants.Intake.FF_CONFIG, false, "intake");
 
       rollerMotor = Constants.Intake.ROLLER_MOTOR_CONFIG.createSparkMax();
-      error = setpoint.get() - pivotMotor.getEncoder().getPosition();
-      pidController = new PIDController(0,0,0);
+    }
+
+    public void runRollerMotors() {
+      rollerMotor.set(Constants.Intake.ROLLER_MOTOR_SPEED);
+    }
+
+    public void stopRollerMotors() {
+      rollerMotor.set(0.0);
+    }
+
+    public Command moveWristUp() {
+      return super.moveWrist(Constants.Intake.ARM_UP_SETPOINT, Constants.Intake.ERROR);
     }
     
-
-    public void setSetpoint(double sP) {
-      setpoint.setDefault(sP);
-    }
-
-  public boolean reachedSetPoint() {
-    if (Math.abs(error) < 0.1) {
-        return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-    public Command runIntake() {
-      return run(() -> {
-        rollerMotor.set(Constants.Intake.ROLLER_MOTOR_SPEED);
-      } ).until(this::reachedSetPoint)
-      .andThen(() -> {rollerMotor.set(Constants.Intake.ROLLER_MOTOR_STOP_SPEED);});
-    }
-
-    public Command rotateIntake(double setpoint) {
-      return run(() -> {
-        setSetpoint(setpoint);
-      }).until(() -> reachedSetPoint());
+    public Command moveWristDown() {
+      return super.moveWrist(Constants.Intake.ARM_DOWN_SETPOINT, Constants.Intake.ERROR);
     }
 
     @Override
     public void periodic() {
-      pivotMotor.set(pidController.calculate(pivotMotor.getEncoder().getPosition()));
+      super.periodic();
     }
 }

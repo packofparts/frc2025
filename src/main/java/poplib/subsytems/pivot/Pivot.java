@@ -10,17 +10,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Pivot extends SubsystemBase {
-    protected final AbsoluteEncoder absoluteEncoder;
+    protected AbsoluteEncoder absoluteEncoder;
     protected final ArmFeedforward ff;
     protected final TunableNumber setpoint;
 
-    public Pivot(FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
+    public Pivot(FFConfig ffConfig, boolean tuningMode, String subsytemName) {
         super(subsytemName);
 
-        absoluteEncoder = absoluteConfig.getDutyCycleEncoder();
         ff = ffConfig.getArmFeedforward();
-
+        absoluteEncoder = null;
         setpoint = new TunableNumber("Pivot Setpoint " + subsytemName, 0, tuningMode);
+    }
+
+    public Pivot(FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
+        this(ffConfig, tuningMode, subsytemName);
+        absoluteEncoder = absoluteConfig.getDutyCycleEncoder();
     }
 
     public Command moveWrist(double position, double error) {
