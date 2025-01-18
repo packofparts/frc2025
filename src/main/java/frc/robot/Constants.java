@@ -43,7 +43,7 @@ public final class Constants {
             20, 
             false, 
             new PIDConfig(0.07, 0, 0, 0),
-            Mode.BRAKE
+            Mode.COAST
         );
 
         public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
@@ -53,6 +53,19 @@ public final class Constants {
         public static final double lowerSetpoint = 0.0;
 
         public static final double MAX_ERROR = 0.1;
+    }
+
+    public static final class Manipualtor {
+        public static final MotorConfig MOTOR = new MotorConfig(
+            24, 
+            40, 
+            false, 
+            Mode.COAST
+        );    
+
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(1);
+
+        public static final double SPEED = 0.8;
     }
 
     public static final class Swerve {
