@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import POPLib.Sensors.Camera.CameraConfig;
-import POPLib.Sensors.Camera.LimelightConfig;
-import POPLib.Sensors.Gyro.Pigeon;
-import POPLib.Swerve.SwerveModules.SwerveModuleTalon;
-import POPLib.Swerve.SwerveTemplates.VisionBaseSwerve;
+import poplib.sensors.camera.CameraConfig;
+import poplib.sensors.camera.LimelightConfig;
+import poplib.sensors.gyro.Pigeon;
+import poplib.swerve.swerve_modules.SwerveModuleTalon;
+import poplib.swerve.swerve_templates.VisionBaseSwerve;
 import frc.robot.Constants;
 
 public class Swerve extends VisionBaseSwerve {
