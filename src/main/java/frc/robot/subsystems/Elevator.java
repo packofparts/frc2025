@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
 
         resetSequence = false; 
 
-        setpoint = new TunableNumber("Elevator Setpoint", 0, Constants.Elevator.TUNNING_MODE); 
+        setpoint = new TunableNumber("Elevator Setpoint", 10.0, Constants.Elevator.TUNNING_MODE); 
     }
 
     public Command moveElevator(double setPoint) {

@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import POPLib.Controllers.OI.OI;
@@ -13,6 +15,7 @@ import POPLib.Swerve.Commands.SysIdSwerve;
 import POPLib.Swerve.Commands.TeleopSwerveDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
@@ -24,14 +27,18 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 public class RobotContainer {
   // Swerve swerve;
   Elevator elevator;
-  OI oi;
+  Indexer indexer;
+  Intake intake;
   Manipulator manipulator;
+  OI oi;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
     elevator = Elevator.getInstance();
     manipulator = Manipulator.getInstance();
+    indexer = Indexer.getInstance();
+    intake = Intake.getInstance();
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     configureBindings();
   }
@@ -44,7 +51,23 @@ public class RobotContainer {
     // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
     oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
-    // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
+    oi.getDriverButton(XboxController.Button.kB.value).onTrue(new ParallelCommandGroup(
+      manipulator.run(),
+      indexer.run(),
+      intake.run()
+    )).onFalse(new ParallelCommandGroup(
+      manipulator.stop(),
+      indexer.stop(),
+      intake.stop()
+    ));
+
+    oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
+      intake.reverse()
+    )).onFalse(new ParallelCommandGroup(
+      intake.stop()
+    ));
+    
+    oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown()).onFalse(elevator.stop());
 
   }
 

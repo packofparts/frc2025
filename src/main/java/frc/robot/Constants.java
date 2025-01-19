@@ -4,11 +4,12 @@
 
 package frc.robot;
 
+import POPLib.Control.ArmFFConfig;
 import POPLib.Control.PIDConfig;
-import POPLib.Motor.ConversionConfig;
 import POPLib.Motor.FollowerConfig;
 import POPLib.Motor.Mode;
 import POPLib.Motor.MotorConfig;
+import POPLib.Sensors.AbsoluteEncoder.AbsoluteEncoderConfig;
 import POPLib.Sensors.BeamBreak.BeamBreakConfig;
 import POPLib.Swerve.SwerveConstants.SDSModules;
 import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -32,10 +32,14 @@ public final class Constants {
     }
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = false;
+
+        // 150 L1
+        // 200 L2
+        // 350 L3
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            22, 
+            26, 
             20, 
             false, 
             new PIDConfig(0.07, 0, 0, 0),
@@ -44,7 +48,7 @@ public final class Constants {
 
         public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
         public static final double upperSetpoint = 1.0;
         public static final double lowerSetpoint = 0.0;
 
@@ -60,10 +64,47 @@ public final class Constants {
             Mode.COAST
         );    
 
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(1);
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6);
 
-        public static final double SPEED = 0.8;
+        public static final double SPEED = 0.9;
     }
+
+    public static final class Indexer {
+        public static final MotorConfig MOTOR = new MotorConfig(
+            23, 
+            40, 
+            true, 
+            Mode.COAST
+        );    
+
+        public static final double SPEED = 0.5;
+    }
+
+    public static final class Intake {
+        // 20 for algea picjup, 35 for algea drop off
+        public static final MotorConfig PIVOT = new MotorConfig(
+            22, 
+            40, 
+            true, 
+            new PIDConfig(0.08),
+            Mode.COAST
+        );    
+
+        public static final MotorConfig SPIN = new MotorConfig(
+            21, 
+            40, 
+            false, 
+            Mode.COAST
+        );    
+
+        public static final double GEAR_RATIO = 25.0 * 2.1;
+        public static final boolean TUNING_MODE = true;
+        public static final ArmFFConfig ff = new ArmFFConfig(0.5, 0.0, 0.0);
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
+
+        public static final double SPEED = 1.0;
+    }
+
 
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
@@ -115,4 +156,5 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
     }
+
 }
