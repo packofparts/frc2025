@@ -51,6 +51,10 @@ public class Elevator extends SparkElevator {
         });
     }
 
+    public Command moveElevator(double setpoint) {
+        return super.moveElevator(setpoint, 0.1);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
