@@ -114,8 +114,8 @@ public final class Constants {
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
         public static final double WHEEL_BASE =  edu.wpi.first.math.util.Units.inchesToMeters(23);
+        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
 
         public static final double DRIVE_BASE_RADIUS = Math
             .sqrt(TRACK_WIDTH * TRACK_WIDTH + WHEEL_BASE * WHEEL_BASE) / 2;

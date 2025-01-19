@@ -8,15 +8,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Manipulator;
-import frc.robot.subsystems.Swerve;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
-import poplib.swerve.commands.SysIdSwerve;
-import poplib.swerve.commands.TeleopSwerveDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +30,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
+    // swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
     elevator = Elevator.getInstance();
     manipulator = Manipulator.getInstance();
@@ -45,6 +42,7 @@ public class RobotContainer {
 
 
   private void configureBindings() {
+    // SysIdSwerve sys = new SysIdSwerve(swerve);
     // SysIdSwerve sys = new SysIdSwerve(swerve);
 
     // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
