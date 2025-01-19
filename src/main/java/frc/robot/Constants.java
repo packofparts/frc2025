@@ -4,15 +4,15 @@
 
 package frc.robot;
 
-import POPLib.Control.ArmFFConfig;
-import POPLib.Control.PIDConfig;
-import POPLib.Motor.FollowerConfig;
-import POPLib.Motor.Mode;
-import POPLib.Motor.MotorConfig;
-import POPLib.Sensors.AbsoluteEncoder.AbsoluteEncoderConfig;
-import POPLib.Sensors.BeamBreak.BeamBreakConfig;
-import POPLib.Swerve.SwerveConstants.SDSModules;
-import POPLib.Swerve.SwerveConstants.SwerveModuleConstants;
+import poplib.control.FFConfig;
+import poplib.control.PIDConfig;
+import poplib.motor.FollowerConfig;
+import poplib.motor.Mode;
+import poplib.motor.MotorConfig;
+import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
+import poplib.sensors.beam_break.BeamBreakConfig;
+import poplib.swerve.swerve_constants.SDSModules;
+import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -36,6 +36,10 @@ public final class Constants {
         // 150 L1
         // 200 L2
         // 350 L3
+
+        public static final double L1 = 150;
+        public static final double L2 = 200;
+        public static final double L3 = 350;
         public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
@@ -46,7 +50,7 @@ public final class Constants {
             Mode.COAST
         );
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.26, 0);
+        public static final FFConfig FF_CONFIG = new FFConfig(0.26);
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
         public static final double upperSetpoint = 1.0;
@@ -99,9 +103,10 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 25.0 * 2.1;
         public static final boolean TUNING_MODE = true;
-        public static final ArmFFConfig ff = new ArmFFConfig(0.5, 0.0, 0.0);
+        public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
-
+        public static final double UP_SETPOINT = 0.0;
+        public static final double DOWN_SETPOINT = 5.0;
         public static final double SPEED = 1.0;
     }
 

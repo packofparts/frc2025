@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
-import POPLib.Subsytems.Pivot.SparkPivot;
+import poplib.subsytems.pivot.SparkPivot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
@@ -23,7 +23,7 @@ public class Intake extends SparkPivot {
         super.leadMotor.getEncoder().setPosition(31.0);
         spin = Constants.Intake.SPIN.createSparkMax();
     }
-
+    
     public Command run() {
         return runOnce(() -> {
             spin.set(Constants.Intake.SPEED);

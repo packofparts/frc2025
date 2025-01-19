@@ -1,3 +1,3 @@
-[submodule "src/main/java/POPLib"]
-	path = src/main/java/POPLib
+[submodule "src/main/java/poplib"]
+	path = src/main/java/poplib
 	url = https://github.com/packofparts/poplib
