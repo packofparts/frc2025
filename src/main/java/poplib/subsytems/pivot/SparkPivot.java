@@ -19,7 +19,11 @@ public class SparkPivot extends Pivot {
     public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
         super(ffConfig, absoluteConfig, tuningMode, subsytemName);
         leadMotor = leadConfig.createSparkMax();
-        followerMotor = followerConfig.createSparkMax();
+        if (followerConfig != null) {
+            followerMotor = followerConfig.createSparkMax();
+        } else {
+            followerMotor = null;
+        };
 
         pid = leadConfig.genPIDTuning("Pivot Motor " + subsytemName, tuningMode);
 
