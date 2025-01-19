@@ -37,7 +37,7 @@ public class Intake extends SparkPivot {
         andThen(manipulator.stop()).
         alongWith(indexer.stop()).
         alongWith(stop()).
-        andThen(moveWrist(Constants.Intake.UP_SETPOINT, getAbsolutePosition()));
+        andThen(moveWrist(Constants.Intake.UP_SETPOINT, Constants.Intake.MAX_ERROR));
     }
 
     public Command run() {

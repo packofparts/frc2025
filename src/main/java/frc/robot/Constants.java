@@ -36,7 +36,7 @@ public final class Constants {
         // 200 L2
         // 350 L3
         
-        public static final double L0 = 0;  // this is my imaginary, untested setpoint for making the elevator go all the way done
+        public static final double L0 = 0;  // this is my imaginary, untested setpoint for making the elevator go all the way down
         public static final double L1 = 150;
         public static final double L2 = 200;
         public static final double L3 = 350;

@@ -38,7 +38,7 @@ public class Elevator extends SparkElevator {
     public Command scoreGamepiece() {
         if (scoringPos.get() < 1 || scoringPos.get() > 3) {
             System.out.println("please give an actual scoring location");
-            return runOnce(super::stop);
+            return runOnce(() -> {});   // hope that works
         } else {
             Manipulator manipulator = Manipulator.getInstance();
             return moveElevator(Constants.Elevator.SETPOINTS[(int)scoringPos.get()], Constants.Elevator.MAX_ERROR).
