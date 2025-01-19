@@ -13,7 +13,6 @@ import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -36,10 +35,14 @@ public final class Constants {
         // 150 L1
         // 200 L2
         // 350 L3
-
+        
+        public static final double L0 = 0;  // this is my imaginary, untested setpoint for making the elevator go all the way done
         public static final double L1 = 150;
         public static final double L2 = 200;
         public static final double L3 = 350;
+
+        // [L0, L1, L2, L3]
+        public static final double[] SETPOINTS = {L0, L1, L2, L3};
         public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
@@ -107,6 +110,7 @@ public final class Constants {
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
         public static final double UP_SETPOINT = 0.0;
         public static final double DOWN_SETPOINT = 5.0;
+        public static final double MAX_ERROR = 0.1;
         public static final double SPEED = 1.0;
     }
 

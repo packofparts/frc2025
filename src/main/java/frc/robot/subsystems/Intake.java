@@ -24,6 +24,22 @@ public class Intake extends SparkPivot {
         spin = Constants.Intake.SPIN.createSparkMax();
     }
     
+    public Command intakeGamepiece() {
+        Elevator elevator = Elevator.getInstance();
+        Indexer indexer = Indexer.getInstance();
+        Manipulator manipulator = Manipulator.getInstance();
+        return elevator.moveElevator(Constants.Elevator.L0, Constants.Elevator.MAX_ERROR).
+        alongWith(moveWrist(Constants.Intake.DOWN_SETPOINT, Constants.Intake.MAX_ERROR)).
+        andThen(run()).
+        alongWith(indexer.run()).
+        alongWith(manipulator.run()).
+        until(manipulator::coralIn).
+        andThen(manipulator.stop()).
+        alongWith(indexer.stop()).
+        alongWith(stop()).
+        andThen(moveWrist(Constants.Intake.UP_SETPOINT, getAbsolutePosition()));
+    }
+
     public Command run() {
         return runOnce(() -> {
             spin.set(Constants.Intake.SPEED);
