@@ -37,7 +37,7 @@ public final class Constants {
         // 350 L3
         
         enum SETPOINTS {
-            L0(0),     // this is my imaginary, untested setpoint for making the elevator go all the way down
+            IDLE(0),     // this is my imaginary, untested setpoint for making the elevator go all the way down
             L1(150),
             L2(200),
             L3(350);
@@ -121,11 +121,11 @@ public final class Constants {
         public static final double MAX_ERROR = 0.1;
         public static final double SPEED = 1.0;
 
-        enum SETPOINTS {   // all setpoints are made up, please fill them in with thier actual values later on
-            IDLE(0),
-            ALGAE_PICKUP(4),
-            ALGAE_DROP(3),
-            CORAL_PICKUP(5);
+        enum SETPOINTS {  
+            IDLE(0),  // this is a guess
+            ALGAE_PICKUP(20),
+            ALGAE_DROP(35),
+            CORAL_PICKUP(50); // this is a guess
 
             private double setpoint;
 

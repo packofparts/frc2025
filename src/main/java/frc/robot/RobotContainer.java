@@ -76,7 +76,7 @@ public class RobotContainer {
     Elevator elevator = Elevator.getInstance();
     Indexer indexer = Indexer.getInstance();
     Manipulator manipulator = Manipulator.getInstance();
-    return elevator.moveElevator(Constants.Elevator.SETPOINTS.L0.getSetpoint(), Constants.Elevator.MAX_ERROR).
+    return elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR).
     alongWith(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
     andThen(intake.run()).
     alongWith(indexer.run()).
@@ -106,7 +106,7 @@ public class RobotContainer {
       }
       return elevator.moveElevator(setpoint, Constants.Elevator.MAX_ERROR).
       andThen(manipulator.run()).until(manipulator::coralIn).andThen(manipulator.stop()).
-      andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.L0.getSetpoint(), Constants.Elevator.MAX_ERROR));
+      andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR));
   }
 
 
