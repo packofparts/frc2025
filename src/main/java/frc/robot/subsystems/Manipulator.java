@@ -22,8 +22,8 @@ public class Manipulator extends SubsystemBase {
     }
 
     private Manipulator() {
-        motor = Constants.Manipualtor.MOTOR.createSparkMax();
-        beamBreak = Constants.Manipualtor.BEAM_BREAK.createBeamBreak();
+        motor = Constants.Manipulator.MOTOR.createSparkMax();
+        beamBreak = Constants.Manipulator.BEAM_BREAK.createBeamBreak();
     }
 
     public boolean coralIn() {
@@ -32,7 +32,7 @@ public class Manipulator extends SubsystemBase {
 
     public Command run() {
         return runOnce(() -> {
-            motor.set(Constants.Manipualtor.SPEED);
+            motor.set(Constants.Manipulator.SPEED);
         });
     }
 
@@ -44,7 +44,7 @@ public class Manipulator extends SubsystemBase {
 
     public Command reverse() {
         return runOnce(() -> {
-            motor.set(-1 * Constants.Manipualtor.SPEED);
+            motor.set(-1 * Constants.Manipulator.SPEED);
         });
     }
 

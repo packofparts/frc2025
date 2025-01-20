@@ -36,13 +36,23 @@ public final class Constants {
         // 200 L2
         // 350 L3
         
-        public static final double L0 = 0;  // this is my imaginary, untested setpoint for making the elevator go all the way down
-        public static final double L1 = 150;
-        public static final double L2 = 200;
-        public static final double L3 = 350;
+        enum SETPOINTS {
+            L0(0),     // this is my imaginary, untested setpoint for making the elevator go all the way down
+            L1(150),
+            L2(200),
+            L3(350);
 
-        // [L0, L1, L2, L3]
-        public static final double[] SETPOINTS = {L0, L1, L2, L3};
+            private double setpoint;
+
+            private SETPOINTS(double setpoint) {
+                this.setpoint = setpoint;
+            }
+
+            public double getSetpoint() {
+                return this.setpoint;
+            }
+        }
+
         public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
@@ -63,7 +73,7 @@ public final class Constants {
         public static final double MAX_ERROR = 0.1;
     }
 
-    public static final class Manipualtor {
+    public static final class Manipulator {
         public static final MotorConfig MOTOR = new MotorConfig(
             24, 
             40, 
@@ -108,10 +118,25 @@ public final class Constants {
         public static final boolean TUNING_MODE = true;
         public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
-        public static final double UP_SETPOINT = 0.0;
-        public static final double DOWN_SETPOINT = 5.0;
         public static final double MAX_ERROR = 0.1;
         public static final double SPEED = 1.0;
+
+        enum SETPOINTS {   // all setpoints are made up, please fill them in with thier actual values later on
+            IDLE(0),
+            ALGAE_PICKUP(4),
+            ALGAE_DROP(3),
+            CORAL_PICKUP(5);
+
+            private double setpoint;
+
+            private SETPOINTS(double setpoint) {
+                this.setpoint = setpoint;
+            }
+
+            public double getSetpoint() {
+                return this.setpoint;
+            }
+        }
     }
 
 

@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import poplib.smart_dashboard.TunableNumber;
 import poplib.subsytems.elevator.SparkElevator;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +15,6 @@ public class Elevator extends SparkElevator {
     private final DigitalInput limitSwitch;
     private boolean resetSequence;
     private static Elevator instance;
-    private TunableNumber scoringPos;
 
     public static Elevator getInstance() {
         if (instance == null) {
@@ -30,21 +28,8 @@ public class Elevator extends SparkElevator {
         super(Constants.Elevator.RIGHT_MOTOR, Constants.Elevator.LEFT_MOTOR, 
         Constants.Elevator.FF_CONFIG, Constants.Elevator.TUNNING_MODE, true, "elevator");   
         
-        scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
         limitSwitch = new DigitalInput(0);
         resetSequence = false; 
-    }
-
-    public Command scoreGamepiece() {
-        if (scoringPos.get() < 1 || scoringPos.get() > 3) {
-            System.out.println("please give an actual scoring location");
-            return runOnce(() -> {});   // hope that works
-        } else {
-            Manipulator manipulator = Manipulator.getInstance();
-            return moveElevator(Constants.Elevator.SETPOINTS[(int)scoringPos.get()], Constants.Elevator.MAX_ERROR).
-            andThen(manipulator.run()).until(manipulator::coralIn).andThen(manipulator.stop()).
-            andThen(moveElevator(Constants.Elevator.L0, Constants.Elevator.MAX_ERROR));
-        }
     }
 
     public boolean isAtBottom() {
