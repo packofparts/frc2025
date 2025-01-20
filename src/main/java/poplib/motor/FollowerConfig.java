@@ -19,7 +19,7 @@ public class FollowerConfig {
         this.canId = canId;
     }
 
-    public SparkMax createSparkMax(SparkMax lead) { 
+    public SparkMax createSparkMax() { 
         SparkMax motor = new SparkMax(canId, SparkMax.MotorType.kBrushless);
         SparkMaxConfig config = leadConfig.getSparkMaxConfig();
         config.follow(leadConfig.canId, inverted);

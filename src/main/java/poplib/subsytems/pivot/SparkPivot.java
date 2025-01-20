@@ -11,7 +11,7 @@ import poplib.smart_dashboard.PIDTuning;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SparkPivot extends Pivot {
-    private final SparkMax leadMotor;
+    public final SparkMax leadMotor;
     @SuppressWarnings("unused")
     private final SparkMax followerMotor;
     private final PIDTuning pid;
@@ -19,7 +19,11 @@ public class SparkPivot extends Pivot {
     public SparkPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
         super(ffConfig, absoluteConfig, tuningMode, subsytemName);
         leadMotor = leadConfig.createSparkMax();
-        followerMotor = followerConfig.createSparkMax(leadMotor);
+        if (followerConfig != null) {
+            followerMotor = followerConfig.createSparkMax();
+        } else {
+            followerMotor = null;
+        };
 
         pid = leadConfig.genPIDTuning("Pivot Motor " + subsytemName, tuningMode);
 

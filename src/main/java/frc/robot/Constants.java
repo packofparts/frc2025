@@ -9,10 +9,10 @@ import poplib.control.PIDConfig;
 import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
+import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -31,10 +31,32 @@ public final class Constants {
     }
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = false;
+
+        // 150 L1
+        // 200 L2
+        // 350 L3
+        
+        enum SETPOINTS {
+            IDLE(0),     // this is my imaginary, untested setpoint for making the elevator go all the way down
+            L1(150),
+            L2(200),
+            L3(350);
+
+            private double setpoint;
+
+            private SETPOINTS(double setpoint) {
+                this.setpoint = setpoint;
+            }
+
+            public double getSetpoint() {
+                return this.setpoint;
+            }
+        }
+
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            22, 
+            26, 
             20, 
             false, 
             new PIDConfig(0.07, 0, 0, 0),
@@ -43,7 +65,7 @@ public final class Constants {
 
         public static final FFConfig FF_CONFIG = new FFConfig(0.26);
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 23);
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
         public static final double upperSetpoint = 1.0;
         public static final double lowerSetpoint = 0.0;
 
@@ -59,16 +81,70 @@ public final class Constants {
             Mode.COAST
         );    
 
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(1);
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6);
 
-        public static final double SPEED = 0.8;
+        public static final double SPEED = 0.9;
     }
+
+    public static final class Indexer {
+        public static final MotorConfig MOTOR = new MotorConfig(
+            23, 
+            40, 
+            true, 
+            Mode.COAST
+        );    
+
+        public static final double SPEED = 0.5;
+    }
+
+    public static final class Intake {
+        // 20 for algea picjup, 35 for algea drop off
+        public static final MotorConfig PIVOT = new MotorConfig(
+            22, 
+            40, 
+            true, 
+            new PIDConfig(0.08),
+            Mode.COAST
+        );    
+
+        public static final MotorConfig SPIN = new MotorConfig(
+            21, 
+            40, 
+            false, 
+            Mode.COAST
+        );    
+
+        public static final double GEAR_RATIO = 25.0 * 2.1;
+        public static final boolean TUNING_MODE = true;
+        public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
+        public static final double MAX_ERROR = 0.1;
+        public static final double SPEED = 1.0;
+
+        enum SETPOINTS {  
+            IDLE(0),  // this is a guess
+            ALGAE_PICKUP(20),
+            ALGAE_DROP(35),
+            CORAL_PICKUP(50); // this is a guess
+
+            private double setpoint;
+
+            private SETPOINTS(double setpoint) {
+                this.setpoint = setpoint;
+            }
+
+            public double getSetpoint() {
+                return this.setpoint;
+            }
+        }
+    }
+
 
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
         public static final double WHEEL_BASE =  edu.wpi.first.math.util.Units.inchesToMeters(23);
+        public static final double TRACK_WIDTH = edu.wpi.first.math.util.Units.inchesToMeters(23);
 
         public static final double DRIVE_BASE_RADIUS = Math
             .sqrt(TRACK_WIDTH * TRACK_WIDTH + WHEEL_BASE * WHEEL_BASE) / 2;
@@ -114,4 +190,5 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
     }
+
 }
