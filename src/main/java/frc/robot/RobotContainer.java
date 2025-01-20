@@ -50,6 +50,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     autoChooser.addOption("line_2meters", makeAuto("line_2meters"));
+    autoChooser.addOption("square", makeAuto("square"));
     configureBindings();
   }
 
