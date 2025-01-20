@@ -11,7 +11,13 @@ import frc.robot.subsystems.Manipulator;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.smart_dashboard.TunableNumber;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
@@ -29,6 +35,7 @@ public class RobotContainer {
   Manipulator manipulator;
   OI oi;
   TunableNumber scoringPos;
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     // swerve = Swerve.getInstance();
@@ -40,6 +47,9 @@ public class RobotContainer {
     intake = Intake.getInstance();
     scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser.addOption("line_2meters", makeAuto("line_2meters"));
     configureBindings();
   }
 
@@ -109,7 +119,9 @@ public class RobotContainer {
       andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR));
   }
 
-
+  private Command makeAuto(String path) {
+    return new PathPlannerAuto(path);
+  } 
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -117,6 +129,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }
