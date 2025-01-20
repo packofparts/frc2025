@@ -17,7 +17,7 @@ public class SparkFlywheel extends Flywheel {
         super(subsytemName, tuningMode);
 
         this.leadMotor = leadConfig.createSparkMax();
-        this.followerMotor = followerConfig.createSparkMax(leadMotor);
+        this.followerMotor = followerConfig.createSparkMax();
     } 
 
     public double getError(double setpoint) {

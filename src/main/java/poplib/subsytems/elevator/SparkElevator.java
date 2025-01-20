@@ -21,7 +21,7 @@ public class SparkElevator extends Elevator {
         this.usePID = usePID;
         leadMotor = motorConfig.createSparkMax();
         leadMotor.getEncoder().setPosition(0.0);
-        followMotor = followerConfig.createSparkMax(leadMotor);
+        followMotor = followerConfig.createSparkMax();
         followMotor.getEncoder().setPosition(0.0);
     }
 

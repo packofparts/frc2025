@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
+
 public class Elevator extends SparkElevator {
     private final DigitalInput limitSwitch;
     private boolean resetSequence;
-
     private static Elevator instance;
 
     public static Elevator getInstance() {
@@ -26,7 +26,7 @@ public class Elevator extends SparkElevator {
 
     private Elevator() { 
         super(Constants.Elevator.RIGHT_MOTOR, Constants.Elevator.LEFT_MOTOR, 
-        Constants.Elevator.FF_CONFIG, false, true, "elevator");   
+        Constants.Elevator.FF_CONFIG, Constants.Elevator.TUNNING_MODE, true, "elevator");   
         
         limitSwitch = new DigitalInput(0);
         resetSequence = false; 
@@ -53,6 +53,11 @@ public class Elevator extends SparkElevator {
 
     @Override
     public void periodic() {
+        super.periodic();
+        SmartDashboard.putBoolean("At Bottom", isAtBottom());
+        if (!resetSequence) { 
+            super.updatePID();
+        }
         super.periodic();
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
         if (!resetSequence) { 
