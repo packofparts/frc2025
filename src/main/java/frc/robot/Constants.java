@@ -13,6 +13,7 @@ import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -27,17 +28,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
  */
 public final class Constants {
     public static class Ports {
-        public static final String CANIVORE_NAME = "rio";
+        public static final String CANIVORE_NAME = "tempura sushi";
     }
 
     public static class Elevator {
-
-        // 150 L1
-        // 200 L2
-        // 350 L3
-        
         enum SETPOINTS {
-            IDLE(0),     // this is my imaginary, untested setpoint for making the elevator go all the way down
+            IDLE(0),
             L1(150),
             L2(200),
             L3(350);
@@ -53,24 +49,26 @@ public final class Constants {
             }
         }
 
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             26, 
             20, 
             false, 
-            new PIDConfig(0.07, 0, 0, 0),
+            new PIDConfig(0.2, 0, 0, 0),
             Mode.COAST
         );
 
         public static final FFConfig FF_CONFIG = new FFConfig(0.26);
+
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0.26, 0, 0);
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
         public static final double upperSetpoint = 1.0;
         public static final double lowerSetpoint = 0.0;
 
         public static final double MOTOR_SPEED = 0.5;
-        public static final double MAX_ERROR = 0.1;
+        public static final double MAX_ERROR = 1.0;
     }
 
     public static final class Manipulator {
@@ -98,7 +96,6 @@ public final class Constants {
     }
 
     public static final class Intake {
-        // 20 for algea picjup, 35 for algea drop off
         public static final MotorConfig PIVOT = new MotorConfig(
             22, 
             40, 
@@ -115,17 +112,17 @@ public final class Constants {
         );    
 
         public static final double GEAR_RATIO = 25.0 * 2.1;
-        public static final boolean TUNING_MODE = true;
+        public static final boolean TUNING_MODE = false;
         public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
         public static final double MAX_ERROR = 0.1;
         public static final double SPEED = 1.0;
 
         enum SETPOINTS {  
-            IDLE(0),  // this is a guess
-            ALGAE_PICKUP(20),
-            ALGAE_DROP(35),
-            CORAL_PICKUP(50); // this is a guess
+            IDLE(30),  // this is a guess
+            ALGAE_PICKUP(-25),
+            ALGAE_DROP(-35),
+            CORAL_PICKUP(-10); // this is a guess
 
             private double setpoint;
 
@@ -157,6 +154,7 @@ public final class Constants {
         );
 
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
+            "tempura sushi",
             25,
             false, // Make true if we have a stroke
             PIDConfig.getPid(5.0), // TODO: retune
@@ -165,6 +163,7 @@ public final class Constants {
 
 
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
+            "tempura sushi",
             60,
             true,
             PIDConfig.getPid(0.01, 0.2), // Tuned 01/05/25 with a shit battery
@@ -173,7 +172,7 @@ public final class Constants {
 
         public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
 
-        public static final boolean SWERVE_TUNING_MODE = true;
+        public static final boolean SWERVE_TUNING_MODE = false;
 
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
