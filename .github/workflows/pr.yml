@@ -1,8 +1,6 @@
 name: PR Validation
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -23,11 +21,15 @@ jobs:
     - name: Checking out Code
       uses: actions/checkout@v4
 
+    - name: Fetching Git Tags
+      run: git fetch --tags
+
     - name: Setting up Java
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
+        cache: 'gradle'
 
     - name: Initializing CodeQL
       uses: github/codeql-action/init@v3
@@ -52,6 +54,9 @@ jobs:
     steps:
     - name: Checking out Code
       uses: actions/checkout@v4
+
+    - name: Fetching Git Tags
+      run: git fetch --tags
 
     - name: Setting up Java
       uses: actions/setup-java@v4
