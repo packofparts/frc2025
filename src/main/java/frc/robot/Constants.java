@@ -13,9 +13,19 @@ import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
+
+import java.io.IOException;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -190,5 +200,69 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
     }
+
+    public static class AutoAlign {
+        public static final Rotation2d DEFAULT_ROTATION = Rotation2d.fromDegrees(-1); //180 or 0
+        
+
+        /** PID tolerance. */ // TODO : to be tuned
+        public static final double X_TOLERANCE = 0.0;
+        public static final double Y_TOLERANCE = 0.0;
+        public static final double THETA_TOLERANCE = 0.0;
+
+        /* Pid Controllers */ //TODO: to be tuned
+        public static final PIDController Y_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+        public static final PIDController X_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+        public static final PIDController THETA_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+
+
+
+        public static final double ERROR = 0.0;
+
+        /** Default offset value. */
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.0, 0.0);
+
+        /*Scoring poses */ // TODO : get the scoring alignments and coordinates
+        public static final Pose2d[] SCORING_POSES = {
+            new Pose2d(-1, -1, Rotation2d.fromDegrees(-1))
+        };
+    }
+
+    public static class Vision {
+        public static final double AMBIGUITY_THRESHOLD = -1;
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
+        
+        /**
+         * Since the april tag field layout constructor throws something, we need
+         * create a method to handle it.
+         */ 
+        private static AprilTagFieldLayout createFieldLayout() {
+            try {
+                return new AprilTagFieldLayout(Filesystem
+                    .getDeployDirectory()
+                    .toPath()
+                    .resolve("april-tag-layout.json")
+                );
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
+        public static final Translation3d CAMERA_POS_METERS =
+            new Translation3d(
+                -1, //meters
+                -1,
+                -1);
+        public static final Rotation3d CAMERA_ANGLE_DEGREES = 
+            new Rotation3d(
+                -1, //radians
+                -1,
+                -1).unaryMinus(); //what is this
+
+        public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = 
+            new Transform3d(
+                CAMERA_POS_METERS.unaryMinus(), 
+                CAMERA_ANGLE_DEGREES); 
+    }
+
 
 }
