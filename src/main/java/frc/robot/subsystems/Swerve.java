@@ -15,6 +15,10 @@ import poplib.control.PIDConfig;
 import poplib.sensors.camera.Camera;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.photonvision.EstimatedRobotPose;
+
+import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.Limelight;
 import poplib.sensors.camera.LimelightConfig;
@@ -41,6 +45,7 @@ import poplib.swerve.swerve_modules.SwerveModuleTalon;
 import poplib.swerve.swerve_templates.VisionBaseSwerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -51,10 +56,14 @@ public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
     private static List<CameraConfig> cameraConfigs;
     private static List<LimelightConfig> limelightConfigs;
+<<<<<<< HEAD
     private static Alliance color;
     private static PIDController xaxisPid;
     private static PIDController yaxisPid;
     private static PIDController thetaPid;
+=======
+    private static Camera camera;
+>>>>>>> a9783ae (implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data)
 
     
     public static Swerve getInstance() {
@@ -92,6 +101,13 @@ public class Swerve extends VisionBaseSwerve {
      * newOffset = vector relative to poseSupplier/where the robot needs to be
     */
     private Command moveToPoseOdom(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
+<<<<<<< HEAD
+=======
+        PIDController yaxisPid = Constants.AutoAlign.Y_PID_CONTROLLER;
+        PIDController xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
+        PIDController thetaPid = Constants.AutoAlign.THETA_PID_CONTROLLER;
+        
+>>>>>>> a9783ae (implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data)
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         return runOnce(() -> {
@@ -240,6 +256,12 @@ public class Swerve extends VisionBaseSwerve {
 
 
     
+    public Command moveToAprilTagVision(int tagID, Translation2d tagOffset) {
+        return moveToPoseVision(
+            () -> Constants.Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
+            tagOffset
+        );
+    } 
 
 
     
