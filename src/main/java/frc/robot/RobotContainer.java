@@ -72,14 +72,14 @@ public class RobotContainer {
         // Intake 
         oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
 
-t         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
+         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
         // new SequentialCommandGroup(
         //     intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
         //     new ParallelCommandGroup(
         //         manipulator.run(),
         //         indexer.run(),
         //         intake.run()
-        //     )
+        //     
         // )).onFalse(
         //     new SequentialCommandGroup(
         //         intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
@@ -139,21 +139,23 @@ t         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
 
     public Command stopIntaking() {
        return new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
-        new ParallelCommandGroup(
-        manipulator.stop(),
-        indexer.stop(),
-        intake.stop()
-        ));
+            intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR),
+            new ParallelCommandGroup(
+                manipulator.stop(),
+                indexer.stop(),
+                intake.stop()
+            )
+        );
     }
 
     public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
-        return 
-            new InstantCommand(() -> {
-                System.out.println("Setpoint Movinf: " + setpoint.getSetpoint());
-            }).andThen(elevator.moveElevator(setpoint.getSetpoint(), Constants.Elevator.MAX_ERROR).
-            andThen(manipulator.run()).andThen(new WaitCommand(1.0)).andThen(manipulator.stop())
-            .andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR)));
+        return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
+            andThen(elevator.moveElevator(setpoint.getSetpoint()).
+            andThen(manipulator.run()).
+            andThen(new WaitCommand(1.0)).
+            andThen(manipulator.stop()).
+            andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
+        );
     }
 
 

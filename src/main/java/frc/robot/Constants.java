@@ -34,9 +34,9 @@ public final class Constants {
     public static class Elevator {
         enum SETPOINTS {
             IDLE(0),
-            L1(150),
-            L2(200),
-            L3(350);
+            L1(150 / 5),
+            L2(200 / 5),
+            L3(350 / 5);
 
             private double setpoint;
 
@@ -55,17 +55,13 @@ public final class Constants {
             26, 
             20, 
             false, 
-            new PIDConfig(0.2, 0, 0, 0),
+            new PIDConfig(0.12, 0, 0, 0), // 0.1
             Mode.COAST
         );
 
-        public static final FFConfig FF_CONFIG = new FFConfig(0.26);
-
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0.26, 0, 0);
-
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
-        public static final double upperSetpoint = 1.0;
-        public static final double lowerSetpoint = 0.0;
+
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.47, 0);
 
         public static final double MOTOR_SPEED = 0.5;
         public static final double MAX_ERROR = 1.0;
@@ -120,9 +116,11 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 25.0 * 2.1;
         public static final boolean TUNING_MODE = false;
-        public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
+
+        public static final FFConfig FF = new FFConfig(0.5, 0.0, 0.0);
+
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, new Rotation2d(360), false);
-        public static final double MAX_ERROR = 0.1;
+        public static final double MAX_ERROR = 1.0;
         public static final double SPEED = 1.0;
 
         enum SETPOINTS {  
@@ -161,7 +159,7 @@ public final class Constants {
         );
 
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
-            "tempura sushi",
+            Ports.CANIVORE_NAME,
             25,
             false, // Make true if we have a stroke
             PIDConfig.getPid(5.0), // TODO: retune
@@ -170,7 +168,7 @@ public final class Constants {
 
 
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
-            "tempura sushi",
+            Ports.CANIVORE_NAME,
             60,
             true,
             PIDConfig.getPid(0.01, 0.2), // Tuned 01/05/25 with a shit battery

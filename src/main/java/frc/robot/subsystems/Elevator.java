@@ -50,18 +50,6 @@ public class Elevator extends SubsystemBase {
         setpoint = new TunableNumber("Elevator Setpoint", 10.0, Constants.Elevator.TUNNING_MODE); 
     }
 
-    public Command moveElevator(double setPoint, double error) {
-        return this.run(() -> {
-           this.setpoint.setDefault(setPoint);
-        }).until(() -> {
-           return this.getError(setPoint) < error;
-        });
-     }
-
-     public double getError(double setpoint) {
-        return MathUtil.getError(rightMotor, setpoint);
-     }
-
     public Command moveElevator(double setPoint) {
         return run(() -> {
             setpoint.setDefault(setPoint);
@@ -111,13 +99,15 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Left Elevator Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
-        if (!resetSequence) { 
+        if (!resetSequence || Constants.Elevator.TUNNING_MODE) { 
             rightMotor.getClosedLoopController().setReference(
                 setpoint.get(), 
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0,
                 Constants.Elevator.FF.calculate(0.0)
             );
+
+            System.out.println( Constants.Elevator.FF.calculate(0.0));
         }
 
         tuning.updatePID(rightMotor);
