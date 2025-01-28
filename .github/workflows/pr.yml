@@ -1,8 +1,6 @@
 name: PR Validation
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,7 +11,7 @@ jobs:
 
     permissions:
       actions: read
-      contents: read
+      contents: write
       security-events: write
 
     strategy:
@@ -23,11 +21,19 @@ jobs:
     - name: Checking out Code
       uses: actions/checkout@v4
 
+    - name: Fetching Git Tags
+      run: git fetch --tags
+
     - name: Setting up Java
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '23'
         distribution: 'temurin'
+
+    - name: Setting up Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        dependency-graph: generate-and-submit
 
     - name: Initializing CodeQL
       uses: github/codeql-action/init@v3
@@ -53,12 +59,18 @@ jobs:
     - name: Checking out Code
       uses: actions/checkout@v4
 
+    - name: Fetching Git Tags
+      run: git fetch --tags
+
     - name: Setting up Java
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '23'
         distribution: 'temurin'
 
+    - name: Setting up Gradle
+      uses: gradle/actions/setup-gradle@v4
+  
     - name: Caching SonarQube packages
       uses: actions/cache@v4
       with:
