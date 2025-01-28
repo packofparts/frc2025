@@ -20,8 +20,8 @@ public class Intake extends SparkPivot {
 
     private Intake() {
         super(Constants.Intake.PIVOT, null, Constants.Intake.GEAR_RATIO, Constants.Intake.ff, Constants.Intake.ENCODER, Constants.Intake.TUNING_MODE, "intake");
-        super.leadMotor.getEncoder().setPosition(31.0);
-        super.setpoint.setDefault(31.0);
+        super.leadMotor.getEncoder().setPosition(-11.0);
+        super.setpoint.setDefault(-8.0);
         spin = Constants.Intake.SPIN.createSparkMax();
     }
 

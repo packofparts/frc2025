@@ -83,10 +83,21 @@ public class RobotContainer {
             intake.stop()
         )));
 
+        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
+        //             intake.run()
+        //     ).onFalse(
+        //         intake.stop()
+        //     );
+    
+
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-            intake.reverse()
+            intake.reverse(),
+            indexer.reverse(),
+            manipulator.reverse()
         )).onFalse(new ParallelCommandGroup(
-            intake.stop()
+            intake.stop(),
+            indexer.stop(),
+            manipulator.stop()
         ));
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> { 

@@ -36,6 +36,12 @@ public class Manipulator extends SubsystemBase {
         });
     }
 
+    public Command intakeCoral() {
+        return run(() -> {
+            motor.set(Constants.Manipulator.SPEED);
+        }).until(beamBreak.getBlockedSupplier()).andThen(stop());
+    }
+
     public Command stop() {
         return runOnce(() -> {
             motor.set(0.0);
@@ -44,7 +50,7 @@ public class Manipulator extends SubsystemBase {
 
     public Command reverse() {
         return runOnce(() -> {
-            motor.set(-1 * Constants.Manipulator.SPEED);
+            motor.set(-0.05);
         });
     }
 

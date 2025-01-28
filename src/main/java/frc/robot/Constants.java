@@ -79,7 +79,7 @@ public final class Constants {
             Mode.COAST
         );    
 
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6);
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true);
 
         public static final double SPEED = 0.9;
     }
@@ -88,11 +88,18 @@ public final class Constants {
         public static final MotorConfig MOTOR = new MotorConfig(
             23, 
             40, 
+            false,
+            Mode.COAST
+        );    
+
+        public static final MotorConfig MOTOR2 = new MotorConfig(
+            30, 
+            40, 
             true, 
             Mode.COAST
         );    
 
-        public static final double SPEED = 0.5;
+        public static final double SPEED = 0.8;
     }
 
     public static final class Intake {
@@ -109,20 +116,20 @@ public final class Constants {
             40, 
             false, 
             Mode.COAST
-        );    
+        );
 
         public static final double GEAR_RATIO = 25.0 * 2.1;
         public static final boolean TUNING_MODE = false;
         public static final FFConfig ff = new FFConfig(0.5, 0.0, 0.0);
-        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(2, new Rotation2d(360), false);
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, new Rotation2d(360), false);
         public static final double MAX_ERROR = 0.1;
         public static final double SPEED = 1.0;
 
         enum SETPOINTS {  
-            IDLE(30),  // this is a guess
-            ALGAE_PICKUP(-25),
-            ALGAE_DROP(-35),
-            CORAL_PICKUP(-10); // this is a guess
+            IDLE(40),
+            ALGAE_PICKUP(25),
+            ALGAE_DROP(35),
+            CORAL_PICKUP(-9);
 
             private double setpoint;
 

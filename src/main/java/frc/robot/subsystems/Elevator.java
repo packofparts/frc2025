@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
         rightMotor.getEncoder().setPosition(0.0);
         leftMotor.getEncoder().setPosition(0.0);
 
-        limitSwitch = new DigitalInput(0);
+        limitSwitch = new DigitalInput(3);
 
         resetSequence = false; 
 
