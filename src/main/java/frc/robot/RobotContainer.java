@@ -37,6 +37,8 @@ public class RobotContainer {
     OI oi;
     SendableChooser<Command> scoring;
 
+    boolean intaking;
+
     public RobotContainer() {
         swerve = Swerve.getInstance();
         oi = XboxOI.getInstance();
@@ -52,6 +54,8 @@ public class RobotContainer {
         SmartDashboard.putData(scoring);
 
         swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+
+        intaking = false;
         configureBindings();
     }
 
@@ -66,22 +70,24 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
 
         // Intake 
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(
-        new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
-            new ParallelCommandGroup(
-                manipulator.run(),
-                indexer.run(),
-                intake.run()
-            )
-        )).onFalse(
-            new SequentialCommandGroup(
-                intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
-            new ParallelCommandGroup(
-            manipulator.stop(),
-            indexer.stop(),
-            intake.stop()
-        )));
+        oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
+
+t         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
+        // new SequentialCommandGroup(
+        //     intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
+        //     new ParallelCommandGroup(
+        //         manipulator.run(),
+        //         indexer.run(),
+        //         intake.run()
+        //     )
+        // )).onFalse(
+        //     new SequentialCommandGroup(
+        //         intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
+        //     new ParallelCommandGroup(
+        //     manipulator.stop(),
+        //     indexer.stop(),
+        //     intake.stop()
+        // )));
 
         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
         //             intake.run()
@@ -108,20 +114,37 @@ public class RobotContainer {
 
     }
 
-    public Command intakeCoral() {
-        Elevator elevator = Elevator.getInstance();
-        Indexer indexer = Indexer.getInstance();
-        Manipulator manipulator = Manipulator.getInstance();
-        return elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR).
-        alongWith(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
-        andThen(intake.run()).
-        alongWith(indexer.run()).
-        alongWith(manipulator.run()).
-        until(manipulator::coralIn).
-        andThen(manipulator.stop()).
-        alongWith(indexer.stop()).
-        alongWith(intake.stop()).
-        andThen(intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR));
+    public Command tobleIntake() {
+        return new InstantCommand(() -> {
+            if (!intaking) {
+                startIntaking().schedule();
+            } else {
+                stopIntaking().schedule();
+            }
+
+            intaking = !intaking;
+        });
+    }
+
+    public Command startIntaking() {
+       return new SequentialCommandGroup(
+            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
+            new ParallelCommandGroup(
+                manipulator.run(),
+                indexer.run(),
+                intake.run()
+            )
+        ); 
+    }
+
+    public Command stopIntaking() {
+       return new SequentialCommandGroup(
+            intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
+        new ParallelCommandGroup(
+        manipulator.stop(),
+        indexer.stop(),
+        intake.stop()
+        ));
     }
 
     public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
