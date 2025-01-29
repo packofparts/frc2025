@@ -11,7 +11,6 @@ import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
-import poplib.smart_dashboard.TunableNumber;
 import poplib.swerve.commands.TeleopSwerveDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,15 +28,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    Swerve swerve;
-    Elevator elevator;
-    Indexer indexer;
-    Intake intake;
-    Manipulator manipulator;
-    OI oi;
-    SendableChooser<Command> scoring;
+    public final Swerve swerve;
+    public final Elevator elevator;
+    public final Indexer indexer;
+    public final Intake intake;
+    public final Manipulator manipulator;
+    public final OI oi;
+    public final SendableChooser<Command> scoring;
 
-    boolean intaking;
+    public boolean intaking;
 
     public RobotContainer() {
         swerve = Swerve.getInstance();
@@ -69,32 +68,7 @@ public class RobotContainer {
 
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
 
-        // Intake 
         oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
-
-         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
-        // new SequentialCommandGroup(
-        //     intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
-        //     new ParallelCommandGroup(
-        //         manipulator.run(),
-        //         indexer.run(),
-        //         intake.run()
-        //     
-        // )).onFalse(
-        //     new SequentialCommandGroup(
-        //         intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), 1),
-        //     new ParallelCommandGroup(
-        //     manipulator.stop(),
-        //     indexer.stop(),
-        //     intake.stop()
-        // )));
-
-        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(
-        //             intake.run()
-        //     ).onFalse(
-        //         intake.stop()
-        //     );
-    
 
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
             intake.reverse(),
@@ -106,29 +80,19 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> { 
-            ((Command) scoring.getSelected()).schedule();
-        }));
-
-        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.5)).onFalse(elevator.stop());
-
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> ((Command) scoring.getSelected()).schedule()));
     }
 
     public Command tobleIntake() {
         return new InstantCommand(() -> {
-            if (!intaking) {
-                startIntaking().schedule();
-            } else {
-                stopIntaking().schedule();
-            }
-
+            (!intaking ? startIntaking() : stopIntaking()).schedule();
             intaking = !intaking;
         });
     }
 
     public Command startIntaking() {
        return new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), 1),
+            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
                 manipulator.run(),
                 indexer.run(),
@@ -138,13 +102,13 @@ public class RobotContainer {
     }
 
     public Command stopIntaking() {
-       return new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR),
-            new ParallelCommandGroup(
-                manipulator.stop(),
-                indexer.stop(),
-                intake.stop()
-            )
+       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
+            andThen(
+                new ParallelCommandGroup(
+                    manipulator.stop(),
+                    indexer.stop(),
+                    intake.stop()
+                )
         );
     }
 
@@ -166,6 +130,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-    return null;
+        return null;
     }
 }
