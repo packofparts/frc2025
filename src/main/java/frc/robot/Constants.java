@@ -17,6 +17,7 @@ import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import java.io.IOException;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -211,9 +212,9 @@ public final class Constants {
         public static final double THETA_TOLERANCE = 0.0;
 
         /* Pid Controllers */ //TODO: to be tuned
-        public static final PIDController Y_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
-        public static final PIDController X_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
-        public static final PIDController THETA_PID_CONTROLLER = new PIDController(-1, -1, -1, -1);
+        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
+        public static final PIDController X_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
 
 
 
@@ -222,31 +223,9 @@ public final class Constants {
         /** Default offset value. */
         public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.0, 0.0);
 
-        /*Scoring poses */ // TODO : get the scoring alignments and coordinates
-        public static final Pose2d[] SCORING_POSES = {
-            new Pose2d(-1, -1, Rotation2d.fromDegrees(-1))
-        };
-    }
-
-    public static class Vision {
         public static final double AMBIGUITY_THRESHOLD = -1;
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = createFieldLayout();
+        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
         
-        /**
-         * Since the april tag field layout constructor throws something, we need
-         * create a method to handle it.
-         */ 
-        private static AprilTagFieldLayout createFieldLayout() {
-            try {
-                return new AprilTagFieldLayout(Filesystem
-                    .getDeployDirectory()
-                    .toPath()
-                    .resolve("april-tag-layout.json")
-                );
-            } catch (IOException e) {
-                throw new Error(e);
-            }
-        }
         public static final Translation3d CAMERA_POS_METERS =
             new Translation3d(
                 -1, //meters
