@@ -16,8 +16,13 @@ import poplib.sensors.camera.Camera;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.photonvision.EstimatedRobotPose;
+import javax.swing.text.html.HTMLDocument.Iterator;
 
+import org.opencv.photo.Photo;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import poplib.control.PIDConfig;
 import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.Limelight;
@@ -43,11 +48,18 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
 import poplib.swerve.swerve_templates.VisionBaseSwerve;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -56,14 +68,11 @@ public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
     private static List<CameraConfig> cameraConfigs;
     private static List<LimelightConfig> limelightConfigs;
-<<<<<<< HEAD
     private static Alliance color;
     private static PIDController xaxisPid;
     private static PIDController yaxisPid;
     private static PIDController thetaPid;
-=======
     private static Camera camera;
->>>>>>> a9783ae (implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data)
 
     
     public static Swerve getInstance() {
@@ -95,21 +104,14 @@ public class Swerve extends VisionBaseSwerve {
         xaxisPid.setTolerance(Constants.AutoAlign.X_TOLERANCE);
         yaxisPid.setTolerance(Constants.AutoAlign.Y_TOLERANCE);
         thetaPid.setTolerance(Constants.AutoAlign.THETA_TOLERANCE);
+
+        thetaPid.enableContinuousInput(0, 2 * Math.PI);
     }
     /**
      * poseSupplier = reference to april tag position
      * newOffset = vector relative to poseSupplier/where the robot needs to be
     */
     private Command moveToPoseOdom(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
-<<<<<<< HEAD
-=======
-        PIDController yaxisPid = Constants.AutoAlign.Y_PID_CONTROLLER;
-        PIDController xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
-        PIDController thetaPid = Constants.AutoAlign.THETA_PID_CONTROLLER;
-        
->>>>>>> a9783ae (implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data)
-        thetaPid.enableContinuousInput(0, 2 * Math.PI);
-
         return runOnce(() -> {
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
@@ -251,18 +253,5 @@ public class Swerve extends VisionBaseSwerve {
     
     public Command moveToAprilTagVision(int tagID, Translation2d tagOffset) {
         return moveToPoseVision(tagOffset);
-    } 
-
-
-
-    
-    public Command moveToAprilTagVision(int tagID, Translation2d tagOffset) {
-        return moveToPoseVision(
-            () -> Constants.Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
-            tagOffset
-        );
-    } 
-
-
-    
+    }     
 }
