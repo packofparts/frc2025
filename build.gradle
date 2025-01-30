@@ -90,7 +90,7 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    implementation 'org.packofparts:poplib:1.0.7'
+    implementation 'org.packofparts:poplib:latest.release'
 }
 
 test {
