@@ -36,7 +36,7 @@ public class RobotContainer {
     public final OI oi;
     public final SendableChooser<Command> scoring;
 
-    public boolean intaking;
+    private boolean intaking;
 
     public RobotContainer() {
         swerve = Swerve.getInstance();
@@ -46,7 +46,7 @@ public class RobotContainer {
         indexer = Indexer.getInstance();
         intake = Intake.getInstance();
 
-        scoring = new SendableChooser<Command>();
+        scoring = new SendableChooser<>();
         scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
         scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
         scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
@@ -56,6 +56,10 @@ public class RobotContainer {
 
         intaking = false;
         configureBindings();
+    }
+
+    public boolean getIntaking() {
+        return intaking;
     }
 
 
@@ -80,7 +84,7 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> ((Command) scoring.getSelected()).schedule()));
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> scoring.getSelected().schedule()));
     }
 
     public Command tobleIntake() {

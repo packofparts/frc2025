@@ -15,7 +15,6 @@ import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
 
-import org.opencv.video.FarnebackOpticalFlow;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,9 +38,9 @@ public final class Constants {
     public static class Elevator {
         public enum SETPOINTS {
             IDLE(0),
-            L1(150 / 5),
-            L2(200 / 5),
-            L3(350 / 5);
+            L1(30),
+            L2(40),
+            L3(60);
 
             private double setpoint;
 

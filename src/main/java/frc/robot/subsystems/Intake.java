@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 
-import poplib.sensors.absolute_encoder.DutyCycleAbsoluteEncoder;
 import poplib.subsytems.pivot.SparkPivot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 

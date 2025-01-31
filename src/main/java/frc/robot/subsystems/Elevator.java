@@ -4,8 +4,6 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,27 +49,20 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command moveElevator(double setPoint) {
-        return run(() -> {
-            setpoint.setDefault(setPoint);
-        }).until(() ->  MathUtil.getError(rightMotor, setPoint) < Constants.Elevator.MAX_ERROR);
+        return run(() -> setpoint.setDefault(setPoint))
+        .until(() -> MathUtil.getError(rightMotor, setPoint) < Constants.Elevator.MAX_ERROR);
     }
 
     public Command moveUp() {
-        return runOnce(() -> {
-            rightMotor.set(Math.abs(Constants.Elevator.MOTOR_SPEED));
-        });
+        return runOnce(() -> rightMotor.set(Math.abs(Constants.Elevator.MOTOR_SPEED)));
     }
 
     public Command moveDown() {
-        return runOnce(() -> {
-            rightMotor.set(-Math.abs(Constants.Elevator.MOTOR_SPEED));
-        });
+        return runOnce(() -> rightMotor.set(-Math.abs(Constants.Elevator.MOTOR_SPEED)));
     }
 
     public Command stop() {
-        return runOnce(() -> {
-            rightMotor.set(0.0);
-        });
+        return runOnce(() -> rightMotor.set(0.0));
     }
 
     public boolean isAtBottom() {
@@ -99,7 +90,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Left Elevator Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
-        if (!resetSequence || Constants.Elevator.TUNNING_MODE) { 
+        if (!resetSequence) { 
             rightMotor.getClosedLoopController().setReference(
                 setpoint.get(), 
                 ControlType.kPosition,
