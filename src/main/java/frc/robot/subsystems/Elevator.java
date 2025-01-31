@@ -47,7 +47,7 @@ public class Elevator extends SubsystemBase {
 
         resetSequence = false; 
 
-        setpoint = new TunableNumber("Elevator Setpoint", 10.0, Constants.Elevator.TUNNING_MODE); 
+        setpoint = new TunableNumber("Elevator Setpoint", Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.TUNNING_MODE); 
     }
 
     public Command moveElevator(double setPoint) {
@@ -106,8 +106,6 @@ public class Elevator extends SubsystemBase {
                 ClosedLoopSlot.kSlot0,
                 Constants.Elevator.FF.calculate(0.0)
             );
-
-            System.out.println( Constants.Elevator.FF.calculate(0.0));
         }
 
         tuning.updatePID(rightMotor);

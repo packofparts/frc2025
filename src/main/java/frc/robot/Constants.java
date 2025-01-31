@@ -6,6 +6,7 @@ package frc.robot;
 
 import poplib.control.FFConfig;
 import poplib.control.PIDConfig;
+import poplib.motor.ConversionConfig;
 import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
@@ -13,10 +14,14 @@ import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
+
+import org.opencv.video.FarnebackOpticalFlow;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.units.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -32,7 +37,7 @@ public final class Constants {
     }
 
     public static class Elevator {
-        enum SETPOINTS {
+        public enum SETPOINTS {
             IDLE(0),
             L1(150 / 5),
             L2(200 / 5),
@@ -99,12 +104,16 @@ public final class Constants {
     }
 
     public static final class Intake {
+        public static final double GEAR_RATIO = 157.5;
+
         public static final MotorConfig PIVOT = new MotorConfig(
             22, 
+            "",
             40, 
             true, 
             new PIDConfig(0.08),
-            Mode.COAST
+            Mode.COAST,
+            new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
 
         public static final MotorConfig SPIN = new MotorConfig(
@@ -114,20 +123,19 @@ public final class Constants {
             Mode.COAST
         );
 
-        public static final double GEAR_RATIO = 25.0 * 2.1;
         public static final boolean TUNING_MODE = false;
 
         public static final FFConfig FF = new FFConfig(0.5, 0.0, 0.0);
 
-        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, new Rotation2d(360), false);
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, Rotation2d.fromDegrees(-48.0), true);
         public static final double MAX_ERROR = 1.0;
         public static final double SPEED = 1.0;
 
-        enum SETPOINTS {  
-            IDLE(40),
+        public enum SETPOINTS {  
+            IDLE(90),
             ALGAE_PICKUP(25),
             ALGAE_DROP(35),
-            CORAL_PICKUP(-9);
+            CORAL_PICKUP(-30);
 
             private double setpoint;
 
