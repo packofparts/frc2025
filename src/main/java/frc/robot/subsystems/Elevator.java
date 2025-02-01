@@ -39,7 +39,6 @@ public class Elevator extends SubsystemBase {
         tuning = Constants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", Constants.Elevator.TUNNING_MODE);
 
         rightMotor.getEncoder().setPosition(0.0);
-        leftMotor.getEncoder().setPosition(0.0);
 
         limitSwitch = new DigitalInput(3);
 
@@ -49,8 +48,11 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command moveElevator(double setPoint) {
-        return run(() -> setpoint.setDefault(setPoint))
-        .until(() -> MathUtil.getError(rightMotor, setPoint) < Constants.Elevator.MAX_ERROR);
+        return run(() -> {
+            setpoint.setDefault(setPoint);
+            System.out.println("Running to : " + setPoint);
+        })
+        .until(() -> Math.abs(rightMotor.getEncoder().getPosition() - setPoint) < Constants.Elevator.MAX_ERROR);
     }
 
     public Command moveUp() {
@@ -86,18 +88,18 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Position Meters", rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Elevator Position Right", rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Left Elevator Position", leftMotor.getEncoder().getPosition());
         SmartDashboard.putBoolean("At Bottom", isAtBottom());
 
-        if (!resetSequence) { 
+        // if (!resetSequence) { 
             rightMotor.getClosedLoopController().setReference(
                 setpoint.get(), 
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0,
-                Constants.Elevator.FF.calculate(0.0)
+                0.45
             );
-        }
+        // }
 
         tuning.updatePID(rightMotor);
     }
