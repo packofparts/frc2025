@@ -75,16 +75,16 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
 
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-            intake.reverse(),
-            indexer.reverse(),
-            manipulator.reverse()
+            // intake.reverse(),
+            // indexer.reverse(),
+            manipulator.run()
         )).onFalse(new ParallelCommandGroup(
             intake.stop(),
             indexer.stop(),
             manipulator.stop()
         ));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> scoring.getSelected().schedule()));
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(Constants.Elevator.SETPOINTS.L2));
     }
 
     public Command tobleIntake() {

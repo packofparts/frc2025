@@ -26,9 +26,8 @@ public class Indexer extends SubsystemBase {
 
     public Command run() {
         return runOnce(() -> {
-            System.out.println("Trying to run Indexer");
             motor.set(Constants.Indexer.SPEED);
-            motor2.set(Constants.Indexer.SPEED * 0.3);
+            motor2.set(Constants.Indexer.SPEED * 1.0);
         });
     }
 
@@ -42,7 +41,7 @@ public class Indexer extends SubsystemBase {
     public Command reverse() {
         return runOnce(() -> {
             motor.set(-1 * Constants.Indexer.SPEED);
-            motor2.set(-1 * Constants.Indexer.SPEED * 0.3);
+            motor2.set(-1 * Constants.Indexer.SPEED * 0.1);
         });
     }
 

@@ -40,7 +40,7 @@ public final class Constants {
             IDLE(0),
             L1(30),
             L2(40),
-            L3(60);
+            L3(72);
 
             private double setpoint;
 
@@ -56,16 +56,16 @@ public final class Constants {
         public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            26, 
+            25, 
             20, 
             false, 
-            new PIDConfig(0.12, 0, 0, 0), // 0.1
-            Mode.COAST
+            new PIDConfig(0.12, 0, 0, 0), // 0.12
+            Mode.BRAKE
         );
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 25);
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 26);
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.47, 0);
+        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0);
 
         public static final double MOTOR_SPEED = 0.5;
         public static final double MAX_ERROR = 1.0;
@@ -99,7 +99,7 @@ public final class Constants {
             Mode.COAST
         );    
 
-        public static final double SPEED = 0.8;
+        public static final double SPEED = 1.0;
     }
 
     public static final class Intake {
@@ -131,7 +131,7 @@ public final class Constants {
         public static final double SPEED = 1.0;
 
         public enum SETPOINTS {  
-            IDLE(90),
+            IDLE(0),
             ALGAE_PICKUP(25),
             ALGAE_DROP(35),
             CORAL_PICKUP(-30);
