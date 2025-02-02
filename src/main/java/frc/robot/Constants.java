@@ -220,45 +220,21 @@ public final class Constants {
     }
 
     public static class AutoAlign {
-        public static final Rotation2d DEFAULT_ROTATION = Rotation2d.fromDegrees(-1); //180 or 0
-        
-
         /** PID tolerance. */ // TODO : to be tuned
-        public static final double X_TOLERANCE = 0.0;
-        public static final double Y_TOLERANCE = 0.0;
-        public static final double THETA_TOLERANCE = 0.0;
+        public static final double X_TOLERANCE = 0.1;
+        public static final double Y_TOLERANCE = 0.1;
+        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(0.5);
 
         /* Pid Controllers */ //TODO: to be tuned
-        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
-        public static final PIDController X_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
-        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(-1, -1, -1, -1).getPIDController();
+        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.0, 0.0, 0.0, 0.0).getPIDController(); //0.5
 
 
 
         public static final double ERROR = 0.0;
 
         /** Default offset value. */
-        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.0, 0.0);
-
-        public static final double AMBIGUITY_THRESHOLD = -1;
-        public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-        
-        public static final Translation3d CAMERA_POS_METERS =
-            new Translation3d(
-                -1, //meters
-                -1,
-                -1);
-        public static final Rotation3d CAMERA_ANGLE_DEGREES = 
-            new Rotation3d(
-                -1, //radians
-                -1,
-                -1).unaryMinus(); //what is this
-
-        public static final Transform3d CAMERA_TO_ROBOT_METERS_DEGREES = 
-            new Transform3d(
-                CAMERA_POS_METERS.unaryMinus(), 
-                CAMERA_ANGLE_DEGREES); 
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.5, 0.0);
     }
-
-
 }

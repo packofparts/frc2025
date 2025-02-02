@@ -1,38 +1,18 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Arrays;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
-
-import org.opencv.photo.Photo;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import poplib.control.PIDConfig;
-import poplib.sensors.camera.Camera;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
-
-import org.opencv.photo.Photo;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import poplib.control.PIDConfig;
 import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
-import poplib.sensors.camera.Limelight;
 import poplib.sensors.camera.LimelightConfig;
+import poplib.sensors.camera.StdDevStategy;
 import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
-import poplib.swerve.swerve_modules.SwerveModule;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import poplib.swerve.swerve_templates.VisionBaseSwerve;
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -41,38 +21,22 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import poplib.swerve.swerve_templates.VisionBaseSwerve;
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.util.VisionBaseSwerve;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
-    private static List<CameraConfig> cameraConfigs;
-    private static List<LimelightConfig> limelightConfigs;
     private static Alliance color;
+
     private static PIDController xaxisPid;
     private static PIDController yaxisPid;
     private static PIDController thetaPid;
-    private static Camera camera;
+
+    private Pose2d relativePosition;
 
     
     public static Swerve getInstance() {
@@ -92,8 +56,14 @@ public class Swerve extends VisionBaseSwerve {
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
             Constants.Swerve.SWERVE_KINEMATICS,
-            cameraConfigs,
-            limelightConfigs
+            new ArrayList<CameraConfig>(Arrays.asList(new CameraConfig("RaoVisionFLCam", 
+                new Transform3d(
+                    Units.inchesToMeters(-12.521), 
+                    Units.inchesToMeters(-11.056), 
+                    Units.inchesToMeters(10.1), 
+                    new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), 
+                    0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
+            new ArrayList<LimelightConfig>()
         );
 
         xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
@@ -107,11 +77,20 @@ public class Swerve extends VisionBaseSwerve {
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
     }
+
+    public void turnCommand(Rotation2d rot) {
+        runOnce(() -> {
+            thetaPid.setSetpoint(rot.getRadians());
+        }).andThen(run(() -> {
+            driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
+        })).until(thetaPid::atSetpoint);
+    }
+
     /**
      * poseSupplier = reference to april tag position
      * newOffset = vector relative to poseSupplier/where the robot needs to be
     */
-    private Command moveToPoseOdom(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
+    public Command moveToPoseOdom(Supplier<Pose2d> poseSupplier, Translation2d newOffset) {
         return runOnce(() -> {
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
@@ -138,7 +117,7 @@ public class Swerve extends VisionBaseSwerve {
             yaxisPid.setSetpoint(offsetTarget.getY());
 
             /** Invert theta to ensure we're facing towards the target */
-            thetaPid.setSetpoint(targetRot.minus(Constants.AutoAlign.DEFAULT_ROTATION).getRadians());
+            thetaPid.setSetpoint(0.0);
 
             xaxisPid.calculate(odom.getEstimatedPosition().getX());
             yaxisPid.calculate(odom.getEstimatedPosition().getY());
@@ -165,13 +144,9 @@ public class Swerve extends VisionBaseSwerve {
     }
 
 
-    /*newOffset = the offset off the target april tag */
-    private Command moveToPoseVision(Translation2d newOffset) {
-        thetaPid.enableContinuousInput(0, 2 * Math.PI);
-
-        getFirstRelativeVisionPose();
-
+    public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
+            System.out.println("RUn Once Running");
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
             }
@@ -181,29 +156,44 @@ public class Swerve extends VisionBaseSwerve {
     
             Translation2d offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
-            Pose2d relativePosition = getFirstRelativeVisionPose();
+            // relativePosition = getFirstRelativeVisionPose();
 
             xaxisPid.setSetpoint(offset.getX());
             yaxisPid.setSetpoint(offset.getY());
-            thetaPid.setSetpoint(0.0);
+            thetaPid.setSetpoint(getOdomPose().getRotation().getRadians() - Units.degreesToRadians(15));
 
-            xaxisPid.calculate(relativePosition.getX());
-            yaxisPid.calculate(relativePosition.getY());
-            thetaPid.calculate(relativePosition.getRotation().getRadians());
 
+            if (relativePosition != null) {
+                System.out.println("Relative Posiiotn is not null");
+                xaxisPid.calculate(relativePosition.getX());
+                yaxisPid.calculate(relativePosition.getY());
+                thetaPid.calculate(getOdomPose().getRotation().getRadians());
+            } else {
+                System.out.println("Relative Posiiotn is  null");
+                xaxisPid.calculate(offset.getX());
+                yaxisPid.calculate(offset.getY());
+                thetaPid.calculate(0.0);          
+            }
         }).andThen(run(
             () -> {
-                Pose2d relativePosition = getFirstRelativeVisionPose();
-                drive(
+                // Pose2d newRelativePosition = getFirstRelativeVisionPose();
+
+                // if (newRelativePosition != null) {
+                //     relativePosition = newRelativePosition;
+                // }
+
+                driveRobotOriented(
                     new Translation2d(
                         xaxisPid.calculate(relativePosition.getX()),
                         yaxisPid.calculate(relativePosition.getY())),
-                    thetaPid.calculate(relativePosition.getRotation().getRadians()),
-                    color);
+                    0.0);
             }
         )).until(
-            () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()
-        ).andThen(
+            () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint()
+        ).andThen(run(
+            () -> {
+                driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
+        })).andThen(
             () -> { 
                 xaxisPid.close(); 
                 yaxisPid.close(); 
@@ -212,46 +202,20 @@ public class Swerve extends VisionBaseSwerve {
         );
     }
 
-    private Pose2d getNearestScoringPos() {
-        Translation2d currentTranslation = odom
-            .getEstimatedPosition()
-            .getTranslation(); 
+    @Override
+    public void periodic() {
+        super.periodic();
 
-        double minDistance = Double.MAX_VALUE;
-        Pose3d closestScoringPos = null;
+        Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
-        for (AprilTag aprilTag : Constants.AutoAlign.APRIL_TAG_FIELD_LAYOUT.getTags()) {
-            Translation3d translation = aprilTag.pose.getTranslation();
-            double distance = currentTranslation.getDistance(translation.toTranslation2d());
-
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestScoringPos = aprilTag.pose;
-            }
+        if (newRelativePosition != null) {
+            relativePosition = newRelativePosition;
         }
-
-        return closestScoringPos.toPose2d(); 
+        
+        if (relativePosition != null) { 
+            SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
+            SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
+            SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
+        }
     }
-
-    public Command moveToNearestScoringPosOdom(Translation2d tagOffset) {
-        return moveToPoseOdom(() -> getNearestScoringPos(), tagOffset);
-    }
-
-    public Command moveToNearestScoringPosVision(Translation2d tagOffset) {
-        return moveToPoseVision(tagOffset);
-    }
-
-    /**
-     * Auto move to april tag.
-     */
-    public Command moveToAprilTagOdom(int tagID, Translation2d tagOffset) {
-        return moveToPoseOdom(
-            () -> Constants.AutoAlign.APRIL_TAG_FIELD_LAYOUT.getTagPose(tagID).get().toPose2d(),
-            tagOffset
-        );
-    }  
-    
-    public Command moveToAprilTagVision(int tagID, Translation2d tagOffset) {
-        return moveToPoseVision(tagOffset);
-    }     
 }
