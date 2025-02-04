@@ -126,6 +126,9 @@ public class Swerve extends VisionBaseSwerve {
             /** Invert theta to ensure we're facing towards the target */
             thetaPid.setSetpoint(0.0);
 
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getX());
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getY());
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getRotation().getRadians());
             xaxisPid.calculate(odom.getEstimatedPosition().getX());
             yaxisPid.calculate(odom.getEstimatedPosition().getY());
             thetaPid.calculate(odom.getEstimatedPosition().getRotation().getRadians());
@@ -202,6 +205,10 @@ public class Swerve extends VisionBaseSwerve {
             }
         )).until(
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint()
+        ).andThen(
+            () -> { 
+                xaxisPid.close(); 
+                yaxisPid.close(); 
         ).andThen(() -> {
             xaxisPid.close();
             yaxisPid.close();
