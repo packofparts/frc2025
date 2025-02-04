@@ -14,13 +14,13 @@ import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
-
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.units.Units;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -202,4 +202,22 @@ public final class Constants {
         public static final int PIGEON_ID = 13;
     }
 
+    public static class AutoAlign {
+        /** PID tolerance. */ // TODO : to be tuned
+        public static final double X_TOLERANCE = 0.1;
+        public static final double Y_TOLERANCE = 0.1;
+        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(2.0);
+
+        /* Pid Controllers */ //TODO: to be tuned
+        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
+
+
+
+        public static final double ERROR = 0.0;
+
+        /** Default offset value. */
+        public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.5, 0.0);
+    }
 }

@@ -12,6 +12,8 @@ import frc.robot.subsystems.Swerve;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.TeleopSwerveDrive;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,104 +31,108 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class RobotContainer {
     public final Swerve swerve;
-    public final Elevator elevator;
-    public final Indexer indexer;
-    public final Intake intake;
-    public final Manipulator manipulator;
+    // public final Elevator elevator;
+    // public final Indexer indexer;
+    // public final Intake intake;
+    // public final Manipulator manipulator;
     public final OI oi;
-    public final SendableChooser<Command> scoring;
-
+    // public final SendableChooser<Command> scoring;
+  
     private boolean intaking;
 
     public RobotContainer() {
         swerve = Swerve.getInstance();
         oi = XboxOI.getInstance();
-        elevator = frc.robot.subsystems.Elevator.getInstance();
-        manipulator = Manipulator.getInstance();
-        indexer = Indexer.getInstance();
-        intake = Intake.getInstance();
+        // elevator = frc.robot.subsystems.Elevator.getInstance();
+        // manipulator = Manipulator.getInstance();
+        // indexer = Indexer.getInstance();
+        // intake = Intake.getInstance();
 
-        scoring = new SendableChooser<>();
-        scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
-        scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
-        scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
-        SmartDashboard.putData(scoring);
+        // scoring = new SendableChooser<>();
+        // scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
+        // scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
+        // scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        // SmartDashboard.putData(scoring);
 
         swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(thing());
+
         intaking = false;
-        configureBindings();
+        // configureBindings();
     }
 
     public boolean getIntaking() {
         return intaking;
     }
 
-
-    private void configureBindings() {
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
-
-        // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
-        // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
-
-        oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
-
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
-
-        oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-            // intake.reverse(),
-            // indexer.reverse(),
-            manipulator.run()
-        )).onFalse(new ParallelCommandGroup(
-            intake.stop(),
-            indexer.stop(),
-            manipulator.stop()
-        ));
-
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(Constants.Elevator.SETPOINTS.L2));
-    }
-
-    public Command tobleIntake() {
-        return new InstantCommand(() -> {
-            (!intaking ? startIntaking() : stopIntaking()).schedule();
-            intaking = !intaking;
-        });
-    }
-
-    public Command startIntaking() {
-       return new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
-            new ParallelCommandGroup(
-                manipulator.run(),
-                indexer.run(),
-                intake.run()
-            )
-        ); 
-    }
-
-    public Command stopIntaking() {
-       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
-            andThen(
-                new ParallelCommandGroup(
-                    manipulator.stop(),
-                    indexer.stop(),
-                    intake.stop()
-                )
-        );
-    }
-
-    public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
-        return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
-            andThen(elevator.moveElevator(setpoint.getSetpoint()).
-            andThen(manipulator.run()).
-            andThen(new WaitCommand(1.0)).
-            andThen(manipulator.stop()).
-            andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
-        );
+    public Command thing() {
+        return swerve.moveToPoseVision(null);
     }
 
 
+    // private void configureBindings() {
+    //     // SysIdSwerve sys = new SysIdSwerve(swerve);
+    //     // SysIdSwerve sys = new SysIdSwerve(swerve);
+
+    //     // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
+    //     // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
+    //     oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(null));
+    //     oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
+
+    //     oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
+
+    //     oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
+    //         // intake.reverse(),
+    //         // indexer.reverse(),
+    //         manipulator.run()
+    //     )).onFalse(new ParallelCommandGroup(
+    //         intake.stop(),
+    //         indexer.stop(),
+    //         manipulator.stop()
+    //     ));
+
+    //     oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(Constants.Elevator.SETPOINTS.L2));
+    // }
+
+    // public Command tobleIntake() {
+    //     return new InstantCommand(() -> {
+    //         (!intaking ? startIntaking() : stopIntaking()).schedule();
+    //         intaking = !intaking;
+    //     });
+    // }
+
+    // public Command startIntaking() {
+    //    return new SequentialCommandGroup(
+    //         intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
+    //         new ParallelCommandGroup(
+    //             manipulator.run(),
+    //             indexer.run(),
+    //             intake.run()
+    //         )
+    //     ); 
+    // }
+
+    // public Command stopIntaking() {
+    //    return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
+    //         andThen(
+    //             new ParallelCommandGroup(
+    //                 manipulator.stop(),
+    //                 indexer.stop(),
+    //                 intake.stop()
+    //             )
+    //     );
+    // }
+
+    // public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
+    //     return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
+    //         andThen(elevator.moveElevator(setpoint.getSetpoint()).
+    //         andThen(manipulator.run()).
+    //         andThen(new WaitCommand(1.0)).
+    //         andThen(manipulator.stop()).
+    //         andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
+    //     );
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
