@@ -106,7 +106,7 @@ public class Swerve extends VisionBaseSwerve {
                 color = Alliance.Blue;
             }
     
-            Translation2d offset = newOffset;
+            offset = newOffset;
 
             if (offset == null) {
                 offset = Constants.AutoAlign.DEFAULT_OFFSET;
@@ -203,14 +203,15 @@ public class Swerve extends VisionBaseSwerve {
         )).until(
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint()
         ).andThen(() -> {
+            xaxisPid.close();
+            yaxisPid.close();
             thetaPid.setSetpoint(relativePosition.getRotation().getMeasure().in(edu.wpi.first.units.Units.Radians));
         }).
         andThen(run(() -> {
                 driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
-        })).andThen(
-            () -> { 
-                xaxisPid.close(); 
-                yaxisPid.close(); 
+        })).until(thetaPid::atSetpoint)
+        .andThen(
+            () -> {
                 thetaPid.close(); 
             }
         );
@@ -226,7 +227,7 @@ public class Swerve extends VisionBaseSwerve {
             relativePosition = newRelativePosition;
             timeSinceLastValid = 0;
         } else if (timeSinceLastValid >= 25) {
-            relativePosition = null;
+            breakOut = true;
         }
         
         if (relativePosition != null) { 
