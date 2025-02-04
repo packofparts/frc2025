@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -22,6 +23,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,7 +40,9 @@ public class Swerve extends VisionBaseSwerve {
     private static PIDController thetaPid;
 
     private Pose2d relativePosition;
-
+    private int timeSinceLastValid;
+    private boolean breakOut;
+    private Translation2d offset;
     
     public static Swerve getInstance() {
         if (instance == null) {
@@ -76,6 +81,8 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.setTolerance(Constants.AutoAlign.THETA_TOLERANCE);
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
+
+        timeSinceLastValid = 0;
     }
 
     public void turnCommand(Rotation2d rot) {
@@ -154,13 +161,13 @@ public class Swerve extends VisionBaseSwerve {
                 color = Alliance.Blue;
             }
     
-            Translation2d offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+            offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
             // relativePosition = getFirstRelativeVisionPose();
 
             xaxisPid.setSetpoint(offset.getX());
             yaxisPid.setSetpoint(offset.getY());
-            thetaPid.setSetpoint(getOdomPose().getRotation().getRadians() - Units.degreesToRadians(15));
+            thetaPid.setSetpoint(0.0);
 
 
             if (relativePosition != null) {
@@ -181,17 +188,24 @@ public class Swerve extends VisionBaseSwerve {
                 // if (newRelativePosition != null) {
                 //     relativePosition = newRelativePosition;
                 // }
-
+                if (breakOut) {
+                    xaxisPid.calculate(offset.getX());
+                    yaxisPid.calculate(offset.getY());
+                    breakOut = false;
+                } else {
                 driveRobotOriented(
                     new Translation2d(
                         xaxisPid.calculate(relativePosition.getX()),
                         yaxisPid.calculate(relativePosition.getY())),
                     0.0);
+                }
             }
         )).until(
             () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint()
-        ).andThen(run(
-            () -> {
+        ).andThen(() -> {
+            thetaPid.setSetpoint(relativePosition.getRotation().getMeasure().in(edu.wpi.first.units.Units.Radians));
+        }).
+        andThen(run(() -> {
                 driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
         })).andThen(
             () -> { 
@@ -210,6 +224,9 @@ public class Swerve extends VisionBaseSwerve {
 
         if (newRelativePosition != null) {
             relativePosition = newRelativePosition;
+            timeSinceLastValid = 0;
+        } else if (timeSinceLastValid >= 25) {
+            relativePosition = null;
         }
         
         if (relativePosition != null) { 

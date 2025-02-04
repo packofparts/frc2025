@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Vector;
+
+import javax.swing.text.html.HTML.Tag;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -27,6 +30,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.StdDevStategy;
 
+
+
 public class Camera {
     private final PhotonCamera camera;
     private final CameraConfig config;
@@ -49,11 +54,13 @@ public class Camera {
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
             if (result.hasTargets()) {
                 PhotonTrackedTarget target = result.getBestTarget();
+                Optional<Pose3d> pose = layout.getTagPose(target.getFiducialId());
+                if (pose.isPresent()) {
                 ret = Optional.of(new Pose2d(
                     new Translation2d(target.getBestCameraToTarget().getX(), target.getBestCameraToTarget().getY()), 
-                    Rotation2d.fromRadians(Math.atan(target.getBestCameraToTarget().getY() / target.getBestCameraToTarget().getX()))
-                ));
-            }
+                    Rotation2d.fromRadians(pose.get().getRotation().getZ())));
+                }
+           }
          }
 
         return ret;
