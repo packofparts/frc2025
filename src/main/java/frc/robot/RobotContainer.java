@@ -37,7 +37,7 @@ public class RobotContainer {
     // public final Manipulator manipulator;
     public final OI oi;
     // public final SendableChooser<Command> scoring;
-
+  
     private boolean intaking;
 
     public RobotContainer() {
@@ -133,8 +133,6 @@ public class RobotContainer {
     //         andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
     //     );
     // }
-
-
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
