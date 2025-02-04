@@ -1,35 +1,27 @@
 package frc.robot.subsystems;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
 import java.util.function.Supplier;
-import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.camera.StdDevStategy;
 import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.util.VisionBaseSwerve;
+import poplib.swerve.swerve_templates.VisionBaseSwerve;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
