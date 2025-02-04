@@ -223,12 +223,12 @@ public final class Constants {
         /** PID tolerance. */ // TODO : to be tuned
         public static final double X_TOLERANCE = 0.1;
         public static final double Y_TOLERANCE = 0.1;
-        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(0.5);
+        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(2.0);
 
         /* Pid Controllers */ //TODO: to be tuned
         public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
-        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.0, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
 
 
 

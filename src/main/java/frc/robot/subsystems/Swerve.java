@@ -41,7 +41,6 @@ public class Swerve extends VisionBaseSwerve {
 
     private Pose2d relativePosition;
     private int timeSinceLastValid;
-    private boolean breakOut;
     private Translation2d offset;
     
     public static Swerve getInstance() {
@@ -166,61 +165,28 @@ public class Swerve extends VisionBaseSwerve {
     
             offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
-            // relativePosition = getFirstRelativeVisionPose();
-
             xaxisPid.setSetpoint(offset.getX());
             yaxisPid.setSetpoint(offset.getY());
-            thetaPid.setSetpoint(0.0);
+            thetaPid.setSetpoint(Units.degreesToRadians(180)-relativePosition.getRotation().getRadians());
 
-
-            if (relativePosition != null) {
-                System.out.println("Relative Posiiotn is not null");
-                xaxisPid.calculate(relativePosition.getX());
-                yaxisPid.calculate(relativePosition.getY());
-                thetaPid.calculate(getOdomPose().getRotation().getRadians());
-            } else {
-                System.out.println("Relative Posiiotn is  null");
-                xaxisPid.calculate(offset.getX());
-                yaxisPid.calculate(offset.getY());
-                thetaPid.calculate(0.0);          
-            }
+            xaxisPid.calculate(relativePosition.getX());
+            yaxisPid.calculate(relativePosition.getY());
+            thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
         }).andThen(run(
             () -> {
-                // Pose2d newRelativePosition = getFirstRelativeVisionPose();
-
-                // if (newRelativePosition != null) {
-                //     relativePosition = newRelativePosition;
-                // }
-                if (breakOut) {
-                    xaxisPid.calculate(offset.getX());
-                    yaxisPid.calculate(offset.getY());
-                    breakOut = false;
-                } else {
                 driveRobotOriented(
                     new Translation2d(
                         xaxisPid.calculate(relativePosition.getX()),
                         yaxisPid.calculate(relativePosition.getY())),
-                    0.0);
-                }
+                        thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
             }
         )).until(
-            () -> xaxisPid.atSetpoint() && yaxisPid.atSetpoint()
-        ).andThen(
-            () -> { 
-                xaxisPid.close(); 
-                yaxisPid.close(); 
+            () -> (xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
         ).andThen(() -> {
             xaxisPid.close();
             yaxisPid.close();
-            thetaPid.setSetpoint(relativePosition.getRotation().getMeasure().in(edu.wpi.first.units.Units.Radians));
-        }).
-        andThen(run(() -> {
-                driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
-        })).until(thetaPid::atSetpoint)
-        .andThen(
-            () -> {
-                thetaPid.close(); 
-            }
+            thetaPid.close(); 
+           }
         );
     }
 
@@ -233,11 +199,13 @@ public class Swerve extends VisionBaseSwerve {
         if (newRelativePosition != null) {
             relativePosition = newRelativePosition;
             timeSinceLastValid = 0;
-        } else if (timeSinceLastValid >= 25) {
-            breakOut = true;
+        } else {
+            timeSinceLastValid++;
         }
-        
-        if (relativePosition != null) { 
+
+        SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
+    
+        if (relativePosition != null) {
             SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
             SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
             SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
