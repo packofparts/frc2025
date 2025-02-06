@@ -97,11 +97,7 @@ public class Swerve extends VisionBaseSwerve {
                 color = Alliance.Blue;
             }
     
-            offset = newOffset;
-
-            if (offset == null) {
-                offset = Constants.AutoAlign.DEFAULT_OFFSET;
-            }
+            offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
             Pose2d pose = poseSupplier.get();
             Rotation2d targetRot = pose.getRotation();
@@ -114,12 +110,8 @@ public class Swerve extends VisionBaseSwerve {
             xaxisPid.setSetpoint(offsetTarget.getX());
             yaxisPid.setSetpoint(offsetTarget.getY());
 
-            /** Invert theta to ensure we're facing towards the target */
             thetaPid.setSetpoint(0.0);
 
-            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getX());
-            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getY());
-            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getRotation().getRadians());
             xaxisPid.calculate(odom.getEstimatedPosition().getX());
             yaxisPid.calculate(odom.getEstimatedPosition().getY());
             thetaPid.calculate(odom.getEstimatedPosition().getRotation().getRadians());
@@ -147,7 +139,6 @@ public class Swerve extends VisionBaseSwerve {
 
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
-            System.out.println("RUn Once Running");
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
             }
@@ -164,6 +155,7 @@ public class Swerve extends VisionBaseSwerve {
             xaxisPid.calculate(relativePosition.getX());
             yaxisPid.calculate(relativePosition.getY());
             thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
+
         }).andThen(run(
             () -> {
                 driveRobotOriented(
@@ -198,9 +190,9 @@ public class Swerve extends VisionBaseSwerve {
         SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
     
         if (relativePosition != null) {
-            SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
-            SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
-            SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
+            SmartDashboard.putNumber("Relative Pose X", relativePosition.getX());
+            SmartDashboard.putNumber("Relative Pose Y", relativePosition.getY());
+            SmartDashboard.putNumber("Relative Pose Degrees", relativePosition.getRotation().getDegrees());
         }
     }
 }
