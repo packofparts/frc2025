@@ -137,6 +137,9 @@ public class Swerve extends VisionBaseSwerve {
     }
 
 
+/**
+ * newOffset = vector relative to april tag
+ */
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
             if (AllianceColor.getInstance().isRed() == true) {
