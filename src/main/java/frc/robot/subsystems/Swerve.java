@@ -21,7 +21,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import poplib.swerve.swerve_templates.VisionBaseSwerve;
+import frc.robot.util.VisionBaseSwerve;
+
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
@@ -57,7 +58,7 @@ public class Swerve extends VisionBaseSwerve {
                     Units.inchesToMeters(-12.521), 
                     Units.inchesToMeters(-11.056), 
                     Units.inchesToMeters(10.1), 
-                    new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), 
+                    new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), //0,4,15
                     0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
             new ArrayList<LimelightConfig>()
         );
@@ -202,5 +203,6 @@ public class Swerve extends VisionBaseSwerve {
             SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
             SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
         }
+        updateVisionPoses();
     }
 }
