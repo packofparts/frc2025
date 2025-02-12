@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.spark.SparkMax;
 
@@ -6,20 +6,20 @@ import poplib.subsytems.pivot.SparkPivot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
-public class Intake extends SparkPivot {
+public class AlphaIntake extends SparkPivot {
     private final SparkMax spin;
 
-    private static Intake instance;
+    private static AlphaIntake instance;
 
-    public static Intake getInstance() {
+    public static AlphaIntake getInstance() {
         if (instance == null) {
-            instance = new Intake();
+            instance = new AlphaIntake();
         }
 
         return instance;
     }
 
-    private Intake() {
+    private AlphaIntake() {
         super(Constants.Intake.PIVOT, null, Constants.Intake.GEAR_RATIO, Constants.Intake.FF, Constants.Intake.ENCODER, Constants.Intake.TUNING_MODE, "intake");
         super.setpoint.setDefault(Constants.Intake.SETPOINTS.IDLE.getSetpoint());
         spin = Constants.Intake.SPIN.createSparkMax();

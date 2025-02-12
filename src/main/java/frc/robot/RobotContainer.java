@@ -4,11 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Elevator.AlphaElevator;
+import frc.robot.subsystems.Indexer.AlphaIndexer;
+import frc.robot.subsystems.Intake.AlphaIntake;
+import frc.robot.subsystems.Manipulator.AlphaManipulator;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.TeleopSwerveDrive;
@@ -40,10 +40,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class RobotContainer {
     public final Swerve swerve;
-    public final Elevator elevator;
-    public final Indexer indexer;
-    public final Intake intake;
-    public final Manipulator manipulator;
+    public final AlphaElevator elevator;
+    public final AlphaIndexer indexer;
+    public final AlphaIntake intake;
+    public final AlphaManipulator manipulator;
     public final OI oi;
     private final SendableChooser<Command> autoChooser;
     // public final SendableChooser<Command> scoring;
@@ -54,10 +54,10 @@ public class RobotContainer {
     // swerve = Swerve.getInstance();
     swerve = Swerve.getInstance();
     oi = XboxOI.getInstance();
-    elevator = Elevator.getInstance();
-    manipulator = Manipulator.getInstance();
-    indexer = Indexer.getInstance();
-    intake = Intake.getInstance();
+    elevator = Elevator.AlphaElevator.getInstance();
+    manipulator = AlphaManipulator.getInstance();
+    indexer = AlphaIndexer.getInstance();
+    intake = AlphaIntake.getInstance();
     // scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
     // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
     autoChooser = AutoBuilder.buildAutoChooser();
