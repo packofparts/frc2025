@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Supplier;
-import poplib.sensors.camera.CameraConfig;
+import frc.robot.util.CameraConfig;
+import frc.robot.util.PipelineType;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.camera.StdDevStategy;
 import poplib.sensors.gyro.Pigeon;
@@ -21,7 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import poplib.swerve.swerve_templates.VisionBaseSwerve;
+import frc.robot.util.VisionBaseSwerve;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
@@ -34,6 +36,7 @@ public class Swerve extends VisionBaseSwerve {
     private Pose2d relativePosition;
     private int timeSinceLastValid;
     private Translation2d offset;
+    private double rotationNeededObjectDetection;
     
     public static Swerve getInstance() {
         if (instance == null) {
@@ -58,7 +61,7 @@ public class Swerve extends VisionBaseSwerve {
                     Units.inchesToMeters(-11.056), 
                     Units.inchesToMeters(10.1), 
                     new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), 
-                    0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
+                    0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape, PipelineType.APRIL_TAG))),
             new ArrayList<LimelightConfig>()
         );
 
@@ -74,14 +77,20 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         timeSinceLastValid = 0;
+
+        rotationNeededObjectDetection = 0.0;
     }
 
-    public void turnCommand(Rotation2d rot) {
-        runOnce(() -> {
-            thetaPid.setSetpoint(rot.getRadians());
-        }).andThen(run(() -> {
-            driveRobotOriented(new Translation2d(), thetaPid.calculate(getOdomPose().getRotation().getRadians()));
-        })).until(thetaPid::atSetpoint);
+    public Command driveForward() {
+        return run(() -> {
+            driveRobotOriented(new Translation2d(1.0, 0), 0);
+        });
+    }
+
+    public Command stop() {
+        return runOnce(() -> {
+            driveRobotOriented(new Translation2d(), 0);
+        });
     }
 
     /**
@@ -182,6 +191,18 @@ public class Swerve extends VisionBaseSwerve {
         );
     }
 
+    public Command rotateToObject() {
+        return runOnce(() -> {
+            thetaPid.setSetpoint(0.0);
+            thetaPid.calculate(rotationNeededObjectDetection);
+        }).andThen(run(
+            () -> {
+                driveRobotOriented(new Translation2d(), thetaPid.calculate(rotationNeededObjectDetection));
+            }
+        )).until(thetaPid::atSetpoint).
+        andThen(() -> {thetaPid.close();});
+    }    
+
     @Override
     public void periodic() {
         super.periodic();
@@ -193,6 +214,11 @@ public class Swerve extends VisionBaseSwerve {
             timeSinceLastValid = 0;
         } else {
             timeSinceLastValid++;
+        }
+
+        Optional<Double> rot = getRotationNeededForObjectDetection();
+        if (rot.isPresent()) {
+            rotationNeededObjectDetection = rot.get();
         }
 
         SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
