@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Elevator;
 
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkMax;
@@ -13,7 +13,7 @@ import poplib.math.MathUtil;
 import poplib.smart_dashboard.PIDTuning;
 import poplib.smart_dashboard.TunableNumber;
 
-public class Elevator extends SubsystemBase {
+public class AlphaElevator extends SubsystemBase {
     private final SparkMax rightMotor;
     private final SparkMax leftMotor;
     private final DigitalInput limitSwitch;
@@ -23,17 +23,17 @@ public class Elevator extends SubsystemBase {
 
     private boolean resetSequence;
 
-    private static Elevator instance;
+    private static AlphaElevator instance;
 
-    public static Elevator getInstance() {
+    public static AlphaElevator getInstance() {
         if (instance == null) {
-            instance = new Elevator();
+            instance = new AlphaElevator();
         }
 
         return instance;
     }
 
-    private Elevator() {        
+    private AlphaElevator() {        
         rightMotor = Constants.Elevator.RIGHT_MOTOR.createSparkMax();
         leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax();
         tuning = Constants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", Constants.Elevator.TUNNING_MODE);

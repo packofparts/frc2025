@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Manipulator;
 
 import com.revrobotics.spark.SparkMax;
 import poplib.sensors.beam_break.BeamBreak;
@@ -7,21 +7,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Manipulator extends SubsystemBase {
+public class AlphaManipulator extends SubsystemBase {
     private final SparkMax motor;
     private final BeamBreak beamBreak;
 
-    private static Manipulator instance;
+    private static AlphaManipulator instance;
 
-    public static Manipulator getInstance() {
+    public static AlphaManipulator getInstance() {
         if (instance == null) {
-            instance = new Manipulator();
+            instance = new AlphaManipulator();
         }
 
         return instance;
     }
 
-    private Manipulator() {
+    private AlphaManipulator() {
         motor = Constants.Manipulator.MOTOR.createSparkMax();
         beamBreak = Constants.Manipulator.BEAM_BREAK.createBeamBreak();
     }
