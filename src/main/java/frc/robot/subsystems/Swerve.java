@@ -196,13 +196,10 @@ public class Swerve extends VisionBaseSwerve {
             timeSinceLastValid++;
         }
 
-        SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
-    
         if (relativePosition != null) {
             SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
             SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
             SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
         }
-        updateVisionPoses();
     }
 }

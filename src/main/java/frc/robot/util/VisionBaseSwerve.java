@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 
-import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.DetectedObject;
 import poplib.sensors.camera.Limelight;
@@ -67,8 +66,7 @@ public abstract class VisionBaseSwerve extends BaseSwerve {
         for (Camera camera : cameras) {
             Optional<EstimatedRobotPose> estPose = camera.getEstimatedPose(getOdomPose());
             if (estPose.isPresent()) {
-                odom.addVisionMeasurement(estPose.get().estimatedPose.toPose2d(), 
-                estPose.get().timestampSeconds, camera.getVisionStdDevs());
+                odom.addVisionMeasurement(estPose.get().estimatedPose.toPose2d(), estPose.get().timestampSeconds);
             }
         }
     }
@@ -146,7 +144,7 @@ public abstract class VisionBaseSwerve extends BaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
-        // updateVisionPoses();
+        updateVisionPoses();
         odom.update(getGyro().getNormalizedRotation2dAngle(), getPose());
     }
 }
