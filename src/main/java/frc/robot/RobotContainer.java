@@ -4,30 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Manipulator;
-import frc.robot.subsystems.Swerve;
-import poplib.controllers.oi.OI;
-import poplib.controllers.oi.XboxOI;
-import poplib.swerve.commands.TeleopSwerveDrive;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.Swerve;
+import poplib.controllers.oi.OI;
+import poplib.controllers.oi.XboxOI;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,6 +28,7 @@ public class RobotContainer {
     // public final Manipulator manipulator;
     public final OI oi;
     // public final SendableChooser<Command> scoring;
+    private final SendableChooser<Command> autoChooser;
   
     private boolean intaking;
 
@@ -55,8 +41,11 @@ public class RobotContainer {
     // indexer = Indexer.getInstance();
     // intake = Intake.getInstance();
     // scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
-    // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
-    // configureBindings();
+    swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+    configureBindings();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
   }
 
     public boolean getIntaking() {
@@ -142,6 +131,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return autoChooser.getSelected();
-        return null;
+        return autoChooser.getSelected();
     }
 }
