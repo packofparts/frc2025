@@ -205,8 +205,8 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
 
-        public static final double ROBOT_MASS_KG = 59; // estimate with bumpers & battery
-        public static final double ROBOT_MOI = 0; // gotta ask CAD
+        public static final double ROBOT_MASS_KG = 50; // estimate with bumpers & battery
+        public static final double ROBOT_MOI = 5; // gotta ask CAD
         public static final double WHEEL_RADIUS_METERS = 0.0508; // 2 inch radius
         public static final double MAX_DRIVE_VELOCITY_MPS = 5; // meters per second
         public static final double WHEEL_COF = 1.0; // suggested value if unsure as per docs

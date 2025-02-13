@@ -218,7 +218,6 @@ public class Swerve extends VisionBaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
-
         Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
         if (newRelativePosition != null) {
@@ -230,10 +229,10 @@ public class Swerve extends VisionBaseSwerve {
 
         SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
     
-        if (relativePosition != null) {
-            SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
-            SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
-            SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
-        }
+        // if (relativePosition != null) {
+        //     // SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
+        //     // SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
+        //     // SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
+        // }
     }
 }

@@ -35,12 +35,18 @@ public class Robot extends TimedRobot {
         autoCommand = robotContainer.getAutonomousCommand();
 
         if (autoCommand != null) {
+            System.out.println(autoCommand.getName());
             autoCommand.schedule();
+        }
+        else{
+            System.out.println("auto is null"); 
         }
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        System.out.println(autoCommand.getName());
+    }
 
     @Override
     public void teleopInit() {
