@@ -23,8 +23,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.StdDevStategy;
 
-
-
 public class Camera {
     private final PhotonCamera camera;
     private final CameraConfig config;
@@ -148,7 +146,7 @@ public class Camera {
             return false;
         }
 
-        if (targets.size() == 1 && targets.get(0).getPoseAmbiguity() < config.poseAmbiguityThreshold) {
+        if (targets.size() == 1 && targets.get(0).getPoseAmbiguity() > config.poseAmbiguityThreshold) {
             System.out.println("Target Rejected Based on Ambiguity");
             return false;
         }

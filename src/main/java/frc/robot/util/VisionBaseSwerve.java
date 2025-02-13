@@ -58,8 +58,8 @@ public abstract class VisionBaseSwerve extends BaseSwerve {
     }
 
     public VisionBaseSwerve(SwerveModule[] swerveMods, Gyro gyro, SwerveDriveKinematics kinematics, List<CameraConfig> cameraConfigs, List<LimelightConfig> limelightConfigs) {
-        this(swerveMods, gyro, kinematics, VecBuilder.fill(0.7, 0.7, Units.degreesToRadians(17)),
-                VecBuilder.fill(0.025, 0.025, Units.degreesToRadians(0.86)), cameraConfigs, limelightConfigs); //0.9, 0.9, 0.9
+        this(swerveMods, gyro, kinematics, VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1)),
+                VecBuilder.fill(0.6, 0.6, Units.degreesToRadians(20)), cameraConfigs, limelightConfigs); //0.9, 0.9, 0.9
     }
 
     public void updateVisionPoses() {

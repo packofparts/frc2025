@@ -55,10 +55,10 @@ public class Swerve extends VisionBaseSwerve {
             Constants.Swerve.SWERVE_KINEMATICS,
             new ArrayList<CameraConfig>(Arrays.asList(new CameraConfig("RaoVisionFLCam", 
                 new Transform3d(
-                    Units.inchesToMeters(-12.521), 
-                    Units.inchesToMeters(-11.056), 
+                    Units.inchesToMeters(-10.8), //-12.521
+                    Units.inchesToMeters(-11.056), //10.4
                     Units.inchesToMeters(10.1), 
-                    new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), //0,4,15
+                    new Rotation3d(0, Units.degreesToRadians(2.0), Units.degreesToRadians(180-19.5))), //0,4,15
                     0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
             new ArrayList<LimelightConfig>()
         );
