@@ -82,7 +82,16 @@ public class Swerve extends VisionBaseSwerve {
 
         timeSinceLastValid = 0;
 
-        RobotConfig config = Constants.Swerve.getRobotConfig();
+        // RobotConfig config = Constants.Swerve.getRobotConfig();
+        RobotConfig config;
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+            // this shouldn't be happening unless settings.json in /deploy/pathplanner is missing
+            config = null;
+        }
 
         // Configure AutoBuilder last
         AutoBuilder.configure(

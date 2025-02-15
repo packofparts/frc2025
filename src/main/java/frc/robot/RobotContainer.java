@@ -46,7 +46,6 @@ public class RobotContainer {
     // public final Manipulator manipulator;
     public final OI oi;
     // private final SendableChooser<Command> autoChooser;
-    // private final SendableChooser<String> myChooser;
     // public final SendableChooser<Command> scoring;
   
     private boolean intaking;
@@ -69,9 +68,6 @@ public class RobotContainer {
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(thing());
         // autoChooser = AutoBuilder.buildAutoChooser();
-        // myChooser = new SendableChooser<>();
-        // SmartDashboard.putData("use my chooser", autoChooser);
-        // myChooser.addOption("line", "line_2meters");
         // SmartDashboard.putData("Auto Selector", autoChooser);
         // autoChooser.addOption("line", new PathPlannerAuto("line_2meters"));
 
