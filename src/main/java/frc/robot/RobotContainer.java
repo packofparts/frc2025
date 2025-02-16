@@ -154,19 +154,20 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return new PathPlannerAuto("line_2meters");
-        try{
-            // Load the path you want to follow using its name in the GUI
-            PathPlannerPath path = PathPlannerPath.fromPathFile("line_2meters");
+        // try{
+        //     // Load the path you want to follow using its name in the GUI
+        //     PathPlannerPath path = PathPlannerPath.fromPathFile("line_2meters");
 
-            // Create a path following command using AutoBuilder. This will also trigger event markers.
-            System.out.println("square");
-            return AutoBuilder.followPath(path);
-            // return AutoBuilder.buildAuto("line_2meters");
-            // return new PathPlannerAuto("line_2meters");
-        } catch (Exception e) {
-            DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-            System.out.println("u r cooked");
-            return Commands.none();
-        }
+        //     // Create a path following command using AutoBuilder. This will also trigger event markers.
+        //     System.out.println("square");
+        //     return AutoBuilder.followPath(path);
+        //     // return AutoBuilder.buildAuto("line_2meters");
+        //     // return new PathPlannerAuto("line_2meters");
+        // } catch (Exception e) {
+        //     DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+        //     System.out.println("u r cooked");
+        //     return Commands.none();
+        // }
+        return new PathPlannerAuto("test1");
     }
 }
