@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.AlphaConstants;
 import poplib.math.MathUtil;
 import poplib.smart_dashboard.PIDTuning;
 import poplib.smart_dashboard.TunableNumber;
@@ -34,9 +34,9 @@ public class AlphaElevator extends SubsystemBase {
     }
 
     private AlphaElevator() {        
-        rightMotor = Constants.Elevator.RIGHT_MOTOR.createSparkMax();
-        leftMotor = Constants.Elevator.LEFT_MOTOR.createSparkMax();
-        tuning = Constants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", Constants.Elevator.TUNNING_MODE);
+        rightMotor = AlphaConstants.Elevator.RIGHT_MOTOR.createSparkMax();
+        leftMotor = AlphaConstants.Elevator.LEFT_MOTOR.createSparkMax();
+        tuning = AlphaConstants.Elevator.RIGHT_MOTOR.genPIDTuning("Elevator Right Motor", AlphaConstants.Elevator.TUNNING_MODE);
 
         rightMotor.getEncoder().setPosition(0.0);
 
@@ -44,7 +44,7 @@ public class AlphaElevator extends SubsystemBase {
 
         resetSequence = false; 
 
-        setpoint = new TunableNumber("Elevator Setpoint", Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.TUNNING_MODE); 
+        setpoint = new TunableNumber("Elevator Setpoint", AlphaConstants.Elevator.SETPOINTS.IDLE.getSetpoint(), AlphaConstants.Elevator.TUNNING_MODE); 
     }
 
     public Command moveElevator(double setPoint) {
@@ -52,15 +52,15 @@ public class AlphaElevator extends SubsystemBase {
             setpoint.setDefault(setPoint);
             System.out.println("Running to : " + setPoint);
         })
-        .until(() -> Math.abs(rightMotor.getEncoder().getPosition() - setPoint) < Constants.Elevator.MAX_ERROR);
+        .until(() -> Math.abs(rightMotor.getEncoder().getPosition() - setPoint) < AlphaConstants.Elevator.MAX_ERROR);
     }
 
     public Command moveUp() {
-        return runOnce(() -> rightMotor.set(Math.abs(Constants.Elevator.MOTOR_SPEED)));
+        return runOnce(() -> rightMotor.set(Math.abs(AlphaConstants.Elevator.MOTOR_SPEED)));
     }
 
     public Command moveDown() {
-        return runOnce(() -> rightMotor.set(-Math.abs(Constants.Elevator.MOTOR_SPEED)));
+        return runOnce(() -> rightMotor.set(-Math.abs(AlphaConstants.Elevator.MOTOR_SPEED)));
     }
 
     public Command stop() {

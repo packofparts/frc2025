@@ -1,14 +1,9 @@
 package frc.robot.subsystems.Intake;
 
-import com.revrobotics.spark.SparkMax;
-
+import frc.robot.AlphaConstants;
 import poplib.subsytems.pivot.SparkPivot;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 
-public class AlphaIntake extends SparkPivot {
-    private final SparkMax spin;
-
+public class AlphaIntake extends BaseIntake {
     private static AlphaIntake instance;
 
     public static AlphaIntake getInstance() {
@@ -20,33 +15,20 @@ public class AlphaIntake extends SparkPivot {
     }
 
     private AlphaIntake() {
-        super(Constants.Intake.PIVOT, null, Constants.Intake.GEAR_RATIO, Constants.Intake.FF, Constants.Intake.ENCODER, Constants.Intake.TUNING_MODE, "intake");
-        super.setpoint.setDefault(Constants.Intake.SETPOINTS.IDLE.getSetpoint());
-        spin = Constants.Intake.SPIN.createSparkMax();
-    }
-
-    public Command run() {
-        return runOnce(() -> {
-            spin.set(Constants.Intake.SPEED);
-        });
-    }
-
-    public Command stop() {
-        return runOnce(() -> {
-            spin.set(0.0);
-        });
-    }
-
-    public Command reverse() {
-        return runOnce(() -> {
-            spin.set(-1 * Constants.Intake.SPEED);
-        });
+        super(AlphaConstants.Intake.SPIN.createSparkMax(), 
+        new SparkPivot(AlphaConstants.Intake.PIVOT, 
+        null, 
+        AlphaConstants.Intake.GEAR_RATIO, 
+        AlphaConstants.Intake.FF, 
+        AlphaConstants.Intake.ENCODER, 
+        AlphaConstants.Intake.TUNING_MODE, 
+        "Alpha Intake"), 
+        AlphaConstants.Intake.SPEED, 
+        AlphaConstants.Intake.MAX_ERROR);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        super.log();
     }
-
 }

@@ -1,16 +1,9 @@
 package frc.robot.subsystems.Manipulator;
 
-import com.revrobotics.spark.SparkMax;
-import poplib.sensors.beam_break.BeamBreak;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.AlphaConstants;
+import frc.robot.util.TalonPivot;
 
-public class AlphaManipulator extends SubsystemBase {
-    private final SparkMax motor;
-    private final BeamBreak beamBreak;
-
+public class AlphaManipulator extends BaseManipulator {
     private static AlphaManipulator instance;
 
     public static AlphaManipulator getInstance() {
@@ -22,40 +15,20 @@ public class AlphaManipulator extends SubsystemBase {
     }
 
     private AlphaManipulator() {
-        motor = Constants.Manipulator.MOTOR.createSparkMax();
-        beamBreak = Constants.Manipulator.BEAM_BREAK.createBeamBreak();
-    }
-
-    public boolean coralIn() {
-        return beamBreak.isBlocked();
-    }
-
-    public Command run() {
-        return runOnce(() -> {
-            motor.set(Constants.Manipulator.SPEED);
-        });
-    }
-
-    public Command intakeCoral() {
-        return run(() -> {
-            motor.set(Constants.Manipulator.SPEED);
-        }).until(beamBreak.getBlockedSupplier()).andThen(stop());
-    }
-
-    public Command stop() {
-        return runOnce(() -> {
-            motor.set(0.0);
-        });
-    }
-
-    public Command reverse() {
-        return runOnce(() -> {
-            motor.set(-0.05);
-        });
+        super(AlphaConstants.Intake.SPIN.createSparkMax(),
+         new TalonPivot(AlphaConstants.Intake.PIVOT, 
+         null, 
+         AlphaConstants.Intake.GEAR_RATIO, 
+         AlphaConstants.Intake.FF, 
+         AlphaConstants.Intake.ENCODER, 
+         AlphaConstants.Intake.TUNING_MODE, 
+         "Alpha Manipulator"), 
+         AlphaConstants.Intake.SPEED, 
+         AlphaConstants.Manipulator.BEAM_BREAK);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Coral In", coralIn());
+        super.periodic();
     }
 }
