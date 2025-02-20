@@ -32,9 +32,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class RobotContainer {
     public final Swerve swerve;
     // public final Elevator elevator;
-    // public final Indexer indexer;
-    // public final Intake intake;
-    // public final Manipulator manipulator;
+    public final Indexer indexer;
+    public final Intake intake;
+    public final Manipulator manipulator;
     public final OI oi;
     // public final SendableChooser<Command> scoring;
   
@@ -44,9 +44,9 @@ public class RobotContainer {
         swerve = Swerve.getInstance();
         oi = XboxOI.getInstance();
         // elevator = frc.robot.subsystems.Elevator.getInstance();
-        // manipulator = Manipulator.getInstance();
-        // indexer = Indexer.getInstance();
-        // intake = Intake.getInstance();
+        manipulator = Manipulator.getInstance();
+        indexer = Indexer.getInstance();
+        intake = Intake.getInstance();
 
         // scoring = new SendableChooser<>();
         // scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
@@ -70,6 +70,14 @@ public class RobotContainer {
         return swerve.moveToPoseVision(null);
     }
 
+    public Command pickUpCoral() {
+        return swerve.rotateToObject().
+        andThen(startIntaking()).
+        andThen(swerve.driveForward()).
+        until(manipulator::coralIn).
+        alongWith(stopIntaking()).
+        andThen(swerve.stop());
+    }
 
     // private void configureBindings() {
     //     // SysIdSwerve sys = new SysIdSwerve(swerve);
@@ -102,27 +110,27 @@ public class RobotContainer {
     //     });
     // }
 
-    // public Command startIntaking() {
-    //    return new SequentialCommandGroup(
-    //         intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
-    //         new ParallelCommandGroup(
-    //             manipulator.run(),
-    //             indexer.run(),
-    //             intake.run()
-    //         )
-    //     ); 
-    // }
+    public Command startIntaking() {
+       return new SequentialCommandGroup(
+            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
+            new ParallelCommandGroup(
+                manipulator.run(),
+                indexer.run(),
+                intake.run()
+            )
+        ); 
+    }
 
-    // public Command stopIntaking() {
-    //    return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
-    //         andThen(
-    //             new ParallelCommandGroup(
-    //                 manipulator.stop(),
-    //                 indexer.stop(),
-    //                 intake.stop()
-    //             )
-    //     );
-    // }
+    public Command stopIntaking() {
+       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
+            andThen(
+                new ParallelCommandGroup(
+                    manipulator.stop(),
+                    indexer.stop(),
+                    intake.stop()
+                )
+        );
+    }
 
     // public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
     //     return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
