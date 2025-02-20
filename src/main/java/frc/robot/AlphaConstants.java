@@ -34,7 +34,7 @@ import edu.wpi.first.units.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class AlphaConstants {
     public static class Ports {
         public static final String CANIVORE_NAME = "tempura sushi";
     }

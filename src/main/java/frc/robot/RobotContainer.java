@@ -6,9 +6,13 @@ package frc.robot;
 
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.AlphaElevator;
+import frc.robot.subsystems.Elevator.BetaElevator;
 import frc.robot.subsystems.Indexer.AlphaIndexer;
+import frc.robot.subsystems.Indexer.BetaIndexer;
 import frc.robot.subsystems.Intake.AlphaIntake;
+import frc.robot.subsystems.Intake.BetaIntake;
 import frc.robot.subsystems.Manipulator.AlphaManipulator;
+import frc.robot.subsystems.Manipulator.BetaManipulator;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.TeleopSwerveDrive;
@@ -40,10 +44,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class RobotContainer {
     public final Swerve swerve;
-    public final AlphaElevator elevator;
-    public final AlphaIndexer indexer;
-    public final AlphaIntake intake;
-    public final AlphaManipulator manipulator;
+
+    // public final AlphaElevator elevator;
+    // public final AlphaIndexer indexer;
+    // public final AlphaIntake intake;
+    // public final AlphaManipulator manipulator;
+
+    public final BetaElevator elevator;
+    public final BetaIndexer indexer;
+    public final BetaIntake intake;
+    public final BetaManipulator manipulator;
+    
     public final OI oi;
     private final SendableChooser<Command> autoChooser;
     // public final SendableChooser<Command> scoring;
@@ -66,6 +77,31 @@ public class RobotContainer {
     autoChooser.addOption("square", new PathPlannerAuto("square"));
     configureBindings();
   }
+    public RobotContainer() {
+        swerve = Swerve.getInstance();
+        oi = XboxOI.getInstance();
+
+        // elevator = AlphaElevator.getInstance();
+        // manipulator = AlphaManipulator.getInstance();
+        // indexer = AlphaIndexer.getInstance();
+        // intake = AlphaIntake.getInstance();
+
+        elevator = BetaElevator.getInstance();
+        manipulator = BetaManipulator.getInstance();
+        indexer = BetaIndexer.getInstance();
+        intake = BetaIntake.getInstance();
+
+        scoring = new SendableChooser<>();
+        scoring.addOption("L1", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L1));
+        scoring.addOption("L2", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
+        scoring.addOption("L3", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L3));
+        SmartDashboard.putData(scoring);
+
+        swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+
+        intaking = false;
+        configureBindings();
+    }
 
     public boolean getIntaking() {
         return intaking;
@@ -97,7 +133,7 @@ public class RobotContainer {
             manipulator.stop()
         ));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(Constants.Elevator.SETPOINTS.L2));
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
     }
 
     public Command tobleIntake() {
@@ -109,17 +145,17 @@ public class RobotContainer {
 
     public Command startIntaking() {
        return new SequentialCommandGroup(
-            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
+            intake.moveWrist(AlphaConstants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint()),
             new ParallelCommandGroup(
                 manipulator.run(),
                 indexer.run(),
                 intake.run()
             )
-        ); 
+        );
     }
 
     public Command stopIntaking() {
-       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
+       return intake.moveWrist(AlphaConstants.Intake.SETPOINTS.IDLE.getSetpoint()).
             andThen(
                 new ParallelCommandGroup(
                     manipulator.stop(),
@@ -129,13 +165,13 @@ public class RobotContainer {
         );
     }
 
-    public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
+    public Command elevatorScore(AlphaConstants.Elevator.SETPOINTS setpoint) {
         return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
             andThen(elevator.moveElevator(setpoint.getSetpoint()).
             andThen(manipulator.run()).
             andThen(new WaitCommand(1.0)).
             andThen(manipulator.stop()).
-            andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
+            andThen(elevator.moveElevator(AlphaConstants.Elevator.SETPOINTS.IDLE.getSetpoint()))
         );
     }
 

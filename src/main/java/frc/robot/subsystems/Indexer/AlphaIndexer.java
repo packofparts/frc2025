@@ -1,13 +1,8 @@
 package frc.robot.subsystems.Indexer;
 
-import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.AlphaConstants;
 
-public class AlphaIndexer extends SubsystemBase {
-    private final SparkMax motor;
-    private final SparkMax motor2;
+public class AlphaIndexer extends BaseIndexer {
 
     private static AlphaIndexer instance;
 
@@ -20,29 +15,7 @@ public class AlphaIndexer extends SubsystemBase {
     }
 
     private AlphaIndexer() {
-        motor = Constants.Indexer.MOTOR.createSparkMax();
-        motor2 = Constants.Indexer.MOTOR2.createSparkMax();
-    }
-
-    public Command run() {
-        return runOnce(() -> {
-            motor.set(Constants.Indexer.SPEED);
-            motor2.set(Constants.Indexer.SPEED * 1.0);
-        });
-    }
-
-    public Command stop() {
-        return runOnce(() -> {
-            motor.set(0.0);
-            motor2.set(0.0);
-        });
-    }
-
-    public Command reverse() {
-        return runOnce(() -> {
-            motor.set(-1 * Constants.Indexer.SPEED);
-            motor2.set(-1 * Constants.Indexer.SPEED * 0.1);
-        });
+        super(AlphaConstants.Indexer.MOTOR, AlphaConstants.Indexer.MOTOR2, AlphaConstants.Indexer.SPEED);
     }
 
     @Override

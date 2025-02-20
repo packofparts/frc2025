@@ -24,7 +24,7 @@ import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
 import poplib.swerve.swerve_templates.VisionBaseSwerve;
-import frc.robot.Constants;
+import frc.robot.AlphaConstants;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
@@ -49,13 +49,13 @@ public class Swerve extends VisionBaseSwerve {
     private Swerve() {
         super(
             new SwerveModuleTalon[] {
-                    new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[0]),
-                    new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[1]),
-                    new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[2]),
-                    new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
+                    new SwerveModuleTalon(AlphaConstants.Swerve.SWERVE_MODULE_CONSTANTS[0]),
+                    new SwerveModuleTalon(AlphaConstants.Swerve.SWERVE_MODULE_CONSTANTS[1]),
+                    new SwerveModuleTalon(AlphaConstants.Swerve.SWERVE_MODULE_CONSTANTS[2]),
+                    new SwerveModuleTalon(AlphaConstants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
-            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
-            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
+            new Pigeon(AlphaConstants.Swerve.PIGEON_ID, AlphaConstants.Swerve.GYRO_INVERSION, AlphaConstants.Ports.CANIVORE_NAME),
+            AlphaConstants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
 
         xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
