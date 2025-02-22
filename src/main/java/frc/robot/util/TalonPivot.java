@@ -6,6 +6,8 @@ package frc.robot.util;
 
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import poplib.control.FFConfig;
 import poplib.motor.FollowerConfig;
@@ -16,7 +18,6 @@ import poplib.subsytems.pivot.Pivot;
 
 public class TalonPivot extends Pivot {
     public final TalonFX leadMotor;
-    @SuppressWarnings("unused")
     protected TalonFX followerMotor;
     protected PIDTuning pid;
     protected PositionDutyCycle position;
@@ -24,6 +25,7 @@ public class TalonPivot extends Pivot {
     public TalonPivot(MotorConfig leadConfig, FollowerConfig followerConfig, double gearRatio, FFConfig ffConfig, AbsoluteEncoderConfig absoluteConfig, boolean tuningMode, String subsytemName) {
         super(ffConfig, absoluteConfig, tuningMode, subsytemName);
         leadMotor = leadConfig.createTalon();
+
         if (followerConfig != null) {
             followerMotor = followerConfig.createTalon();
         } else {
@@ -45,20 +47,19 @@ public class TalonPivot extends Pivot {
         return Math.abs(leadMotor.getPosition().getValueAsDouble() - setpoint);
     }
 
-    public void updatePID() {
-        leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(super.ff.getKg()));
-    }
-
     @Override
     public void log() {
         super.log();
-        SmartDashboard.putNumber("Lead Position " + getName(), leadMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Lead Position 2 " + getName(), leadMotor.getPosition().getValueAsDouble());
     }
 
     @Override
     public void periodic() {
         pid.updatePID(leadMotor);
-        leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(super.ff.getKg()));
+        leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(super.ff.calculate(
+            Math.toRadians(leadMotor.getPosition().getValueAsDouble()),
+            0.0
+        )));
     }
 
     @Override

@@ -30,17 +30,17 @@ import edu.wpi.first.units.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class AlphaConstants {
+public final class Constants {
     public static class Ports {
-        public static final String CANIVORE_NAME = "tempura sushi";
+        public static final String CANIVORE_NAME = "pop into worlds";
     }
 
     public static class Elevator {
         public enum SETPOINTS {
-            IDLE(0),
-            L1(30),
-            L2(40),
-            L3(72);
+            IDLE(0), // tbd
+            L1(30), // tbd
+            L2(40), // tbd
+            L3(72); // tbd
 
             private double setpoint;
 
@@ -53,70 +53,81 @@ public final class AlphaConstants {
             }
         }
 
-        public static final boolean TUNNING_MODE = false;
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            25, 
+            27, 
             20, 
             false, 
-            new PIDConfig(0.12, 0, 0, 0), // 0.12
+            new PIDConfig(0.0, 0, 0, 0),
             Mode.BRAKE
         );
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 26);
+        public static final int LIMIT_SWITCH_CHANNEL = 3; // tbd
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0);
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
-        public static final double MOTOR_SPEED = 0.5;
+        // public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0); // tbd
+        public static final FFConfig FF_CONFIG = new FFConfig(0.6, 0, 0); // tbd
+
+        public static final double MOTOR_SPEED = 0.5; // tbd
         public static final double MAX_ERROR = 1.0;
     }
 
     public static final class Manipulator {
-        public static final MotorConfig MOTOR = new MotorConfig(
+        public static final MotorConfig MANIPULATOR_MOTOR = new MotorConfig(
             24, 
             40, 
             false, 
             Mode.COAST
-        );    
+        );
 
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true);
+        public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
+            25, 
+            40, 
+            false, 
+            Mode.COAST
+        );
 
-        public static final double SPEED = 0.9;
+        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true); // tbd
+
+        public static final double SPEED = 0.9; // tbd
+
+        public static final double GEAR_RATIO = 0;
+
+        public static final FFConfig FF = null;
+
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = null;
+
+        public static final boolean TUNNING_MODE = false;
     }
 
     public static final class Indexer {
         public static final MotorConfig MOTOR = new MotorConfig(
             23, 
             40, 
-            false,
+            true,
             Mode.COAST
-        );    
+        );
 
-        public static final MotorConfig MOTOR2 = new MotorConfig(
-            30, 
-            40, 
-            true, 
-            Mode.COAST
-        );    
-
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 1.0; // tbd
     }
 
     public static final class Intake {
-        public static final double GEAR_RATIO = 157.5;
+        public static final double GEAR_RATIO = 100.8;
 
         public static final MotorConfig PIVOT = new MotorConfig(
-            22, 
+            21, 
             "",
-            40, 
-            true, 
-            new PIDConfig(0.08),
+            20, 
+            false, 
+            new PIDConfig(0.1),
             Mode.COAST,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
 
         public static final MotorConfig SPIN = new MotorConfig(
-            21, 
+            22, 
             40, 
             false, 
             Mode.COAST
@@ -124,17 +135,17 @@ public final class AlphaConstants {
 
         public static final boolean TUNING_MODE = false;
 
-        public static final FFConfig FF = new FFConfig(0.5, 0.0, 0.0);
+        public static final FFConfig FF = new FFConfig(0.015, 0.0, 0.0); // tbd
 
-        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, Rotation2d.fromDegrees(-48.0), true);
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
         public static final double MAX_ERROR = 1.0;
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 1.0; // tbd
 
-        public enum SETPOINTS {  
-            IDLE(0),
-            ALGAE_PICKUP(25),
-            ALGAE_DROP(35),
-            CORAL_PICKUP(-30);
+        public enum SETPOINTS {
+            IDLE(70), // tbd
+            ALGAE_PICKUP(0), // tbd
+            ALGAE_DROP(0), // tbd
+            CORAL_PICKUP(0); // tbd
 
             private double setpoint;
 
@@ -147,7 +158,6 @@ public final class AlphaConstants {
             }
         }
     }
-
 
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
@@ -165,6 +175,7 @@ public final class AlphaConstants {
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)
         );
 
+        // tbd
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             25,
@@ -173,12 +184,12 @@ public final class AlphaConstants {
             Mode.COAST
         );
 
-
+        // tbd
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             60,
             true,
-            PIDConfig.getPid(0.01, 0.2), // Tuned 01/05/25 with a shit battery
+            PIDConfig.getPid(0.01, 0.2), // Tuned alpha on 01/05/25 with a shit battery // tbd
             Mode.BRAKE
         );
 
@@ -186,6 +197,7 @@ public final class AlphaConstants {
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
+        // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
                 Rotation2d.fromDegrees(131.5), // 42.2
@@ -199,7 +211,7 @@ public final class AlphaConstants {
             ANGLE_CONFIG
         );
 
-        public static final int PIGEON_ID = 13;
+        public static final int PIGEON_ID = 13; // tbd
     }
 
 }

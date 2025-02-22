@@ -1,0 +1,53 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems.Elevator;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.util.TalonElevator;
+import poplib.smart_dashboard.TunableNumber;
+
+public class Elevator extends TalonElevator {
+    private static Elevator instance;
+    private final DigitalInput limitSwitch;
+
+    public static Elevator getInstance() {
+        if (instance == null) {
+            instance = new Elevator();
+        }
+
+        return instance;
+    }
+
+    /** Creates a new BetaElevator. */
+    public Elevator() {
+        super(Constants.Elevator.RIGHT_MOTOR, Constants.Elevator.LEFT_MOTOR, Constants.Elevator.FF_CONFIG, Constants.Elevator.TUNNING_MODE, "Beta Elevator");
+        limitSwitch = new DigitalInput(Constants.Elevator.LIMIT_SWITCH_CHANNEL);
+    }
+
+    // public boolean isAtBottom() {
+    //     return !limitSwitch.get();
+    // }
+
+    // public Command reZero() {
+    //     return runOnce(() -> {
+    //         resetSequence = true;
+    //         moveDown(0.1);
+    //         System.out.println("Reset Sequency Starting");
+    //     }).andThen(run(() -> {
+    //     })).until(() -> isAtBottom()).finallyDo(() -> {
+    //         resetSequence = false;
+    //         System.out.println("Reset Sequency Ending");
+    //         stop();
+    //         zeroPosition();
+    //     });
+    // }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+    }
+}

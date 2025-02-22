@@ -27,8 +27,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() { 
-        robotContainer.intake.resetToAbsPosition();
-        robotContainer.swerve.updateEncoders(); 
+        // robotContainer.intake.resetToAbsPosition();
+        // robotContainer.swerve.updateEncoders(); 
     }
 
     @Override
@@ -52,9 +52,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
-            robotContainer.stopIntaking().schedule();
-        }
+        // if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
+        //     robotContainer.stopIntaking().schedule();
+        // }
     }
 
     @Override
