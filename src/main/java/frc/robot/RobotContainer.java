@@ -4,15 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.Constants.Manipulator;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Elevator.AlphaElevator;
-import frc.robot.subsystems.Elevator.BetaElevator;
-import frc.robot.subsystems.Indexer.AlphaIndexer;
-import frc.robot.subsystems.Indexer.BetaIndexer;
-import frc.robot.subsystems.Intake.AlphaIntake;
-import frc.robot.subsystems.Intake.BetaIntake;
-import frc.robot.subsystems.Manipulator.AlphaManipulator;
-import frc.robot.subsystems.Manipulator.BetaManipulator;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Indexer.Indexer;
+import frc.robot.subsystems.Intake.Intake;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.TeleopSwerveDrive;
@@ -43,22 +39,20 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    public final Swerve swerve;
+    public Swerve swerve;
 
-    // public final AlphaElevator elevator;
-    // public final AlphaIndexer indexer;
-    // public final AlphaIntake intake;
-    // public final AlphaManipulator manipulator;
-
-    public final BetaElevator elevator;
-    public final BetaIndexer indexer;
-    public final BetaIntake intake;
-    public final BetaManipulator manipulator;
+    public Elevator elevator;
+    public Indexer indexer;
+    public Intake intake;
+    public Manipulator manipulator;
     
     public final OI oi;
     private final SendableChooser<Command> autoChooser;
     // public final SendableChooser<Command> scoring;
   
+    public OI oi;
+    public SendableChooser<Command> scoring;
+
     private boolean intaking;
 
   public RobotContainer() {
@@ -78,26 +72,22 @@ public class RobotContainer {
     configureBindings();
   }
     public RobotContainer() {
-        swerve = Swerve.getInstance();
+        // swerve = Swerve.getInstance();
         oi = XboxOI.getInstance();
 
-        // elevator = AlphaElevator.getInstance();
-        // manipulator = AlphaManipulator.getInstance();
-        // indexer = AlphaIndexer.getInstance();
-        // intake = AlphaIntake.getInstance();
 
-        elevator = BetaElevator.getInstance();
-        manipulator = BetaManipulator.getInstance();
-        indexer = BetaIndexer.getInstance();
-        intake = BetaIntake.getInstance();
+        elevator = Elevator.getInstance();
+        // manipulator = Manipulator.getInstance();
+        // indexer = Indexer.getInstance();
+        // intake = Intake.getInstance();
 
-        scoring = new SendableChooser<>();
-        scoring.addOption("L1", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L1));
-        scoring.addOption("L2", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
-        scoring.addOption("L3", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L3));
-        SmartDashboard.putData(scoring);
+        // scoring = new SendableChooser<>();
+        // scoring.addOption("L1", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L1));
+        // scoring.addOption("L2", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
+        // scoring.addOption("L3", elevatorScore(AlphaConstants.Elevator.SETPOINTS.L3));
+        // SmartDashboard.putData(scoring);
 
-        swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+        // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
         intaking = false;
         configureBindings();
@@ -121,19 +111,20 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(null));
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
 
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
+        oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
+        oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
 
-        oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-            // intake.reverse(),
-            // indexer.reverse(),
-            manipulator.run()
-        )).onFalse(new ParallelCommandGroup(
-            intake.stop(),
-            indexer.stop(),
-            manipulator.stop()
-        ));
+        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
+        //     // intake.reverse(),
+        //     // indexer.reverse(),
+        //     manipulator.run()
+        // )).onFalse(new ParallelCommandGroup(
+        //     intake.stop(),
+        //     indexer.stop(),
+        //     manipulator.stop()
+        // ));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
+        // oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(AlphaConstants.Elevator.SETPOINTS.L2));
     }
 
     public Command tobleIntake() {
@@ -145,9 +136,9 @@ public class RobotContainer {
 
     public Command startIntaking() {
        return new SequentialCommandGroup(
-            intake.moveWrist(AlphaConstants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint()),
+            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
-                manipulator.run(),
+                // manipulator.run(),
                 indexer.run(),
                 intake.run()
             )
@@ -155,25 +146,25 @@ public class RobotContainer {
     }
 
     public Command stopIntaking() {
-       return intake.moveWrist(AlphaConstants.Intake.SETPOINTS.IDLE.getSetpoint()).
+       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
             andThen(
                 new ParallelCommandGroup(
-                    manipulator.stop(),
+                    // manipulator.stop(),
                     indexer.stop(),
                     intake.stop()
                 )
         );
     }
 
-    public Command elevatorScore(AlphaConstants.Elevator.SETPOINTS setpoint) {
-        return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
-            andThen(elevator.moveElevator(setpoint.getSetpoint()).
-            andThen(manipulator.run()).
-            andThen(new WaitCommand(1.0)).
-            andThen(manipulator.stop()).
-            andThen(elevator.moveElevator(AlphaConstants.Elevator.SETPOINTS.IDLE.getSetpoint()))
-        );
-    }
+    // public Command elevatorScore(AlphaConstants.Elevator.SETPOINTS setpoint) {
+    //     return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
+    //         andThen(elevator.moveElevator(setpoint.getSetpoint()).
+    //         andThen(manipulator.run()).
+    //         andThen(new WaitCommand(1.0)).
+    //         andThen(manipulator.stop()).
+    //         andThen(elevator.moveElevator(AlphaConstants.Elevator.SETPOINTS.IDLE.getSetpoint()))
+    //     );
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
