@@ -57,13 +57,13 @@ public final class Constants {
             }
         }
 
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
-            20, 
-            false, 
-            new PIDConfig(0.0, 0, 0, 0),
+            40, 
+            true, 
+            new PIDConfig(0.8, 0, 0.02, 0),
             Mode.BRAKE
         );
 
@@ -72,7 +72,7 @@ public final class Constants {
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
         // public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0); // tbd
-        public static final FFConfig FF_CONFIG = new FFConfig(0.6, 0, 0); // tbd
+        public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0); // tbd
 
         public static final double MOTOR_SPEED = 0.5; // tbd
         public static final double MAX_ERROR = 1.0;
@@ -99,9 +99,9 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 0;
 
-        public static final FFConfig FF = null;
+        public static final FFConfig FF = new FFConfig(0.0);
 
-        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = null;
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = null; // id 1
 
         public static final boolean TUNNING_MODE = false;
     }
@@ -125,7 +125,7 @@ public final class Constants {
             "",
             20, 
             false, 
-            new PIDConfig(0.1),
+            new PIDConfig(0.0), // 0.05
             Mode.COAST,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
@@ -133,7 +133,7 @@ public final class Constants {
         public static final MotorConfig SPIN = new MotorConfig(
             22, 
             40, 
-            false, 
+            true, 
             Mode.COAST
         );
 
@@ -149,7 +149,7 @@ public final class Constants {
             IDLE(70), // tbd
             ALGAE_PICKUP(0), // tbd
             ALGAE_DROP(0), // tbd
-            CORAL_PICKUP(0); // tbd
+            CORAL_PICKUP(-16.5); // tbd
 
             private double setpoint;
 
