@@ -39,7 +39,7 @@ public class TalonElevator extends Elevator {
         super.tuning.updatePID(leadMotor);
 
         if (usePID) {
-            leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(kG.get()));
+            leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(feedforward.calculate(0.0)));
         }
 
         SmartDashboard.putNumber("Elevator lead motor pos", getEncoderPos());
