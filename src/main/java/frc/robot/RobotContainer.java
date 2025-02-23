@@ -4,11 +4,12 @@
 
 package frc.robot;
 
-import frc.robot.Constants.Manipulator;
+import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Indexer.Indexer;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Manipulator.Manipulator;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.TeleopSwerveDrive;
@@ -46,7 +47,7 @@ public class RobotContainer {
 
 
         // elevator = Elevator.getInstance();
-        // manipulator = Manipulator.getInstance();
+        manipulator = Manipulator.getInstance();
         indexer = Indexer.getInstance();
         intake = Intake.getInstance();
 
@@ -103,7 +104,7 @@ public class RobotContainer {
     //    return new SequentialCommandGroup(
             // intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             return new ParallelCommandGroup(
-                // manipulator.run(),
+                manipulator.run(),
                 indexer.run(),
                 intake.run()
             );
@@ -114,7 +115,7 @@ public class RobotContainer {
     //    return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
     //         andThen(
                 return new ParallelCommandGroup(
-                    // manipulator.stop(),
+                    manipulator.stop(),
                     indexer.stop(),
                     intake.stop()
                 );
