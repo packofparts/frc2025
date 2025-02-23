@@ -81,14 +81,16 @@ public final class Constants {
     public static final class Manipulator {
         public static final MotorConfig MANIPULATOR_MOTOR = new MotorConfig(
             24, 
+            "tempura sushi",
             40, 
-            false, 
+            false,
             Mode.COAST
         );
 
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
-            25, 
-            40, 
+            25,
+            "tempura sushi",
+            40,
             false, 
             Mode.COAST
         );
@@ -101,7 +103,7 @@ public final class Constants {
 
         public static final FFConfig FF = new FFConfig(0.0);
 
-        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = null; // id 1
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(1, new Rotation2d(0.0), false); // id 1
 
         public static final boolean TUNNING_MODE = false;
     }
