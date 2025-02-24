@@ -18,10 +18,10 @@ import frc.robot.Constants;
 import frc.robot.util.TalonPivot;
 
 public class Manipulator extends TalonPivot {
-  private static Manipulator instance;
-  private final TalonFX spin;
-  private final DutyCycleOut control;
+    private final TalonFX spin;
+    private final DutyCycleOut control;
     private static CANrange range;
+    
     private static Manipulator instance;
 
     public static Manipulator getInstance() {
@@ -32,41 +32,6 @@ public class Manipulator extends TalonPivot {
         return instance;
     }
 
-  /** Creates a new BaseManipulator. */
-  private Manipulator() {
-    super(
-      Constants.Manipulator.PIVOT_MOTOR, 
-      null, 
-      Constants.Manipulator.GEAR_RATIO, 
-      Constants.Manipulator.FF, 
-      Constants.Manipulator.ABSOLUTE_ENCODER, 
-      Constants.Manipulator.TUNNING_MODE,
-      "Manipulator"
-    );
-    spin = Constants.Manipulator.MANIPULATOR_MOTOR.createTalon();
-    control = new DutyCycleOut(0.0);
-  }
-
-  public Command run(){
-    return runOnce(() ->{
-      // spin.setControl(control.withOutput(Constants.Manipulator.SPEED));
-      spin.set(Constants.Manipulator.SPEED);
-    });
-  }
-
-  public Command stop(){
-    return runOnce(() ->{
-      // spin.setControl(control.withOutput(0.0));
-      spin.set(0.0);
-    });
-  }
-
-  public Command reverse(){
-    return runOnce(() ->{
-      // spin.setControl(control.withOutput(-1 * Constants.Manipulator.SPEED));
-      spin.set(-1 * Constants.Manipulator.SPEED);
-    });
-  }
     /** Creates a new BaseManipulator. */
     private Manipulator() {
         super(
@@ -78,11 +43,26 @@ public class Manipulator extends TalonPivot {
             Constants.Manipulator.TUNNING_MODE,
             "Manipulator"
         );
+        spin = Constants.Manipulator.MANIPULATOR_MOTOR.createTalon();
+        control = new DutyCycleOut(0.0);
+    }
 
-        range = new CANrange(Constants.Manipulator.RANGE_ID, Constants.Ports.CANIVORE_NAME);
+    public Command run(){
+        return runOnce(() ->{
+            spin.setControl(control.withOutput(Constants.Manipulator.SPEED));
+        });
+    }
 
-        CANrangeConfiguration config = new CANrangeConfiguration();
-        range.getConfigurator().apply(config);
+    public Command stop(){
+        return runOnce(() ->{
+            spin.setControl(control.withOutput(0.0));
+        });
+    }
+
+    public Command reverse(){
+        return runOnce(() ->{
+            spin.setControl(control.withOutput(-1 * Constants.Manipulator.SPEED));
+        });
     }
 
     @Override
