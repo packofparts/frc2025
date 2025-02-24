@@ -36,15 +36,15 @@ import edu.wpi.first.units.Units;
  */
 public final class Constants {
     public static class Ports {
-        public static final String CANIVORE_NAME = "pop into worlds";
+        public static final String CANIVORE_NAME = "tempura sushi";
     }
 
     public static class Elevator {
         public enum SETPOINTS {
-            IDLE(0), // tbd
-            L1(30), // tbd
-            L2(40), // tbd
-            L3(72); // tbd
+            IDLE(0),
+            L1(30), // tuned 2/23/25
+            L2(72), // tuned 2/23/25
+            L3(117); // tuned 2/23/25
 
             private double setpoint;
 
@@ -63,7 +63,7 @@ public final class Constants {
             27, 
             40, 
             true, 
-            new PIDConfig(0.8, 0, 0.02, 0),
+            new PIDConfig(0., 0, 0.0, 0), // 0.8 p, 0.02 d
             Mode.BRAKE
         );
 
@@ -97,7 +97,7 @@ public final class Constants {
 
         public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true); // tbd
 
-        public static final double SPEED = 0.9; // tbd
+        public static final double SPEED = 0.2; // tbd
 
         public static final double GEAR_RATIO = 0;
 
@@ -127,7 +127,7 @@ public final class Constants {
             "",
             20, 
             false, 
-            new PIDConfig(0.0), // 0.05
+            new PIDConfig(0.02), // 0.05
             Mode.COAST,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
@@ -144,14 +144,14 @@ public final class Constants {
         public static final FFConfig FF = new FFConfig(0.015, 0.0, 0.0); // tbd
 
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
-        public static final double MAX_ERROR = 1.0;
+        public static final double MAX_ERROR = 5.0;
         public static final double SPEED = 1.0; // tbd
 
         public enum SETPOINTS {
-            IDLE(70), // tbd
+            IDLE(80), // tbd
             ALGAE_PICKUP(0), // tbd
             ALGAE_DROP(0), // tbd
-            CORAL_PICKUP(-16.5); // tbd
+            CORAL_PICKUP(-25.5); // tbd
 
             private double setpoint;
 
@@ -187,7 +187,7 @@ public final class Constants {
             25,
             false, // Make true if we have a stroke
             PIDConfig.getPid(5.0), // TODO: retune
-            Mode.COAST
+            Mode.BRAKE
         );
 
         // tbd
@@ -196,7 +196,7 @@ public final class Constants {
             60,
             true,
             PIDConfig.getPid(0.01, 0.2), // Tuned alpha on 01/05/25 with a shit battery // tbd
-            Mode.BRAKE
+            Mode.COAST
         );
 
         public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
@@ -206,10 +206,10 @@ public final class Constants {
         // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
-                Rotation2d.fromDegrees(131.5), // 42.2
-                Rotation2d.fromDegrees(36.47), // 315.4
-                Rotation2d.fromDegrees(227.46), // 95.09
-                Rotation2d.fromDegrees(344.53) // 101.95 THIS ONE
+                Rotation2d.fromDegrees(42.099609), // 42.2
+                Rotation2d.fromDegrees(283.007812), // 315.4
+                Rotation2d.fromDegrees(162.421875), // 95.09
+                Rotation2d.fromDegrees(173.408203) // 101.95 THIS ONE
             },
             MODULE_TYPE, 
             SWERVE_TUNING_MODE, 
