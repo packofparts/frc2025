@@ -102,6 +102,8 @@ public final class Constants {
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(1, new Rotation2d(0.0), false); // id 1
 
         public static final boolean TUNNING_MODE = false;
+
+        public static final int RANGE_ID = 31;
     }
 
     public static final class Indexer {
