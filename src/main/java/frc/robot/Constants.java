@@ -72,6 +72,8 @@ public final class Constants {
 
         public static final double MOTOR_SPEED = 0.5; // tbd
         public static final double MAX_ERROR = 1.0;
+
+        public static final double RESET_SPEED = 0.3;
     }
 
     public static final class Manipulator {

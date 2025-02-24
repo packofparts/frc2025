@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.util.TalonElevator;
-import poplib.smart_dashboard.TunableNumber;
 
 public class Elevator extends TalonElevator {
     private static Elevator instance;
@@ -28,23 +27,18 @@ public class Elevator extends TalonElevator {
         limitSwitch = new DigitalInput(Constants.Elevator.LIMIT_SWITCH_CHANNEL);
     }
 
-    // public boolean isAtBottom() {
-    //     return !limitSwitch.get();
-    // }
+    public boolean isAtBottom() {
+        return !limitSwitch.get();
+    }
 
-    // public Command reZero() {
-    //     return runOnce(() -> {
-    //         resetSequence = true;
-    //         moveDown(0.1);
-    //         System.out.println("Reset Sequency Starting");
-    //     }).andThen(run(() -> {
-    //     })).until(() -> isAtBottom()).finallyDo(() -> {
-    //         resetSequence = false;
-    //         System.out.println("Reset Sequency Ending");
-    //         stop();
-    //         zeroPosition();
-    //     });
-    // }
+    public Command reZero() {
+        return runOnce(() -> {
+            System.out.println("Reset Sequency Starting");
+        }).andThen(moveDown(Constants.Elevator.RESET_SPEED)).until(() -> isAtBottom()).finallyDo(() -> {
+            System.out.println("Reset Sequency Ending");
+            zeroPosition();
+        }).andThen(stop());
+    }
 
     @Override
     public void periodic() {
