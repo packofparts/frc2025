@@ -72,6 +72,8 @@ public final class Constants {
 
         public static final double MOTOR_SPEED = 0.5; // tbd
         public static final double MAX_ERROR = 1.0;
+
+        public static final double RESET_SPEED = 0.3;
     }
 
     public static final class Manipulator {
@@ -102,6 +104,8 @@ public final class Constants {
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(1, new Rotation2d(0.0), false); // id 1
 
         public static final boolean TUNNING_MODE = false;
+
+        public static final int RANGE_ID = 31;
     }
 
     public static final class Indexer {
