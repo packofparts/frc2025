@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Indexer.Indexer;
@@ -16,8 +15,6 @@ import poplib.swerve.commands.SysIdSwerve;
 import poplib.swerve.commands.TeleopSwerveDrive;
 import poplib.swerve.commands.WheelRadiusChar;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -77,7 +73,6 @@ public class RobotContainer {
 
 
     private void configureBindings() {
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
         // SysIdSwerve sys = new SysIdSwerve(swerve);
 
         oi.getDriverButton(XboxController.Button.kA.value).whileTrue(

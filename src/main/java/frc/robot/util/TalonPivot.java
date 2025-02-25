@@ -7,7 +7,6 @@ package frc.robot.util;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import poplib.control.FFConfig;
 import poplib.motor.FollowerConfig;

@@ -13,25 +13,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class TalonElevator extends Elevator {
-    private TalonFX leadMotor;
-    private TalonFX followMotor;
+    private final TalonFX leadMotor;
+    private final TalonFX followMotor;
+    private final PositionDutyCycle position;
+    private final TunableNumber kG;
     protected boolean usePID;
-    private PositionDutyCycle position;
-    private TunableNumber kG;
 
     public TalonElevator(MotorConfig motorConfig, FollowerConfig followerConfig, FFConfig ffConfig, boolean tuningMode, String subsystemName) {
-        super(ffConfig, tuningMode, subsystemName);
+        super(
+            ffConfig, 
+            tuningMode, 
+            subsystemName
+        );
     
-        usePID = true;
         leadMotor = motorConfig.createTalon();
-        position = new PositionDutyCycle(0.0).
-        withSlot(leadMotor.getClosedLoopSlot().getValue());
-
         leadMotor.setPosition(0.0);
+
         followMotor = followerConfig.createTalon();
         followMotor.setPosition(0.0);
 
-        kG = new TunableNumber(subsystemName + "kG", ffConfig.G, tuningMode);
+        position = new PositionDutyCycle(0.0).
+        withSlot(leadMotor.getClosedLoopSlot().getValue());
+
+        kG = new TunableNumber(subsystemName + " kG", ffConfig.G, tuningMode);
+
+        usePID = true;
     }
 
     @Override
