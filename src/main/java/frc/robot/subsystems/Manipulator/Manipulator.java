@@ -48,6 +48,7 @@ public class Manipulator extends TalonPivot {
 
         range = new CANrange(Constants.Manipulator.RANGE_ID, Constants.Ports.CANIVORE_NAME);
         CANrangeConfiguration config = new CANrangeConfiguration();
+        config.ProximityParams.ProximityThreshold = 0.1;
         range.getConfigurator().apply(config);
     }
 
@@ -72,6 +73,7 @@ public class Manipulator extends TalonPivot {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Blocked", range.getIsDetected().getValue());
+        super.log();
         super.periodic();
     }
 }

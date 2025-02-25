@@ -45,26 +45,26 @@ public class RobotContainer {
     private SysIdSwerve sys;
 
     public RobotContainer() {
-        swerve = Swerve.getInstance();
+        // swerve = Swerve.getInstance();
         oi = XboxOI.getInstance();
 
 
         elevator = Elevator.getInstance();
         manipulator = Manipulator.getInstance();
-        indexer = Indexer.getInstance();
-        intake = Intake.getInstance();
-        sys = new SysIdSwerve(swerve);
+        // indexer = Indexer.getInstance();
+        // intake = Intake.getInstance();
+        // sys = new SysIdSwerve(swerve);
 
-        scoring = new SendableChooser<>();
-        scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
-        scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
-        scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
-        SmartDashboard.putData(scoring);
+        // scoring = new SendableChooser<>();
+        // scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
+        // scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
+        // scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        // SmartDashboard.putData(scoring);
 
-        swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+        // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
-        intaking = false;
-        configureBindings();
+        // intaking = false;
+        // configureBindings();
     }
 
     public boolean getIntaking() {
@@ -75,9 +75,9 @@ public class RobotContainer {
     private void configureBindings() {
         // SysIdSwerve sys = new SysIdSwerve(swerve);
 
-        oi.getDriverButton(XboxController.Button.kA.value).whileTrue(
-            new WheelRadiusChar(swerve, Constants.Swerve.MODULE_TYPE, Constants.Swerve.DRIVE_BASE_RADIUS)
-        );
+        // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(
+        //     new WheelRadiusChar(swerve, Constants.Swerve.MODULE_TYPE, Constants.Swerve.DRIVE_BASE_RADIUS)
+        // );
         // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
         // oi.getDriverButton(XboxController.Button.kX.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
