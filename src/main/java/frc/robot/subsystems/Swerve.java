@@ -3,25 +3,28 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Supplier;
-import poplib.sensors.camera.CameraConfig;
-import poplib.sensors.camera.LimelightConfig;
-import poplib.sensors.camera.StdDevStategy;
-import poplib.sensors.gyro.Pigeon;
-import poplib.smart_dashboard.AllianceColor;
-import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import edu.wpi.first.apriltag.AprilTagFields;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import poplib.sensors.camera.CameraConfig;
+import poplib.sensors.camera.LimelightConfig;
+import poplib.sensors.gyro.Pigeon;
+import poplib.smart_dashboard.AllianceColor;
+import poplib.swerve.swerve_modules.SwerveModuleTalon;
 import poplib.swerve.swerve_templates.VisionBaseSwerve;
+import frc.robot.Constants;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
@@ -34,11 +37,12 @@ public class Swerve extends VisionBaseSwerve {
     private Pose2d relativePosition;
     private int timeSinceLastValid;
     private Translation2d offset;
-    
+
     public static Swerve getInstance() {
         if (instance == null) {
             instance = new Swerve();
         }
+
         return instance;
     }
 
@@ -51,15 +55,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
-            Constants.Swerve.SWERVE_KINEMATICS,
-            new ArrayList<CameraConfig>(Arrays.asList(new CameraConfig("RaoVisionFLCam", 
-                new Transform3d(
-                    Units.inchesToMeters(-12.521), 
-                    Units.inchesToMeters(-11.056), 
-                    Units.inchesToMeters(10.1), 
-                    new Rotation3d(0, Units.degreesToRadians(4.0), Units.degreesToRadians(15.0))), 
-                    0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
-            new ArrayList<LimelightConfig>()
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
 
         xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
@@ -74,6 +70,43 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         timeSinceLastValid = 0;
+
+        // RobotConfig config = Constants.Swerve.getRobotConfig();
+        RobotConfig config;
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            // e.printStackTrace();
+            // u r cooked
+            // this shouldn't be happening unless settings.json in /deploy/pathplanner is missing
+            config = null;
+        }
+
+        // Configure AutoBuilder last
+        AutoBuilder.configure(
+                this::getOdomPose, // Robot pose supplier
+                this::setOdomPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                (speeds, feedforwards) -> driveChassis(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                        new PIDConstants(15.0, 0.0, 0.1), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                ),
+                config, // The robot configuration
+                () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                // This will flip the path being followed to the red side of the field.
+                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
     }
 
     public void turnCommand(Rotation2d rot) {
@@ -97,7 +130,11 @@ public class Swerve extends VisionBaseSwerve {
                 color = Alliance.Blue;
             }
     
-            offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+            offset = newOffset;
+
+            if (offset == null) {
+                offset = Constants.AutoAlign.DEFAULT_OFFSET;
+            }
 
             Pose2d pose = poseSupplier.get();
             Rotation2d targetRot = pose.getRotation();
@@ -110,12 +147,15 @@ public class Swerve extends VisionBaseSwerve {
             xaxisPid.setSetpoint(offsetTarget.getX());
             yaxisPid.setSetpoint(offsetTarget.getY());
 
+            /** Invert theta to ensure we're facing towards the target */
             thetaPid.setSetpoint(0.0);
 
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getX());
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getY());
+            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getRotation().getRadians());
             xaxisPid.calculate(odom.getEstimatedPosition().getX());
             yaxisPid.calculate(odom.getEstimatedPosition().getY());
             thetaPid.calculate(odom.getEstimatedPosition().getRotation().getRadians());
-
         }).andThen(run(
             () -> {
                 drive(
@@ -137,11 +177,9 @@ public class Swerve extends VisionBaseSwerve {
     }
 
 
-/**
- * newOffset = vector relative to april tag
- */
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
+            System.out.println("RUn Once Running");
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
             }
@@ -158,7 +196,6 @@ public class Swerve extends VisionBaseSwerve {
             xaxisPid.calculate(relativePosition.getX());
             yaxisPid.calculate(relativePosition.getY());
             thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
-
         }).andThen(run(
             () -> {
                 driveRobotOriented(
@@ -180,7 +217,6 @@ public class Swerve extends VisionBaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
-
         Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
         if (newRelativePosition != null) {
@@ -192,10 +228,10 @@ public class Swerve extends VisionBaseSwerve {
 
         SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
     
-        if (relativePosition != null) {
-            SmartDashboard.putNumber("Relative Pose X", relativePosition.getX());
-            SmartDashboard.putNumber("Relative Pose Y", relativePosition.getY());
-            SmartDashboard.putNumber("Relative Pose Degrees", relativePosition.getRotation().getDegrees());
-        }
+        // if (relativePosition != null) {
+        //     // SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
+        //     // SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
+        //     // SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
+        // }
     }
 }
