@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "start right to reef1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cycle reef1 to source right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cycle source right to reef2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "reef2 to source right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": null
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
