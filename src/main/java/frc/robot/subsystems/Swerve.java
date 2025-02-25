@@ -77,7 +77,8 @@ public class Swerve extends VisionBaseSwerve {
             config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
             // Handle exception as needed
-            e.printStackTrace();
+            // e.printStackTrace();
+            // u r cooked
             // this shouldn't be happening unless settings.json in /deploy/pathplanner is missing
             config = null;
         }
