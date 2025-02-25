@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems.Elevator;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.util.TalonElevator;
@@ -50,6 +53,7 @@ public class Elevator extends TalonElevator {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("Elevator at bottom", isAtBottom());
         super.periodic();
     }
 }

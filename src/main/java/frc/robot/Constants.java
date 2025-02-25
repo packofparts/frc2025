@@ -67,7 +67,7 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        public static final int LIMIT_SWITCH_CHANNEL = 3; // tbd
+        public static final int LIMIT_SWITCH_CHANNEL = 2;
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
@@ -89,25 +89,26 @@ public final class Constants {
             Mode.COAST
         );
 
+        public static final double GEAR_RATIO = 48;
+
+
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
             25,
             "tempura sushi",
             40,
             false, 
-            Mode.COAST
+            new PIDConfig(0.0), 
+            Mode.COAST,
+            new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
-
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true); // tbd
 
         public static final double SPEED = 0.2; // tbd
 
-        public static final double GEAR_RATIO = 0;
-
         public static final FFConfig FF = new FFConfig(0.0);
 
-        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(1, new Rotation2d(0.0), false); // id 1
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(9, Rotation2d.fromDegrees(-71.0), true); // id 1
 
-        public static final boolean TUNNING_MODE = false;
+        public static final boolean TUNNING_MODE = true;
 
         public static final int RANGE_ID = 31;
     }
