@@ -51,20 +51,20 @@ public class RobotContainer {
 
         elevator = Elevator.getInstance();
         manipulator = Manipulator.getInstance();
-        // indexer = Indexer.getInstance();
-        // intake = Intake.getInstance();
+        indexer = Indexer.getInstance();
+        intake = Intake.getInstance();
         // sys = new SysIdSwerve(swerve);
 
-        // scoring = new SendableChooser<>();
-        // scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
-        // scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
-        // scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
-        // SmartDashboard.putData(scoring);
+        scoring = new SendableChooser<>();
+        scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
+        scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
+        scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        SmartDashboard.putData(scoring);
 
         // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
-        // intaking = false;
-        // configureBindings();
+        intaking = false;
+        configureBindings();
     }
 
     public boolean getIntaking() {
@@ -83,26 +83,17 @@ public class RobotContainer {
         // oi.getDriverButton(XboxController.Button.kX.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
         // oi.getDriverButton(XboxController.Button.kY.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
-        // oi.getDriverButton(XboxController.Button.kY.value).onTrue(tobleIntake());
+        oi.getDriverButton(XboxController.Button.kY.value).onTrue(tobleIntake());
 
         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
         // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
 
-        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-        //     // intake.reverse(),
-        //     // indexer.reverse(),
-        //     manipulator.run()
-        // )).onFalse(new ParallelCommandGroup(
-        //     intake.stop(),
-        //     indexer.stop(),
-        //     manipulator.stop()
-        // ));
 
         // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
 
-        // oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-        //     scoring.getSelected().schedule();
-        // }));
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+            scoring.getSelected().schedule();
+        }));
     }
 
     public Command tobleIntake() {
