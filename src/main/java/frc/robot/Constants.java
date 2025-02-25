@@ -102,7 +102,7 @@ public final class Constants {
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
 
-        public static final double SPEED = 0.2; // tbd
+        public static final double SPEED = 0.05; // tbd
 
         public static final FFConfig FF = new FFConfig(0.0);
 

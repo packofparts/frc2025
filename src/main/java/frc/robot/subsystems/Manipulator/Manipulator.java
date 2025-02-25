@@ -70,6 +70,10 @@ public class Manipulator extends TalonPivot {
         });
     }
 
+    public boolean coralIn() {
+        return range.getIsDetected().getValue();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Blocked", range.getIsDetected().getValue());

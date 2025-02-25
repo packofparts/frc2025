@@ -58,9 +58,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        // if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
-        //     robotContainer.stopIntaking().schedule();
-        // }
+        if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
+            robotContainer.stopIntaking().schedule();
+        }
     }
 
     @Override
