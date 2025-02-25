@@ -4,15 +4,12 @@
 
 package frc.robot.subsystems.Manipulator;
 
-import java.net.ContentHandler;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.util.TalonPivot;
@@ -21,7 +18,7 @@ public class Manipulator extends TalonPivot {
     private final TalonFX spin;
     private final DutyCycleOut control;
     private static CANrange range;
-    
+
     private static Manipulator instance;
 
     public static Manipulator getInstance() {

@@ -21,9 +21,15 @@ public class Elevator extends TalonElevator {
         return instance;
     }
 
-    /** Creates a new BetaElevator. */
     public Elevator() {
-        super(Constants.Elevator.RIGHT_MOTOR, Constants.Elevator.LEFT_MOTOR, Constants.Elevator.FF_CONFIG, Constants.Elevator.TUNNING_MODE, "Beta Elevator");
+        super(
+            Constants.Elevator.RIGHT_MOTOR, 
+            Constants.Elevator.LEFT_MOTOR, 
+            Constants.Elevator.FF_CONFIG, 
+            Constants.Elevator.TUNNING_MODE, 
+            "Elevator"
+        );
+
         limitSwitch = new DigitalInput(Constants.Elevator.LIMIT_SWITCH_CHANNEL);
     }
 
@@ -32,12 +38,14 @@ public class Elevator extends TalonElevator {
     }
 
     public Command reZero() {
-        return runOnce(() -> {
-            System.out.println("Reset Sequency Starting");
-        }).andThen(moveDown(Constants.Elevator.RESET_SPEED)).until(() -> isAtBottom()).finallyDo(() -> {
-            System.out.println("Reset Sequency Ending");
-            zeroPosition();
-        }).andThen(stop());
+        return runOnce(() -> System.out.println("Reset Sequency Starting"))
+            .andThen(moveDown(Constants.Elevator.RESET_SPEED))
+            .until(() -> isAtBottom())
+            .finallyDo(() -> {
+                System.out.println("Reset Sequency Ending");
+                zeroPosition();
+            })
+            .andThen(stop());
     }
 
     @Override
