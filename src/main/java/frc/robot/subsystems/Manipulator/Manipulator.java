@@ -5,6 +5,9 @@
 package frc.robot.subsystems.Manipulator;
 
 
+import java.util.concurrent.CancellationException;
+
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -42,6 +45,10 @@ public class Manipulator extends TalonPivot {
         );
         spin = Constants.Manipulator.MANIPULATOR_MOTOR.createTalon();
         control = new DutyCycleOut(0.0);
+
+        range = new CANrange(Constants.Manipulator.RANGE_ID, Constants.Ports.CANIVORE_NAME);
+        CANrangeConfiguration config = new CANrangeConfiguration();
+        range.getConfigurator().apply(config);
     }
 
     public Command run(){
