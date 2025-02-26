@@ -42,57 +42,48 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    public Swerve swerve;
+    public final Swerve swerve;
+    public final Elevator elevator;
+    public final Indexer indexer;
+    public final Intake intake;
+    public final Manipulator manipulator;
 
-    public Elevator elevator;
-    public Indexer indexer;
-    public Intake intake;
-    public Manipulator manipulator;
-    
+    private final SysIdSwerve sys;
+
     public final OI oi;
+
     private final SendableChooser<Command> autoChooser;
-    // public final SendableChooser<Command> scoring;
-  
-    public OI oi;
-    public SendableChooser<Command> scoring;
+    public final SendableChooser<Command> scoring;
 
     private boolean intaking;
-    private SysIdSwerve sys;
 
-  public RobotContainer() {
-    // swerve = Swerve.getInstance();
-    swerve = Swerve.getInstance();
-    oi = XboxOI.getInstance();
-    elevator = Elevator.AlphaElevator.getInstance();
-    manipulator = AlphaManipulator.getInstance();
-    indexer = AlphaIndexer.getInstance();
-    intake = AlphaIntake.getInstance();
-    // scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
-    // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
-    autoChooser.addOption("square", new PathPlannerAuto("square"));
-    configureBindings();
-  }
     public RobotContainer() {
-        // swerve = Swerve.getInstance();
-        oi = XboxOI.getInstance();
-
-
+        // Subsytem intatiating
+        swerve = Swerve.getInstance();
         elevator = Elevator.getInstance();
         manipulator = Manipulator.getInstance();
         indexer = Indexer.getInstance();
         intake = Intake.getInstance();
-        // sys = new SysIdSwerve(swerve);
 
+        sys = new SysIdSwerve(swerve);
+        oi = XboxOI.getInstance();
+
+
+        // Scoring Selecter
         scoring = new SendableChooser<>();
         scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
         scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
         scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        scoring.addOption("L4", elevatorScore(Constants.Elevator.SETPOINTS.L4));
         SmartDashboard.putData(scoring);
 
-        // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+        // Auto Selecter
+        autoChooser = AutoBuilder.buildAutoChooser();    
+        autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
+        autoChooser.addOption("square", new PathPlannerAuto("square"));
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
         intaking = false;
         configureBindings();
@@ -102,14 +93,8 @@ public class RobotContainer {
         return intaking;
     }
 
-    public Command thing() {
-        return swerve.moveToPoseVision(null);
-    }
-
 
     private void configureBindings() {
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
-
         // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(
         //     new WheelRadiusChar(swerve, Constants.Swerve.MODULE_TYPE, Constants.Swerve.DRIVE_BASE_RADIUS)
         // );
@@ -118,11 +103,10 @@ public class RobotContainer {
         // oi.getDriverButton(XboxController.Button.kX.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
         // oi.getDriverButton(XboxController.Button.kY.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
 
-        oi.getDriverButton(XboxController.Button.kY.value).onTrue(tobleIntake());
+        oi.getDriverButton(XboxController.Button.kY.value).onTrue(togleIntake());
 
         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
         // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
-
 
         // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
 
@@ -131,7 +115,7 @@ public class RobotContainer {
         }));
     }
 
-    public Command tobleIntake() {
+    public Command togleIntake() {
         return new InstantCommand(() -> {
             (!intaking ? startIntaking() : stopIntaking()).schedule();
             intaking = !intaking;

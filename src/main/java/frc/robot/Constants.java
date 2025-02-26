@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -44,7 +45,8 @@ public final class Constants {
             IDLE(0),
             L1(30), // tuned 2/23/25
             L2(72), // tuned 2/23/25
-            L3(117); // tuned 2/23/25
+            L3(117), // tuned 2/23/25
+            L4(0);
 
             private double setpoint;
 
@@ -186,7 +188,6 @@ public final class Constants {
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)
         );
 
-        // tbd
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             25,
@@ -195,7 +196,6 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        // tbd
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             60,
@@ -208,13 +208,12 @@ public final class Constants {
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
-        // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
-                Rotation2d.fromDegrees(42.099609), // 42.2
-                Rotation2d.fromDegrees(283.007812), // 315.4
-                Rotation2d.fromDegrees(162.421875), // 95.09
-                Rotation2d.fromDegrees(173.408203) // 101.95 THIS ONE
+                Rotation2d.fromDegrees(42.099609), 
+                Rotation2d.fromDegrees(283.007812),
+                Rotation2d.fromDegrees(162.421875),
+                Rotation2d.fromDegrees(173.408203)
             },
             MODULE_TYPE, 
             SWERVE_TUNING_MODE, 
@@ -224,25 +223,42 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
 
-        public static final double ROBOT_MASS_KG = 50; // estimate with bumpers & battery
-        public static final double ROBOT_MOI = 5; // gotta ask CAD
-        public static final double WHEEL_RADIUS_METERS = 0.0508; // 2 inch radius
-        public static final double MAX_DRIVE_VELOCITY_MPS = 5; // meters per second
-        public static final double WHEEL_COF = 1.0; // suggested value if unsure as per docs
+        public static final double ROBOT_MASS_KG = edu.wpi.first.math.util.Units.lbsToKilograms(153);;
 
-        public static RobotConfig getRobotConfig(){
-            RobotConfig config = new RobotConfig(ROBOT_MASS_KG, ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS_METERS, MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, DCMotor.getKrakenX60(4), 60, 4), TRACK_WIDTH);
+        public static final double ROBOT_MOI = 
+            (1.0 / 12.0) * 
+            ROBOT_MASS_KG * 
+            2 * (edu.wpi.first.math.util.Units.inchesToMeters(32) * edu.wpi.first.math.util.Units.inchesToMeters(32));
+
+        public static final double WHEEL_RADIUS_METERS = edu.wpi.first.math.util.Units.inchesToMeters(2); 
+        public static final double WHEEL_COF = 1.0;
+
+        public static RobotConfig getRobotConfig() {
+            RobotConfig config = new RobotConfig(
+                ROBOT_MASS_KG, 
+                ROBOT_MOI, 
+                new ModuleConfig(
+                    WHEEL_RADIUS_METERS, 
+                    MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
+                    WHEEL_COF, 
+                    DCMotor.getKrakenX60(4), 
+                    DRIVE_CONFIG.currentLimit, 
+                    4
+                ), 
+                TRACK_WIDTH
+            );
+
             return config;
         }
     }
 
     public static class AutoAlign {
-        /** PID tolerance. */ // TODO : to be tuned
+        /** PID tolerance. */ 
         public static final double X_TOLERANCE = 0.1;
         public static final double Y_TOLERANCE = 0.1;
         public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(2.0);
 
-        /* Pid Controllers */ //TODO: to be tuned
+        /* Pid Controllers */ 
         public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
