@@ -5,8 +5,6 @@
 package frc.robot.subsystems.Manipulator;
 
 
-import java.util.concurrent.CancellationException;
-
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -76,7 +74,7 @@ public class Manipulator extends TalonPivot {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Blocked", range.getIsDetected().getValue());
+        SmartDashboard.putBoolean("Blocked", coralIn());
         super.log();
         super.periodic();
     }
