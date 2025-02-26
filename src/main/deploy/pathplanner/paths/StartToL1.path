@@ -8,14 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
+<<<<<<< HEAD
         "x": 3.786581369173729,
         "y": 6.899213370630297
+=======
+        "x": 7.415256762712509,
+        "y": 5.9273721432670845
+>>>>>>> 6084e3205c0f7369309385f4e310dfb5469e0645
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
+<<<<<<< HEAD
         "x": 3.9054869570974575,
         "y": 5.573967988612287
       },
@@ -26,6 +32,18 @@
       "nextControl": null,
       "isLocked": false,
       "linkedName": "kScoreBlue"
+=======
+        "x": 5.512552138510942,
+        "y": 5.307398702332191
+      },
+      "prevControl": {
+        "x": 7.032085021935471,
+        "y": 6.346594260810443
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "IScoreBlue"
+>>>>>>> 6084e3205c0f7369309385f4e310dfb5469e0645
     }
   ],
   "rotationTargets": [],
@@ -42,7 +60,11 @@
   },
   "goalEndState": {
     "velocity": 0,
+<<<<<<< HEAD
     "rotation": 121.87872190956315
+=======
+    "rotation": 58.46520809501185
+>>>>>>> 6084e3205c0f7369309385f4e310dfb5469e0645
   },
   "reversed": false,
   "folder": "ground",

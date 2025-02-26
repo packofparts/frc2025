@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() { 
         // robotContainer.intake.resetToAbsPosition();
         robotContainer.swerve.updateEncoders(); 
+        // robotContainer.swerve.updateEncoders(); 
     }
 
     @Override

@@ -187,6 +187,7 @@ public final class Constants {
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)
         );
 
+        // tbd
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             25,
@@ -207,6 +208,7 @@ public final class Constants {
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
+        // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
                 Rotation2d.fromDegrees(42.099609), 

@@ -16,6 +16,7 @@ import poplib.swerve.commands.TeleopSwerveDrive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import poplib.swerve.commands.WheelRadiusChar;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -47,6 +48,7 @@ public class RobotContainer {
     public final SendableChooser<Command> scoring;
 
     private boolean intaking;
+    private SysIdSwerve sys;
 
     public RobotContainer() {
         // Subsytem intatiating
@@ -55,6 +57,7 @@ public class RobotContainer {
         manipulator = Manipulator.getInstance();
         indexer = Indexer.getInstance();
         intake = Intake.getInstance();
+        // sys = new SysIdSwerve(swerve);
 
         sys = new SysIdSwerve(swerve);
         oi = XboxOI.getInstance();
