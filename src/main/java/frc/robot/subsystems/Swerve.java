@@ -1,13 +1,9 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -72,41 +68,21 @@ public class Swerve extends VisionBaseSwerve {
 
         timeSinceLastValid = 0;
 
-        // RobotConfig config = Constants.Swerve.getRobotConfig();
-        RobotConfig config;
-        try{
-            config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-            // Handle exception as needed
-            // e.printStackTrace();
-            // u r cooked
-            // this shouldn't be happening unless settings.json in /deploy/pathplanner is missing
-            config = null;
-        }
-
-        // Configure AutoBuilder last
         AutoBuilder.configure(
-                this::getOdomPose, // Robot pose supplier
-                this::setOdomPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> driveChassis(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(15.0, 0.0, 0.1), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-                ),
-                config, // The robot configuration
-                () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
+            this::getOdomPose,
+            this::setOdomPose,
+            this::getChassisSpeeds, 
+            (speeds, feedforwards) -> driveChassis(speeds), 
+            Constants.Swerve.SWERVE_AUTO_CONTROLLER,
+            Constants.Swerve.CONFIG,
+            () -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()) {
                     return alliance.get() == DriverStation.Alliance.Red;
                 }
                 return false;
-                },
-                this // Reference to this subsystem to set requirements
+            },
+            this
         );
     }
 
@@ -180,7 +156,6 @@ public class Swerve extends VisionBaseSwerve {
 
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
-            System.out.println("RUn Once Running");
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
             }
@@ -218,6 +193,7 @@ public class Swerve extends VisionBaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
+
         Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
         if (newRelativePosition != null) {
@@ -226,13 +202,5 @@ public class Swerve extends VisionBaseSwerve {
         } else {
             timeSinceLastValid++;
         }
-
-        SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
-    
-        // if (relativePosition != null) {
-        //     // SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
-        //     // SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
-        //     // SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
-        // }
     }
 }

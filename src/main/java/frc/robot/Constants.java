@@ -11,21 +11,20 @@ import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
 import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
-import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -233,23 +232,24 @@ public final class Constants {
         public static final double WHEEL_RADIUS_METERS = edu.wpi.first.math.util.Units.inchesToMeters(2); 
         public static final double WHEEL_COF = 1.0;
 
-        public static RobotConfig getRobotConfig() {
-            RobotConfig config = new RobotConfig(
-                ROBOT_MASS_KG, 
-                ROBOT_MOI, 
-                new ModuleConfig(
-                    WHEEL_RADIUS_METERS, 
-                    MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
-                    WHEEL_COF, 
-                    DCMotor.getKrakenX60(4), 
-                    DRIVE_CONFIG.currentLimit, 
-                    4
-                ), 
-                TRACK_WIDTH
-            );
+        public static final RobotConfig CONFIG = new RobotConfig(
+            ROBOT_MASS_KG, 
+            ROBOT_MOI, 
+            new ModuleConfig(
+                WHEEL_RADIUS_METERS, 
+                MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
+                WHEEL_COF, 
+                DCMotor.getKrakenX60(4), 
+                DRIVE_CONFIG.currentLimit, 
+                4
+            ), 
+            TRACK_WIDTH
+        );
 
-            return config;
-        }
+        public static final PPHolonomicDriveController SWERVE_AUTO_CONTROLLER = new PPHolonomicDriveController(
+            new PIDConstants(15.0, 0.0, 0.1),
+            new PIDConstants(5.0, 0.0, 0.0)
+        );
     }
 
     public static class AutoAlign {

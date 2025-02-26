@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.676476843882416,
-        "y": 7.566508044226695
+        "x": 8.699957792637711,
+        "y": 4.807181872351695
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.786581369173729,
-        "y": 6.899213370630297
+        "x": 6.762997384798728,
+        "y": 5.052836169226695
+      },
+      "isLocked": false,
+      "linkedName": "StartFar"
+    },
+    {
+      "anchor": {
+        "x": 6.681031928628178,
+        "y": 3.0840675483315674
+      },
+      "prevControl": {
+        "x": 7.007209993736333,
+        "y": 3.9858340807860166
+      },
+      "nextControl": {
+        "x": 5.8867948887711865,
+        "y": 0.8882841465836875
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.9054869570974575,
-        "y": 5.573967988612287
+        "x": 3.44777790651483,
+        "y": 2.7241070246292374
       },
       "prevControl": {
-        "x": 3.7462038201800847,
-        "y": 6.45593178959216
+        "x": 2.794910702462923,
+        "y": 1.435366045418433
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "kScoreBlue"
+      "linkedName": "cScoreBlue"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 121.87872190956315
+    "rotation": -119.24176124744916
   },
   "reversed": false,
   "folder": "ground",

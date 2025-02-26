@@ -14,22 +14,13 @@ import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.SysIdSwerve;
 import poplib.swerve.commands.TeleopSwerveDrive;
 
-import java.nio.file.Path;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import poplib.swerve.commands.WheelRadiusChar;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -79,6 +70,9 @@ public class RobotContainer {
 
         // Auto Selecter
         autoChooser = AutoBuilder.buildAutoChooser();    
+        autoChooser.addOption("none", new InstantCommand(() -> {}));
+        autoChooser.addOption("One Score Close", new PathPlannerAuto("One Score Close"));
+        autoChooser.addOption("One Score Far", new PathPlannerAuto("One Score Far"));
         autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
         autoChooser.addOption("square", new PathPlannerAuto("square"));
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -154,27 +148,7 @@ public class RobotContainer {
         );
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
     public Command getAutonomousCommand() {
-        // return new PathPlannerAuto("line_2meters");
-        // try{
-        //     // Load the path you want to follow using its name in the GUI
-        //     PathPlannerPath path = PathPlannerPath.fromPathFile("line_2meters");
-
-        //     // Create a path following command using AutoBuilder. This will also trigger event markers.
-        //     System.out.println("square");
-        //     return AutoBuilder.followPath(path);
-        //     // return AutoBuilder.buildAuto("line_2meters");
-        //     // return new PathPlannerAuto("line_2meters");
-        // } catch (Exception e) {
-        //     DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-        //     System.out.println("u r cooked");
-        //     return Commands.none();
-        // }
-        return new PathPlannerAuto("test1");
+        return autoChooser.getSelected();
     }
 }
