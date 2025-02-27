@@ -134,7 +134,7 @@ public class RobotContainer {
        return new SequentialCommandGroup(
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
-                manipulator.intake(),
+                manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
                 indexer.run(),
                 intake.run()
             )
@@ -160,7 +160,11 @@ public class RobotContainer {
         return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
             andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
             alongWith(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
-            andThen(manipulator.run()).
+            andThen(
+                setpoint == Constants.SCORING_SETPOINTS.L4 ? 
+                manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
+                manipulator.run()
+            ).
             andThen(new WaitCommand(1.0)).
             andThen(manipulator.stop()).
             andThen(elevator.moveElevator(Constants.SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR))

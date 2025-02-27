@@ -51,14 +51,12 @@ public class Manipulator extends TalonPivot {
     }
 
     public Command run(){
-        return runOnce(() ->{
-            spin.setControl(control.withOutput(Constants.Manipulator.SPEED));
-        });
+        return run(Constants.Manipulator.SPEEDS.NORMAL);
     }
 
-    public Command intake(){
+    public Command run(Constants.Manipulator.SPEEDS speed){
         return runOnce(() -> {
-            spin.setControl(control.withOutput(Constants.Manipulator.SPEED_WHILE_INTAKING));
+            spin.setControl(control.withOutput(speed.getSpeed()));
         }); 
     }
 
@@ -68,9 +66,13 @@ public class Manipulator extends TalonPivot {
         });
     }
 
-    public Command reverse(){
+    public Command reverse() {
+        return reverse(Constants.Manipulator.SPEEDS.NORMAL);
+    }
+
+    public Command reverse(Constants.Manipulator.SPEEDS speed) {
         return runOnce(() ->{
-            spin.setControl(control.withOutput(-1 * Constants.Manipulator.SPEED));
+            spin.setControl(control.withOutput(-1 * speed.getSpeed()));
         });
     }
 

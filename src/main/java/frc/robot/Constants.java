@@ -89,6 +89,21 @@ public final class Constants {
     }
 
     public static final class Manipulator {
+        public enum SPEEDS {
+            NORMAL(0.4),
+            INTAKE(0.07),
+            L4(1.0);
+
+            double speed;
+
+            private SPEEDS(double speed) {
+                this.speed = speed;
+            }
+
+            public double getSpeed() {
+                return speed;
+            }
+        }
         public static final MotorConfig MANIPULATOR_MOTOR = new MotorConfig(
             24, 
             "tempura sushi",
@@ -110,9 +125,6 @@ public final class Constants {
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
-
-        public static final double SPEED = 0.4; // tbd
-        public static final double SPEED_WHILE_INTAKING = 0.07;
 
         public static final FFConfig FF = new FFConfig(0.03);
 
