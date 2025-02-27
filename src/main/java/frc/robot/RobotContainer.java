@@ -68,6 +68,11 @@ public class RobotContainer {
         scoring.addOption("L4", elevatorScore(Constants.Elevator.SETPOINTS.L4));
         SmartDashboard.putData(scoring);
 
+
+        // Get Named Commands inputed for Auto
+        NamedCommands.registerCommand("score", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        NamedCommands.registerCommand("intake", startIntaking());
+
         // Auto Selecter
         autoChooser = AutoBuilder.buildAutoChooser();    
         autoChooser.addOption("none", new InstantCommand(() -> {}));
@@ -76,9 +81,6 @@ public class RobotContainer {
         autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
         autoChooser.addOption("square", new PathPlannerAuto("square"));
         autoChooser.addOption("test", new PathPlannerAuto("test"));
-
-        NamedCommands.registerCommand("score", elevatorScore(Constants.Elevator.SETPOINTS.L3));
-        NamedCommands.registerCommand("intake", startIntaking());
 
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
