@@ -64,7 +64,7 @@ public final class Constants {
             27, 
             40, 
             true, 
-            new PIDConfig(0., 0, 0.0, 0), // 0.8 p, 0.02 d
+            new PIDConfig(0.8, 0, 0.0, 0.02), // 0.8 p, 0.02 d
             Mode.BRAKE
         );
 
@@ -75,7 +75,7 @@ public final class Constants {
         // public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0); // tbd
         public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0); // tbd
 
-        public static final double MOTOR_SPEED = 0.5; // tbd
+        public static final double MOTOR_SPEED = 0.8; // tbd
         public static final double MAX_ERROR = 1.0;
 
         public static final double RESET_SPEED = 0.3;
@@ -99,11 +99,11 @@ public final class Constants {
             40,
             false, 
             new PIDConfig(0.0), 
-            Mode.COAST,
+            Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
 
-        public static final double SPEED = 0.05; // tbd
+        public static final double SPEED = 0.4; // tbd
 
         public static final FFConfig FF = new FFConfig(0.0);
 
@@ -151,7 +151,7 @@ public final class Constants {
 
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
         public static final double MAX_ERROR = 5.0;
-        public static final double SPEED = 1.0; // tbd
+        public static final double SPEED = 0.7; // tbd
 
         public enum SETPOINTS {
             IDLE(80), // tbd
@@ -201,7 +201,7 @@ public final class Constants {
             60,
             true,
             PIDConfig.getPid(0.01, 0.2), // Tuned alpha on 01/05/25 with a shit battery // tbd
-            Mode.COAST
+            Mode.BRAKE
         );
 
         public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
@@ -249,9 +249,11 @@ public final class Constants {
         );
 
         public static final PPHolonomicDriveController SWERVE_AUTO_CONTROLLER = new PPHolonomicDriveController(
-            new PIDConstants(15.0, 0.0, 0.1),
-            new PIDConstants(5.0, 0.0, 0.0)
+            new PIDConstants(30.0, 0.0, 0.1),
+            new PIDConstants(35.0, 0.0, 0.0)
         );
+        // 30, 0, 0.1
+        // 30, 0, 0
     }
 
     public static class AutoAlign {

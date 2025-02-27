@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.699957792637711,
-        "y": 4.807181872351695
+        "x": 7.12069672130964,
+        "y": 0.507807377051862
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.762997384798728,
-        "y": 5.052836169226695
+        "x": 4.9053688524571815,
+        "y": 1.0184836065600593
       },
       "isLocked": false,
       "linkedName": "StartFar"
     },
     {
       "anchor": {
-        "x": 6.681031928628178,
-        "y": 3.0840675483315674
+        "x": 3.646659836065574,
+        "y": 2.9892622950819656
       },
       "prevControl": {
-        "x": 7.007209993736333,
-        "y": 3.9858340807860166
-      },
-      "nextControl": {
-        "x": 5.8867948887711865,
-        "y": 0.8882841465836875
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.44777790651483,
-        "y": 2.7241070246292374
-      },
-      "prevControl": {
-        "x": 2.794910702462923,
-        "y": 1.435366045418433
+        "x": 2.9937926320136667,
+        "y": 1.7005213158711607
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,10 +45,10 @@
     "rotation": -119.24176124744916
   },
   "reversed": false,
-  "folder": "ground",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.83409605293846
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

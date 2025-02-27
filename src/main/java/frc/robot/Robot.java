@@ -46,9 +46,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousPeriodic() {
-        System.out.println(autoCommand.getName());
-    }
+    public void autonomousPeriodic() { }
 
     @Override
     public void teleopInit() {

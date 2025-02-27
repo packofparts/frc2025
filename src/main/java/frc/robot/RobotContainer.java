@@ -15,6 +15,7 @@ import poplib.swerve.commands.SysIdSwerve;
 import poplib.swerve.commands.TeleopSwerveDrive;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -70,10 +71,16 @@ public class RobotContainer {
         // Auto Selecter
         autoChooser = AutoBuilder.buildAutoChooser();    
         autoChooser.addOption("none", new InstantCommand(() -> {}));
-        autoChooser.addOption("One Score Close", new PathPlannerAuto("One Score Close"));
+        autoChooser.addOption("One Score", new PathPlannerAuto("One Piece"));
         autoChooser.addOption("One Score Far", new PathPlannerAuto("One Score Far"));
         autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
         autoChooser.addOption("square", new PathPlannerAuto("square"));
+        autoChooser.addOption("test", new PathPlannerAuto("test"));
+
+        NamedCommands.registerCommand("score", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        NamedCommands.registerCommand("intake", startIntaking());
+
+
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
@@ -104,6 +111,9 @@ public class RobotContainer {
         return new InstantCommand(() -> {
             (!intaking ? startIntaking() : stopIntaking()).schedule();
             intaking = !intaking;
+            if(intaking){
+                System.out.print("intaking");
+            }
         });
     }
 

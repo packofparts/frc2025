@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
@@ -68,13 +70,20 @@ public class Swerve extends VisionBaseSwerve {
 
         timeSinceLastValid = 0;
 
+        RobotConfig config = null;
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch(Exception E){
+            System.out.print("u r cooked");
+        }
+
         AutoBuilder.configure(
             this::getOdomPose,
             this::setOdomPose,
             this::getChassisSpeeds, 
             (speeds, feedforwards) -> driveChassis(speeds), 
             Constants.Swerve.SWERVE_AUTO_CONTROLLER,
-            Constants.Swerve.CONFIG,
+            config,
             () -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()) {

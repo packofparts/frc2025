@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PickupFar"
+            "pathName": "test"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PickupClose"
+            "pathName": "PickupFar"
           }
         }
       ]

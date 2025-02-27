@@ -3,51 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.831996077198093,
-        "y": 3.759253757282839
+        "x": 3.8048975409836068,
+        "y": 5.1182786885245894
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5467684498630956,
-        "y": 3.9225928981998237
+        "x": 3.5963114754098364,
+        "y": 6.87327868852459
       },
       "isLocked": false,
-      "linkedName": "BScoreBlue"
+      "linkedName": "LScoreBlue"
     },
     {
       "anchor": {
-        "x": 1.1273276118908897,
-        "y": 2.166858117055085
+        "x": 1.2155532786885246,
+        "y": 5.78
       },
       "prevControl": {
-        "x": 0.6496156625562897,
-        "y": 2.870091731722594
+        "x": 1.0121653491716174,
+        "y": 7.71218533041062
       },
       "nextControl": {
-        "x": 1.4664577595238917,
-        "y": 1.6676289897643217
+        "x": 1.3450204918032787,
+        "y": 4.550061475409835
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.481474278336864,
-        "y": 2.706774695444915
+        "x": 3.186331967213115,
+        "y": 4.154467213114753
       },
       "prevControl": {
-        "x": 2.313492112417373,
-        "y": 1.7513412567251705
+        "x": 2.265676229508197,
+        "y": 4.7298770491803275
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "aScoreBlue"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -62.02006123250424
+      "rotationDegrees": -93.17983011986422
     }
   ],
   "constraintZones": [],
@@ -63,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.24753318000081
+    "rotation": -179.66973741158915
   },
   "reversed": false,
-  "folder": "ground",
+  "folder": "Ground",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.66973741158915
+    "rotation": 118.0874287234013
   },
   "useDefaultConstraints": false
 }
