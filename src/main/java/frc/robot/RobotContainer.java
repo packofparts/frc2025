@@ -17,6 +17,7 @@ import poplib.swerve.commands.TeleopSwerveDrive;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -82,6 +83,7 @@ public class RobotContainer {
         autoChooser.addOption("square", new PathPlannerAuto("square"));
         autoChooser.addOption("test", new PathPlannerAuto("test"));
 
+        PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 

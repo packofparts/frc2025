@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -93,6 +94,10 @@ public class Swerve extends VisionBaseSwerve {
             },
             this
         );
+    }
+
+    public void setAutoTrajector(List<Pose2d> poses) {
+        field.getObject("auto").setPoses(poses);
     }
 
     public void turnCommand(Rotation2d rot) {
