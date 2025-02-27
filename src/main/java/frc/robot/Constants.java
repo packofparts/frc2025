@@ -64,7 +64,7 @@ public final class Constants {
             27, 
             40, 
             true, 
-            new PIDConfig(0.8, 0, 0.0, 0.02), // 0.8 p, 0.02 d
+            new PIDConfig(0.8, 0, 0.0, 0.02), 
             Mode.BRAKE
         );
 
@@ -72,8 +72,7 @@ public final class Constants {
 
         public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
-        // public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0); // tbd
-        public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0); // tbd
+        public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0);
 
         public static final double MOTOR_SPEED = 0.8; // tbd
         public static final double MAX_ERROR = 1.0;
@@ -107,7 +106,12 @@ public final class Constants {
 
         public static final FFConfig FF = new FFConfig(0.0);
 
-        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(9, Rotation2d.fromDegrees(-71.0), true); // id 1
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
+            9,
+            Rotation2d.fromDegrees(-71.0), 
+            true,
+            new ConversionConfig(1.5, Units.Rotations)
+        );
 
         public static final boolean TUNNING_MODE = true;
 
