@@ -224,7 +224,7 @@ public final class Constants {
 
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
-            60,
+            80,
             true,
             PIDConfig.getPid(0.01, 0.2), // Tuned alpha on 01/05/25 with a shit battery // tbd
             Mode.BRAKE
