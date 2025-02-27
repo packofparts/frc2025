@@ -9,6 +9,7 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Indexer.Indexer;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Manipulator.Manipulator;
+import frc.robot.util.RobotZoneDetector;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
 import poplib.swerve.commands.SysIdSwerve;
@@ -19,6 +20,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -108,6 +110,14 @@ public class RobotContainer {
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
             scoring.getSelected().schedule();
+        }));
+
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
+            swerve.findDehWey(RobotZoneDetector.getPathNameForZone(Swerve.zoneID, true));
+        }));
+
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+            swerve.findDehWey(RobotZoneDetector.getPathNameForZone(Swerve.zoneID, false));
         }));
     }
 

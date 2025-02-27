@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.util.RobotZoneDetector;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
@@ -30,6 +31,7 @@ import poplib.swerve.swerve_templates.VisionBaseSwerve;
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
     private static Alliance color;
+    public static int zoneID;
 
     private static PIDController xaxisPid;
     private static PIDController yaxisPid;
@@ -69,6 +71,7 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.setTolerance(Constants.AutoAlign.THETA_TOLERANCE);
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
+        zoneID = 4;
 
         timeSinceLastValid = 0;
 
@@ -103,6 +106,23 @@ public class Swerve extends VisionBaseSwerve {
             Constants.Swerve.PATHFINDING_RESTRAINTS,
             0.0
         );
+    }
+
+    public Command findDehWey(String pathName){
+        PathPlannerPath path = null;
+        try{
+            path = PathPlannerPath.fromPathFile(pathName);
+        }
+        catch (Exception E){
+            System.out.print("can't findDehWey");
+        }
+
+        // Since AutoBuilder is configured, we can use it to build pathfinding commands
+        Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+            path,
+            Constants.Swerve.PATHFINDING_RESTRAINTS);
+        
+        return pathfindingCommand;
     }
 
     public void setAutoTrajector(List<Pose2d> poses) {
@@ -225,5 +245,7 @@ public class Swerve extends VisionBaseSwerve {
         } else {
             timeSinceLastValid++;
         }
+        Swerve.zoneID = RobotZoneDetector.getZone(getOdomPose().getX(), getOdomPose().getY(), AllianceColor.getInstance().isBlue());
+        SmartDashboard.putNumber("Current Zone", Swerve.zoneID);
     }
 }
