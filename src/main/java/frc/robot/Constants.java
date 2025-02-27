@@ -19,6 +19,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -256,8 +257,13 @@ public final class Constants {
             new PIDConstants(30.0, 0.0, 0.1),
             new PIDConstants(35.0, 0.0, 0.0)
         );
-        // 30, 0, 0.1
-        // 30, 0, 0
+        
+        public static final PathConstraints PATHFINDING_RESTRAINTS = new PathConstraints(
+            MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
+            MODULE_TYPE.maxAcceleration.in(Units.MetersPerSecondPerSecond),
+            MODULE_TYPE.maxAngularVelocity.in(Units.RadiansPerSecond),
+            MODULE_TYPE.maxAngularAcceleration.in(Units.RadiansPerSecondPerSecond)
+        );
     }
 
     public static class AutoAlign {

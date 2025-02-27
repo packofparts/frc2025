@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -93,6 +94,14 @@ public class Swerve extends VisionBaseSwerve {
                 return false;
             },
             this
+        );
+    }
+
+    public Command pathFind(Pose2d target) {
+        return AutoBuilder.pathfindToPose(
+            target,
+            Constants.Swerve.PATHFINDING_RESTRAINTS,
+            0.0
         );
     }
 
