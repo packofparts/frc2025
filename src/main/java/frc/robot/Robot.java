@@ -59,6 +59,10 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
             robotContainer.stopIntaking().schedule();
+
+            // if (robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4) {
+            //     robotContainer.l4HoldManipulator().schedule();
+            // }
         }
     }
 

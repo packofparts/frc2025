@@ -39,26 +39,34 @@ public final class Constants {
         public static final String CANIVORE_NAME = "tempura sushi";
     }
 
-    public static class Elevator {
-        public enum SETPOINTS {
-            IDLE(0),
-            L1(30), // tuned 2/23/25
-            L2(72), // tuned 2/23/25
-            L3(117), // tuned 2/23/25
-            L4(0);
+    public enum SCORING_SETPOINTS {
+        IDLE(0, -90),
+        L1(30, -90), // tuned 2/23/25
+        L2(72, -90), // tuned 2/23/25
+        L3(117, -90), // tuned 2/23/25
+        L4(140, 72),
+        L4Hold(140, 50);
 
-            private double setpoint;
+        private double elevator;
+        private double manipulator;
 
-            private SETPOINTS(double setpoint) {
-                this.setpoint = setpoint;
-            }
-
-            public double getSetpoint() {
-                return this.setpoint;
-            }
+        private SCORING_SETPOINTS(double elevator, double manipulator) {
+            this.elevator = elevator;
+            this.manipulator = manipulator;
         }
 
-        public static final boolean TUNNING_MODE = false;
+        public double getElevator() {
+            return this.elevator;
+        }
+        
+        public double getManipulator() {
+            return this.manipulator;
+        }
+    }
+
+
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
@@ -91,27 +99,28 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 48;
 
+        public static final double ERROR = 0.5;
 
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
             25,
             "tempura sushi",
             40,
             false, 
-            new PIDConfig(0.0), 
+            new PIDConfig(0.05, 0.0, 0.0, 0.0), 
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
 
-        public static final double SPEED = 0.6; // tbd
+        public static final double SPEED = 0.4; // tbd
         public static final double SPEED_WHILE_INTAKING = 0.07;
 
-        public static final FFConfig FF = new FFConfig(0.0);
+        public static final FFConfig FF = new FFConfig(0.03);
 
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
             9,
-            Rotation2d.fromDegrees(-71.0), 
+            Rotation2d.fromDegrees(8.0), 
             true,
-            new ConversionConfig(1.5, Units.Rotations)
+            new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
 
         public static final boolean TUNNING_MODE = true;
