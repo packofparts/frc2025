@@ -121,7 +121,7 @@ public class RobotContainer {
        return new SequentialCommandGroup(
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
-                manipulator.run(),
+                manipulator.intake(),
                 indexer.run(),
                 intake.run()
             )

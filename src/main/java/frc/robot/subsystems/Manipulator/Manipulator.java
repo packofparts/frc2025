@@ -56,6 +56,12 @@ public class Manipulator extends TalonPivot {
         });
     }
 
+    public Command intake(){
+        return runOnce(() -> {
+            spin.setControl(control.withOutput(Constants.Manipulator.SPEED_WHILE_INTAKING));
+        }); 
+    }
+
     public Command stop(){
         return runOnce(() ->{
             spin.setControl(control.withOutput(0.0));

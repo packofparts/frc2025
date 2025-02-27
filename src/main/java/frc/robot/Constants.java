@@ -103,7 +103,8 @@ public final class Constants {
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
 
-        public static final double SPEED = 0.4; // tbd
+        public static final double SPEED = 0.6; // tbd
+        public static final double SPEED_WHILE_INTAKING = 0.07;
 
         public static final FFConfig FF = new FFConfig(0.0);
 
@@ -122,7 +123,7 @@ public final class Constants {
             Mode.COAST
         );
 
-        public static final double SPEED = 1.0; // tbd
+        public static final double SPEED = 0.65; // tbd
     }
 
     public static final class Intake {
@@ -151,7 +152,7 @@ public final class Constants {
 
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
         public static final double MAX_ERROR = 5.0;
-        public static final double SPEED = 0.7; // tbd
+        public static final double SPEED = 0.8; // tbd
 
         public enum SETPOINTS {
             IDLE(80), // tbd
