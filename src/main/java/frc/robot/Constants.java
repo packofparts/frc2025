@@ -11,14 +11,15 @@ import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
 import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
-import poplib.sensors.beam_break.BeamBreakConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,106 +40,150 @@ public final class Constants {
         public static final String CANIVORE_NAME = "tempura sushi";
     }
 
-    public static class Elevator {
-        public enum SETPOINTS {
-            IDLE(0),
-            L1(30),
-            L2(40),
-            L3(72);
+    public enum SCORING_SETPOINTS {
+        IDLE(0, -90),
+        L1(30, -90), // tuned 2/23/25
+        L2(72, -90), // tuned 2/23/25
+        L3(117, -90), // tuned 2/23/25
+        L4(140, 72),
+        L4Hold(140, 50);
 
-            private double setpoint;
+        private double elevator;
+        private double manipulator;
 
-            private SETPOINTS(double setpoint) {
-                this.setpoint = setpoint;
-            }
-
-            public double getSetpoint() {
-                return this.setpoint;
-            }
+        private SCORING_SETPOINTS(double elevator, double manipulator) {
+            this.elevator = elevator;
+            this.manipulator = manipulator;
         }
 
-        public static final boolean TUNNING_MODE = false;
+        public double getElevator() {
+            return this.elevator;
+        }
+        
+        public double getManipulator() {
+            return this.manipulator;
+        }
+    }
+
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
-            25, 
-            20, 
-            false, 
-            new PIDConfig(0.12, 0, 0, 0), // 0.12
+            27, 
+            40, 
+            true, 
+            new PIDConfig(0.8, 0, 0.0, 0.02), 
             Mode.BRAKE
         );
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 26);
+        public static final int LIMIT_SWITCH_CHANNEL = 2;
 
-        public static final ElevatorFeedforward FF = new ElevatorFeedforward(0, 0.6, 0);
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
-        public static final double MOTOR_SPEED = 0.5;
+        public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0);
+
+        public static final double MOTOR_SPEED = 0.8; // tbd
         public static final double MAX_ERROR = 1.0;
+
+        public static final double RESET_SPEED = 0.3;
     }
 
     public static final class Manipulator {
-        public static final MotorConfig MOTOR = new MotorConfig(
+        public enum SPEEDS {
+            NORMAL(0.4),
+            INTAKE(0.07),
+            L4(1.0);
+
+            double speed;
+
+            private SPEEDS(double speed) {
+                this.speed = speed;
+            }
+
+            public double getSpeed() {
+                return speed;
+            }
+        }
+        public static final MotorConfig MANIPULATOR_MOTOR = new MotorConfig(
             24, 
+            "tempura sushi",
             40, 
-            false, 
+            false,
             Mode.COAST
-        );    
+        );
 
-        public static final BeamBreakConfig BEAM_BREAK = new BeamBreakConfig(6, true);
+        public static final double GEAR_RATIO = 48;
 
-        public static final double SPEED = 0.9;
+        public static final double ERROR = 0.5;
+
+        public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
+            25,
+            "tempura sushi",
+            40,
+            false, 
+            new PIDConfig(0.05, 0.0, 0.0, 0.0), 
+            Mode.BRAKE,
+            new ConversionConfig(GEAR_RATIO, Units.Degrees)
+        );
+
+        public static final FFConfig FF = new FFConfig(0.03);
+
+        public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
+            9,
+            Rotation2d.fromDegrees(8.0), 
+            true,
+            new ConversionConfig(1.0 / 1.5, Units.Rotations)
+        );
+
+        public static final boolean TUNNING_MODE = true;
+
+        public static final int RANGE_ID = 31;
     }
 
     public static final class Indexer {
         public static final MotorConfig MOTOR = new MotorConfig(
             23, 
             40, 
-            false,
+            true,
             Mode.COAST
-        );    
+        );
 
-        public static final MotorConfig MOTOR2 = new MotorConfig(
-            30, 
-            40, 
-            true, 
-            Mode.COAST
-        );    
-
-        public static final double SPEED = 1.0;
+        public static final double SPEED = 0.65; // tbd
     }
 
     public static final class Intake {
-        public static final double GEAR_RATIO = 157.5;
+        public static final double GEAR_RATIO = 100.8;
 
         public static final MotorConfig PIVOT = new MotorConfig(
-            22, 
+            21, 
             "",
-            40, 
-            true, 
-            new PIDConfig(0.08),
+            20, 
+            false, 
+            new PIDConfig(0.02), // 0.05
             Mode.COAST,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
 
         public static final MotorConfig SPIN = new MotorConfig(
-            21, 
+            22, 
             40, 
-            false, 
+            true, 
             Mode.COAST
         );
 
         public static final boolean TUNING_MODE = false;
 
-        public static final FFConfig FF = new FFConfig(0.5, 0.0, 0.0);
+        public static final FFConfig FF = new FFConfig(0.015, 0.0, 0.0); // tbd
 
-        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(9, Rotation2d.fromDegrees(-48.0), true);
-        public static final double MAX_ERROR = 1.0;
-        public static final double SPEED = 1.0;
+        public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
+        public static final double MAX_ERROR = 5.0;
+        public static final double SPEED = 0.8; // tbd
 
-        public enum SETPOINTS {  
-            IDLE(0),
-            ALGAE_PICKUP(25),
-            ALGAE_DROP(35),
-            CORAL_PICKUP(-30);
+        public enum SETPOINTS {
+            IDLE(80), // tbd
+            ALGAE_PICKUP(0), // tbd
+            ALGAE_DROP(0), // tbd
+            CORAL_PICKUP(-25.5); // tbd
 
             private double setpoint;
 
@@ -151,7 +196,6 @@ public final class Constants {
             }
         }
     }
-
 
     public static final class Swerve {
         public static final boolean GYRO_INVERSION = false; // Always ensure Gyro is CCW+ CW-
@@ -169,33 +213,34 @@ public final class Constants {
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)
         );
 
+        // tbd
         public static final MotorConfig ANGLE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             25,
             false, // Make true if we have a stroke
             PIDConfig.getPid(5.0), // TODO: retune
-            Mode.COAST
+            Mode.BRAKE
         );
-
 
         public static final MotorConfig DRIVE_CONFIG = new MotorConfig(
             Ports.CANIVORE_NAME,
             60,
             true,
-            PIDConfig.getPid(0.01, 0.2), // Tuned 01/05/25 with a shit battery
+            PIDConfig.getPid(0.01, 0.2), // Tuned alpha on 01/05/25 with a shit battery // tbd
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4iL2FOC;
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
+        // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
-                Rotation2d.fromDegrees(131.5), // 42.2
-                Rotation2d.fromDegrees(36.47), // 315.4
-                Rotation2d.fromDegrees(227.46), // 95.09
-                Rotation2d.fromDegrees(344.53) // 101.95 THIS ONE
+                Rotation2d.fromDegrees(42.099609), 
+                Rotation2d.fromDegrees(283.007812),
+                Rotation2d.fromDegrees(162.421875),
+                Rotation2d.fromDegrees(173.408203)
             },
             MODULE_TYPE, 
             SWERVE_TUNING_MODE, 
@@ -205,25 +250,50 @@ public final class Constants {
 
         public static final int PIGEON_ID = 13;
 
-        public static final double ROBOT_MASS_KG = 50; // estimate with bumpers & battery
-        public static final double ROBOT_MOI = 5; // gotta ask CAD
-        public static final double WHEEL_RADIUS_METERS = 0.0508; // 2 inch radius
-        public static final double MAX_DRIVE_VELOCITY_MPS = 5; // meters per second
-        public static final double WHEEL_COF = 1.0; // suggested value if unsure as per docs
+        public static final double ROBOT_MASS_KG = edu.wpi.first.math.util.Units.lbsToKilograms(153);;
 
-        public static RobotConfig getRobotConfig(){
-            RobotConfig config = new RobotConfig(ROBOT_MASS_KG, ROBOT_MOI, new ModuleConfig(WHEEL_RADIUS_METERS, MAX_DRIVE_VELOCITY_MPS, WHEEL_COF, DCMotor.getKrakenX60(4), 60, 4), TRACK_WIDTH);
-            return config;
-        }
+        public static final double ROBOT_MOI = 
+            (1.0 / 12.0) * 
+            ROBOT_MASS_KG * 
+            2 * (edu.wpi.first.math.util.Units.inchesToMeters(32) * edu.wpi.first.math.util.Units.inchesToMeters(32));
+
+        public static final double WHEEL_RADIUS_METERS = edu.wpi.first.math.util.Units.inchesToMeters(2); 
+        public static final double WHEEL_COF = 1.0;
+
+        public static final RobotConfig CONFIG = new RobotConfig(
+            ROBOT_MASS_KG, 
+            ROBOT_MOI, 
+            new ModuleConfig(
+                WHEEL_RADIUS_METERS, 
+                MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
+                WHEEL_COF, 
+                DCMotor.getKrakenX60(4), 
+                DRIVE_CONFIG.currentLimit, 
+                4
+            ), 
+            TRACK_WIDTH
+        );
+
+        public static final PPHolonomicDriveController SWERVE_AUTO_CONTROLLER = new PPHolonomicDriveController(
+            new PIDConstants(30.0, 0.0, 0.1),
+            new PIDConstants(35.0, 0.0, 0.0)
+        );
+        
+        public static final PathConstraints PATHFINDING_RESTRAINTS = new PathConstraints(
+            MODULE_TYPE.maxSpeed.in(Units.MetersPerSecond), 
+            MODULE_TYPE.maxAcceleration.in(Units.MetersPerSecondPerSecond),
+            MODULE_TYPE.maxAngularVelocity.in(Units.RadiansPerSecond),
+            MODULE_TYPE.maxAngularAcceleration.in(Units.RadiansPerSecondPerSecond)
+        );
     }
 
     public static class AutoAlign {
-        /** PID tolerance. */ // TODO : to be tuned
+        /** PID tolerance. */ 
         public static final double X_TOLERANCE = 0.1;
         public static final double Y_TOLERANCE = 0.1;
         public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(2.0);
 
-        /* Pid Controllers */ //TODO: to be tuned
+        /* Pid Controllers */ 
         public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5

@@ -4,29 +4,27 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Indexer.Indexer;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Manipulator.Manipulator;
+import frc.robot.util.RobotZoneDetector;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
+import poplib.swerve.commands.SysIdSwerve;
 import poplib.swerve.commands.TeleopSwerveDrive;
 
-import java.nio.file.Path;
-
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -44,63 +42,93 @@ public class RobotContainer {
     public final Indexer indexer;
     public final Intake intake;
     public final Manipulator manipulator;
+
+    private final SysIdSwerve sys;
     public final OI oi;
+
     private final SendableChooser<Command> autoChooser;
-    // public final SendableChooser<Command> scoring;
-  
+    public final SendableChooser<Constants.SCORING_SETPOINTS> scoring;
+
     private boolean intaking;
 
-  public RobotContainer() {
-    // swerve = Swerve.getInstance();
-    swerve = Swerve.getInstance();
-    oi = XboxOI.getInstance();
-    elevator = Elevator.getInstance();
-    manipulator = Manipulator.getInstance();
-    indexer = Indexer.getInstance();
-    intake = Intake.getInstance();
-    // scoringPos = new TunableNumber("Elevator Scoring Position", 0, true);
-    // swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
-    autoChooser.addOption("square", new PathPlannerAuto("square"));
-    configureBindings();
-  }
+    public RobotContainer() {
+        // Subsytem intatiating
+        swerve = Swerve.getInstance();
+        elevator = Elevator.getInstance();
+        manipulator = Manipulator.getInstance();
+        indexer = Indexer.getInstance();
+        intake = Intake.getInstance();
+
+        sys = new SysIdSwerve(swerve);
+        oi = XboxOI.getInstance();
+
+
+        // Scoring Selecter
+        scoring = new SendableChooser<>();
+        scoring.addOption("L1", Constants.SCORING_SETPOINTS.L1);
+        scoring.addOption("L2", Constants.SCORING_SETPOINTS.L2);
+        scoring.addOption("L3", Constants.SCORING_SETPOINTS.L3);
+        scoring.addOption("L4", Constants.SCORING_SETPOINTS.L4);
+
+        scoring.onChange((Constants.SCORING_SETPOINTS setpoint) -> {
+            if (manipulator.coralIn()) {
+                l4HoldManipulator().schedule();
+            }
+        });
+
+        SmartDashboard.putData(scoring);
+
+
+        // Get Named Commands inputed for Auto
+        NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
+        NamedCommands.registerCommand("intake", startIntaking());
+
+        // Auto Selecter
+        autoChooser = AutoBuilder.buildAutoChooser();    
+        autoChooser.addOption("none", new InstantCommand(() -> {}));
+        autoChooser.addOption("One Score", new PathPlannerAuto("One Piece"));
+        autoChooser.addOption("One Score Far", new PathPlannerAuto("One Score Far"));
+        autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
+        autoChooser.addOption("square", new PathPlannerAuto("square"));
+        autoChooser.addOption("test", new PathPlannerAuto("test"));
+
+        PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
+
+        intaking = false;
+        configureBindings();
+    }
 
     public boolean getIntaking() {
         return intaking;
     }
 
-    public Command thing() {
-        return swerve.moveToPoseVision(null);
-    }
-
 
     private void configureBindings() {
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
-        // SysIdSwerve sys = new SysIdSwerve(swerve);
+        oi.getDriverButton(XboxController.Button.kY.value).onTrue(togleIntake());
 
-        // oi.getDriverButton(XboxController.Button.kA.value).whileTrue(sys.sysIdQuasistatic(Direction.kForward));
-        // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(sys.sysIdDynamic(Direction.kForward));
-        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(null));
-        oi.getDriverButton(XboxController.Button.kY.value).onTrue(elevator.reZero());
+        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
+        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
 
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(tobleIntake());
+        // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
 
-        oi.getDriverButton(XboxController.Button.kX.value).onTrue(new ParallelCommandGroup(
-            // intake.reverse(),
-            // indexer.reverse(),
-            manipulator.run()
-        )).onFalse(new ParallelCommandGroup(
-            intake.stop(),
-            indexer.stop(),
-            manipulator.stop()
-        ));
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+            elevatorScore(scoring.getSelected()).schedule();
+        }));
 
-        oi.getDriverButton(XboxController.Button.kA.value).onTrue(elevatorScore(Constants.Elevator.SETPOINTS.L2));
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
+            swerve.findDehWey(RobotZoneDetector.getPathNameForZone(Swerve.zoneID, true));
+        }));
+
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+            swerve.findDehWey(RobotZoneDetector.getPathNameForZone(Swerve.zoneID, false));
+        }));
     }
 
-    public Command tobleIntake() {
+    public Command togleIntake() {
         return new InstantCommand(() -> {
             (!intaking ? startIntaking() : stopIntaking()).schedule();
             intaking = !intaking;
@@ -111,15 +139,15 @@ public class RobotContainer {
        return new SequentialCommandGroup(
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
-                manipulator.run(),
+                manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
                 indexer.run(),
                 intake.run()
             )
-        ); 
+        );
     }
 
     public Command stopIntaking() {
-       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR).
+       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
             andThen(
                 new ParallelCommandGroup(
                     manipulator.stop(),
@@ -129,37 +157,26 @@ public class RobotContainer {
         );
     }
 
-    public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
-        return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
-            andThen(elevator.moveElevator(setpoint.getSetpoint()).
-            andThen(manipulator.run()).
+    public Command l4HoldManipulator() {
+        return manipulator.moveWrist(Constants.SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR);
+    }
+
+    public Command elevatorScore(Constants.SCORING_SETPOINTS setpoint) {
+        return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
+            andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
+            alongWith(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(
+                setpoint == Constants.SCORING_SETPOINTS.L4 ? 
+                manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
+                manipulator.run()
+            ).
             andThen(new WaitCommand(1.0)).
             andThen(manipulator.stop()).
-            andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint()))
+            andThen(elevator.moveElevator(Constants.SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR))
         );
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
     public Command getAutonomousCommand() {
-        // return new PathPlannerAuto("line_2meters");
-        // try{
-        //     // Load the path you want to follow using its name in the GUI
-        //     PathPlannerPath path = PathPlannerPath.fromPathFile("line_2meters");
-
-        //     // Create a path following command using AutoBuilder. This will also trigger event markers.
-        //     System.out.println("square");
-        //     return AutoBuilder.followPath(path);
-        //     // return AutoBuilder.buildAuto("line_2meters");
-        //     // return new PathPlannerAuto("line_2meters");
-        // } catch (Exception e) {
-        //     DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-        //     System.out.println("u r cooked");
-        //     return Commands.none();
-        // }
-        return new PathPlannerAuto("test1");
+        return autoChooser.getSelected();
     }
 }

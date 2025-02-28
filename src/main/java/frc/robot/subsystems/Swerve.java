@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,17 +18,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import frc.robot.Constants;
+import frc.robot.util.RobotZoneDetector;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
 import poplib.swerve.swerve_templates.VisionBaseSwerve;
-import frc.robot.Constants;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
     private static Alliance color;
+    public static int zoneID;
 
     private static PIDController xaxisPid;
     private static PIDController yaxisPid;
@@ -54,7 +57,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[2]),
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
-            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
+            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, ""),
             Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
         );
 
@@ -68,45 +71,62 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.setTolerance(Constants.AutoAlign.THETA_TOLERANCE);
 
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
+        zoneID = 4;
 
         timeSinceLastValid = 0;
 
-        // RobotConfig config = Constants.Swerve.getRobotConfig();
-        RobotConfig config;
+        RobotConfig config = null;
         try{
             config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-            // Handle exception as needed
-            // e.printStackTrace();
-            // u r cooked
-            // this shouldn't be happening unless settings.json in /deploy/pathplanner is missing
-            config = null;
+        } catch(Exception E){
+            System.out.print("u r cooked");
         }
 
-        // Configure AutoBuilder last
         AutoBuilder.configure(
-                this::getOdomPose, // Robot pose supplier
-                this::setOdomPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> driveChassis(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-                new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                        new PIDConstants(15.0, 0.0, 0.1), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-                ),
-                config, // The robot configuration
-                () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                // This will flip the path being followed to the red side of the field.
-                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
+            this::getOdomPose,
+            this::setOdomPose,
+            this::getChassisSpeeds, 
+            (speeds, feedforwards) -> driveChassis(speeds), 
+            Constants.Swerve.SWERVE_AUTO_CONTROLLER,
+            config,
+            () -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()) {
                     return alliance.get() == DriverStation.Alliance.Red;
                 }
                 return false;
-                },
-                this // Reference to this subsystem to set requirements
+            },
+            this
         );
+    }
+
+    public Command pathFind(Pose2d target) {
+        return AutoBuilder.pathfindToPose(
+            target,
+            Constants.Swerve.PATHFINDING_RESTRAINTS,
+            0.0
+        );
+    }
+
+    public Command findDehWey(String pathName){
+        PathPlannerPath path = null;
+        try{
+            path = PathPlannerPath.fromPathFile(pathName);
+        }
+        catch (Exception E){
+            System.out.print("can't findDehWey");
+        }
+
+        // Since AutoBuilder is configured, we can use it to build pathfinding commands
+        Command pathfindingCommand = AutoBuilder.pathfindThenFollowPath(
+            path,
+            Constants.Swerve.PATHFINDING_RESTRAINTS);
+        
+        return pathfindingCommand;
+    }
+
+    public void setAutoTrajector(List<Pose2d> poses) {
+        field.getObject("auto").setPoses(poses);
     }
 
     public void turnCommand(Rotation2d rot) {
@@ -179,7 +199,6 @@ public class Swerve extends VisionBaseSwerve {
 
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
-            System.out.println("RUn Once Running");
             if (AllianceColor.getInstance().isRed() == true) {
                 color = Alliance.Red;
             }
@@ -217,6 +236,7 @@ public class Swerve extends VisionBaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
+
         Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
         if (newRelativePosition != null) {
@@ -225,13 +245,7 @@ public class Swerve extends VisionBaseSwerve {
         } else {
             timeSinceLastValid++;
         }
-
-        SmartDashboard.putNumber("gyro rot rad", getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));    
-    
-        // if (relativePosition != null) {
-        //     // SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
-        //     // SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
-        //     // SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
-        // }
+        Swerve.zoneID = RobotZoneDetector.getZone(getOdomPose().getX(), getOdomPose().getY(), AllianceColor.getInstance().isBlue());
+        SmartDashboard.putNumber("Current Zone", Swerve.zoneID);
     }
 }
