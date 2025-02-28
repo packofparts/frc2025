@@ -40,26 +40,33 @@ public final class Constants {
         public static final String CANIVORE_NAME = "tempura sushi";
     }
 
-    public static class Elevator {
-        public enum SETPOINTS {
-            IDLE(0),
-            L1(30), // tuned 2/23/25
-            L2(72), // tuned 2/23/25
-            L3(117), // tuned 2/23/25
-            L4(0);
+    public enum SCORING_SETPOINTS {
+        IDLE(0, -90),
+        L1(30, -90), // tuned 2/23/25
+        L2(72, -90), // tuned 2/23/25
+        L3(117, -90), // tuned 2/23/25
+        L4(140, 72),
+        L4Hold(140, 50);
 
-            private double setpoint;
+        private double elevator;
+        private double manipulator;
 
-            private SETPOINTS(double setpoint) {
-                this.setpoint = setpoint;
-            }
-
-            public double getSetpoint() {
-                return this.setpoint;
-            }
+        private SCORING_SETPOINTS(double elevator, double manipulator) {
+            this.elevator = elevator;
+            this.manipulator = manipulator;
         }
 
-        public static final boolean TUNNING_MODE = false;
+        public double getElevator() {
+            return this.elevator;
+        }
+        
+        public double getManipulator() {
+            return this.manipulator;
+        }
+    }
+
+    public static class Elevator {
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
@@ -82,6 +89,21 @@ public final class Constants {
     }
 
     public static final class Manipulator {
+        public enum SPEEDS {
+            NORMAL(0.4),
+            INTAKE(0.07),
+            L4(1.0);
+
+            double speed;
+
+            private SPEEDS(double speed) {
+                this.speed = speed;
+            }
+
+            public double getSpeed() {
+                return speed;
+            }
+        }
         public static final MotorConfig MANIPULATOR_MOTOR = new MotorConfig(
             24, 
             "tempura sushi",
@@ -92,26 +114,25 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 48;
 
+        public static final double ERROR = 0.5;
 
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
             25,
             "tempura sushi",
             40,
             false, 
-            new PIDConfig(0.0), 
+            new PIDConfig(0.05, 0.0, 0.0, 0.0), 
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
 
-        public static final double SPEED = 0.4; // tbd
-
-        public static final FFConfig FF = new FFConfig(0.0);
+        public static final FFConfig FF = new FFConfig(0.03);
 
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
             9,
-            Rotation2d.fromDegrees(-71.0), 
+            Rotation2d.fromDegrees(8.0), 
             true,
-            new ConversionConfig(1.5, Units.Rotations)
+            new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
 
         public static final boolean TUNNING_MODE = true;
@@ -127,7 +148,7 @@ public final class Constants {
             Mode.COAST
         );
 
-        public static final double SPEED = 1.0; // tbd
+        public static final double SPEED = 0.65; // tbd
     }
 
     public static final class Intake {
@@ -156,7 +177,7 @@ public final class Constants {
 
         public static final AbsoluteEncoderConfig ENCODER = new AbsoluteEncoderConfig(0, Rotation2d.fromDegrees(45.241246), true); // tbd
         public static final double MAX_ERROR = 5.0;
-        public static final double SPEED = 0.7; // tbd
+        public static final double SPEED = 0.8; // tbd
 
         public enum SETPOINTS {
             IDLE(80), // tbd
@@ -209,7 +230,7 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4iL2FOC;
 
         public static final boolean SWERVE_TUNING_MODE = false;
 

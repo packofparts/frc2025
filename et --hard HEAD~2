@@ -1,0 +1,592 @@
+[33mcommit 38e2a9499d5b78a8134a00a0dc781cc4028ff021[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32monTheFlyPathGeneration[m[33m)[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Jan 20 13:39:03 2025 -0800
+
+    Added Named Commands for auton
+
+[33mcommit 76fb4b34cbe9fa66615a3f4412d25169c978c7ff[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Jan 20 13:18:31 2025 -0800
+
+    Added line & square paths
+
+[33mcommit 8b5aa5836ed499a5740a89082a5f35c40176846e[m[33m ([m[1;31morigin/onTheFlyPathGeneration[m[33m)[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Thu Feb 27 15:15:16 2025 -0800
+
+    findDehWey implemented
+
+[33mcommit 16e1acc31c3add037677fdf1eda85e5a463ccaed[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 17:42:33 2025 -0800
+
+    setup pathfinding
+
+[33mcommit 41be44225d0d3e14e8dae4e881a2a8fb41bc1df5[m[33m ([m[1;32mbetaBot[m[33m)[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 17:29:58 2025 -0800
+
+    fix navgrid
+
+[33mcommit e51c3788958dc830e6df075a46776f67df04192e[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 17:13:32 2025 -0800
+
+    working abosulte encdoer?
+
+[33mcommit c09afc8e67117fe1821f00758b827794f29e5d1b[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 17:12:00 2025 -0800
+
+    fix auto
+
+[33mcommit 7a9ce325f84f4dd7bf59bc400470647e6de3c27d[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 17:09:48 2025 -0800
+
+    fixed named commands bug
+
+[33mcommit 289b489d7165c46e59175031a14ebbd698b5411e[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Wed Feb 26 16:30:22 2025 -0800
+
+    working One piece far auto - 02/26
+
+[33mcommit 8a9291db2f0e49504bd08876c7cfa0b9aad9032d[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 12:56:38 2025 -0800
+
+    clean code
+
+[33mcommit 43074f2dcf2e970960464ab9189c98ef552a6a6e[m
+Merge: 09e6cbe 6084e32
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 12:55:26 2025 -0800
+
+    rebase
+
+[33mcommit 09e6cbee27a32d67c4eddd3951cb4c7e7b42141a[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 12:51:30 2025 -0800
+
+    add pathplanner
+
+[33mcommit 9490036a082e27cce156566fc2d362faf024cc54[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 26 12:40:12 2025 -0800
+
+    merge in autos
+
+[33mcommit cad370c3b7199c5d36bdeee3c9b0d32a4479f38d[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 20:47:27 2025 -0800
+
+    working auto intake
+
+[33mcommit 60432dff1ba62de5a73f693d70c5027239037801[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 20:40:07 2025 -0800
+
+    can range working
+
+[33mcommit 7916e1d492ccd58548956a46135b1ce27acf6b76[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 18:37:11 2025 -0800
+
+    added can range
+
+[33mcommit 7ccf311cde4930953917844b2ca0b82278e50552[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 18:33:04 2025 -0800
+
+    cleanup
+
+[33mcommit 66e8c248bacc5d86a0f5f510358b07461ba0f1c2[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 10:03:43 2025 -0800
+
+    limit switch on elevator added
+
+[33mcommit 9f5e695bcbafbaf937ee206f689047e21b784df0[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 09:59:13 2025 -0800
+
+    rebase
+
+[33mcommit 0338e65671e81a9152981daccf9ff56d97c1a4c0[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 09:57:52 2025 -0800
+
+    add can range
+
+[33mcommit 5dc494f4431315ca4d0e1aa1de35606e75e07b45[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 11:12:25 2025 -0800
+
+    pratice field 2/23
+
+[33mcommit badb1d018a33d3b09ca6680cb2d7684ea5b093ea[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Sat Feb 22 16:33:24 2025 -0800
+
+    working intake + indexer + elevator + manipulatorSpin
+
+[33mcommit b6fd0e8288efb84af71b8a5895d43b47297b0c67[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Sat Feb 22 14:32:50 2025 -0800
+
+    testing beta
+
+[33mcommit 5b8b140af09742df41a9d89788694527b2bc7315[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Sat Feb 22 13:21:42 2025 -0800
+
+    beta kinda working
+
+[33mcommit 318690f4e983b5b4d8e7bf2aecdf848dbda788b5[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Wed Feb 19 17:42:41 2025 -0800
+
+    added untested beta robot subsystems
+
+[33mcommit cdceb018c9c925511b397aa819e68501ad813aa4[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 12 09:54:04 2025 -0800
+
+    move to folders and change naming to alpha
+
+[33mcommit 6084e3205c0f7369309385f4e310dfb5469e0645[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 20:47:27 2025 -0800
+
+    working auto intake
+
+[33mcommit 10374ad2a774d5e5d80cd8d5b515cbab225bcf42[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 20:40:07 2025 -0800
+
+    can range working
+
+[33mcommit a33deffca2de7f3476cffe2fb55307192ba10fb9[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Aditya Gajula <117060090+Aditya9246@users.noreply.github.com>
+Date:   Mon Feb 24 20:18:04 2025 -0800
+
+    PathPlanner 2025 implementation (#26)
+    
+    * new branch to merge with working robot code
+    
+    * Added line & square paths
+    
+    * Added Named Commands for auton
+    
+    * update pathplanner lib
+    
+    * added autochooser
+    
+    * worked once then stopped working
+    
+    * minor config changes
+    
+    * tuning pathplanner almost done
+    
+    ---------
+    
+    Co-authored-by: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+
+[33mcommit a675f98b1c30e0dbd7dd8f67ea93a43f44196fb4[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 18:37:11 2025 -0800
+
+    added can range
+
+[33mcommit 16b12b4b798a7775a986046d5f8885a33c4bfc67[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 18:33:04 2025 -0800
+
+    cleanup
+
+[33mcommit c8644be44e7d6981f85e79de795a1a16c279bb91[m
+Merge: 91226f5 815ea66
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 11:23:29 2025 -0800
+
+    Merge branch 'betaBot' of https://github.com/packofparts/frc2025 into betaBot
+
+[33mcommit 91226f50252bad5a48903030115a379a05bce83b[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Mon Feb 24 11:12:25 2025 -0800
+
+    pratice field 2/23
+
+[33mcommit 815ea66d693e577a1fa7731c7fdc2396c561a8a5[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 10:03:43 2025 -0800
+
+    limit switch on elevator added
+
+[33mcommit df2ff0e5e50c773616790896f4f5a798d17cfdaa[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 09:59:13 2025 -0800
+
+    rebase
+
+[33mcommit b294aa0ecf806ceb6fa366b11daec6775faade3d[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Mon Feb 24 09:57:52 2025 -0800
+
+    add can range
+
+[33mcommit 1c2f85da7dabecd69bb5d29a285128b1fc940bc0[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Sat Feb 22 16:33:24 2025 -0800
+
+    working intake + indexer + elevator + manipulatorSpin
+
+[33mcommit e56f478cfab99a7c9ae7ce4f74dc6a8ae46bf175[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Sat Feb 22 14:32:50 2025 -0800
+
+    testing beta
+
+[33mcommit 3b1628119324b011a576b9e5e5fdf5e5a99c7394[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Sat Feb 22 13:21:42 2025 -0800
+
+    beta kinda working
+
+[33mcommit 1d774c0fce933ed1c6c1b7dfcaa290e508440231[m
+Author: SaranyaA20 <146662808+SaranyaA20@users.noreply.github.com>
+Date:   Wed Feb 19 19:08:47 2025 -0800
+
+    Cleaned code (#67)
+    
+    * cleaned up swerve code (remove print statement, unnecessary SmartDashboard.putNumber() statements)
+    
+    * Cleaned Swerve code
+
+[33mcommit ae379d27844a1b25e2e7d3b9496b0c7e9a4c32dd[m
+Author: Aditya9246 <G.Aditya2409@hotmail.com>
+Date:   Wed Feb 19 17:42:41 2025 -0800
+
+    added untested beta robot subsystems
+
+[33mcommit 29fdca563e266de25aa4b9077aa4f432a02848ca[m
+Author: dgorbatov <dzgorbatov@gmail.com>
+Date:   Wed Feb 12 09:54:04 2025 -0800
+
+    move to folders and change naming to alpha
+
+[33mcommit f243cfade0a4de57c66c5b8360cc71aafb67b50c[m
+Author: SaranyaA20 <146662808+SaranyaA20@users.noreply.github.com>
+Date:   Tue Feb 4 13:47:57 2025 -0800
+
+    Swerve alignment (#44)
+    
+    * updated constants class and swerve class with basic odom alignment
+    
+    * implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data
+    
+    * finished vision autoalign
+    
+    * Setup gradle explicitly for better caching (#34)
+    
+    * Try to fix the 'grab the latest version of poplib' functionality (#42)
+    
+    * Alpha bot (#39)
+    
+    * working elevator
+    
+    * working alpha bot
+    
+    * fixed persistmode
+    
+    * clean up
+    
+    * add state machine and clean up
+    
+    * Try to fix the 'grab the latest version of poplib' functionality (#42)
+    
+    * working alpha
+    
+    ---------
+    
+    Co-authored-by: Martin Taillefer <geeknoid@users.noreply.github.com>
+    
+    * Alpha bot (#49)
+    
+    * working elevator
+    
+    * working alpha bot
+    
+    * fixed persistmode
+    
+    * clean up
+    
+    * add state machine and clean up
+    
+    * Try to fix the 'grab the latest version of poplib' functionality (#42)
+    
+    * working alpha
+    
+    * cleanup
+    
+    ---------
+    
+    Co-authored-by: Martin Taillefer <geeknoid@users.noreply.github.com>
+    
+    * rebase with main
+    
+    * implemented moveToPose, moveToNearestScoringPos, and moveToAprilTag based on april tag data
+    
+    * finished vision autoalign
+    
+    * alpha swerve testing saturday
+    
+    * new stuff
+    
+    * fix
+    
+    * working autoalign aside from when apriltag not in sight
+    
+    * works
+    
+    * using poplib
+    
+    ---------
+    
+    Co-authored-by: Martin Taillefer <geeknoid@users.noreply.github.com>
+    Co-authored-by: Daniel Gorbatov <dzgorbatov@gmail.com>
+    Co-authored-by: Aditya9246 <G.Aditya2409@hotmail.com>
+    Co-authored-by: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+    Co-authored-by: Powerlax <raovishruth@gmail.com>
+
+[33mcommit 8af304d2e71f18cfc596fb9d29b08d752c6f9d2b[m
+Author: Daniel Gorbatov <dzgorbatov@gmail.com>
+Date:   Sat Feb 1 10:33:28 2025 -0800
+
+    Alpha bot (#49)
+    
+    * working elevator
+    
+    * working alpha bot
+    
+    * fixed persistmode
+    
+    * clean up
+    
+    * add state machine and clean up
+    
+    * Try to fix the 'grab the latest version of poplib' functionality (#42)
+    
+    * working alpha
+    
+    * cleanup
+    
+    ---------
+    
+    Co-authored-by: Martin Taillefer <geeknoid@users.noreply.github.com>
+
+[33mcommit b63ee40ecbc7ffbe905c4bbc29e0b08d66c2acb6[m
+Author: Daniel Gorbatov <dzgorbatov@gmail.com>
+Date:   Fri Jan 31 12:30:30 2025 -0800
+
+    Alpha bot (#39)
+    
+    * working elevator
+    
+    * working alpha bot
+    
+    * fixed persistmode
+    
+    * clean up
+    
+    * add state machine and clean up
+    
+    * Try to fix the 'grab the latest version of poplib' functionality (#42)
+    
+    * working alpha
+    
+    ---------
+    
+    Co-authored-by: Martin Taillefer <geeknoid@users.noreply.github.com>
+
+[33mcommit 1742e89ecd7f9d93f9a70d79a1ae7e947c029f27[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Wed Jan 29 19:24:07 2025 -0800
+
+    Try to fix the 'grab the latest version of poplib' functionality (#42)
+
+[33mcommit 9d5b39c2def0fafe58b54fbc0aa934634bae76ea[m[33m ([m[1;31morigin/q/Manipulator[m[33m, [m[1;32mcameraconfig[m[33m)[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Sat Jan 25 14:43:59 2025 -0800
+
+    Setup gradle explicitly for better caching (#34)
+
+[33mcommit 4530e135e7d8665634319a4850775d36ac8f4f54[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Mon Jan 20 20:16:37 2025 -0800
+
+    Enable caching, which speeds up automated builds (#29)
+
+[33mcommit 7a0a9bfdf68f0e744a99e14e0323470ab74c8c90[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Mon Jan 20 19:20:34 2025 -0800
+
+    Clone this from poplib repo for consistency (#28)
+
+[33mcommit d9c9e36d21c5033f2f28e3f072530508893fa53a[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Mon Jan 20 18:34:26 2025 -0800
+
+    Import poplib package (#19)
+
+[33mcommit e9676893405ddcf6f1f2a9c3e882bd28184cbe9a[m
+Author: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+Date:   Mon Jan 20 11:19:58 2025 -0800
+
+    Update to Working Robot Code (#23)
+    
+    * first test
+    
+    * after first test
+    
+    * elevator changes
+    
+    * working elevator
+    
+    * cleanup
+    
+    * set tuning mode to false & minor fixes
+    
+    * working robot
+    
+    * update
+    
+    * maybe
+    
+    * working robot code
+    
+    * new stuff
+    
+    * small touchups
+    
+    * fixes
+    
+    * minor changes
+    
+    ---------
+    
+    Co-authored-by: Daniel Gorbatov <dzgorbatov@gmail.com>
+    Co-authored-by: Aditya9246 <G.Aditya2409@hotmail.com>
+
+[33mcommit 5bbd07ef1b3b98b7d637557698844cc1f16fcf01[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Sun Jan 19 14:12:09 2025 -0800
+
+    Simplified and speed up GitHub actions (#25)
+
+[33mcommit d2cfd39e1d2ae4a1c7f5943b1151db49fb96da78[m
+Author: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+Date:   Sat Jan 18 15:32:54 2025 -0800
+
+    elevator (#22)
+
+[33mcommit 630a56391900d7e99b70d4c559bdc98fcd2a7043[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Sat Jan 18 14:28:41 2025 -0800
+
+    Update workflows (#20)
+    
+    Co-authored-by: Martin Taillefer <mataille@microsoft.com>
+
+[33mcommit 0ccd2be3bc62d3256e2f2cd56915202d6a5b76f6[m
+Author: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+Date:   Sat Jan 18 13:36:13 2025 -0800
+
+    name changes (#18)
+    
+    * name changes
+    
+    * thing
+    
+    * added poplib folder
+
+[33mcommit b414a2537fba9fc965792ef0775454f910da60b3[m
+Author: Daniel Gorbatov <dzgorbatov@gmail.com>
+Date:   Fri Jan 17 23:05:54 2025 -0800
+
+    Powerlax/elevator (#15)
+    
+    * first test
+    
+    * after first test
+    
+    * elevator changes
+    
+    * working elevator
+    
+    * cleanup
+    
+    * set tuning mode to false & minor fixes
+    
+    ---------
+    
+    Co-authored-by: Powerlax <raovishruth@gmail.com>
+    Co-authored-by: Aditya9246 <G.Aditya2409@hotmail.com>
+
+[33mcommit 028c30c6bfc06def2200c1d1e0d0615e85b69464[m
+Author: Martin Taillefer <geeknoid@users.noreply.github.com>
+Date:   Sat Jan 11 14:03:51 2025 -0800
+
+    Fix submodule builds (#11)
+
+[33mcommit eb209fcbeaf12805b35b7467a2804af57437e9bc[m
+Author: Daniel Gorbatov <dzgorbatov@gmail.com>
+Date:   Sat Jan 11 13:37:40 2025 -0800
+
+    Swerve fix (#10)
+    
+    * inital commit
+    
+    * update to 2025
+    
+    * add swerve
+    
+    * swerve
+    
+    * swerve working sort of
+    
+    * empty elevator subsytem
+    
+    * working sysid
+    
+    * fixes
+    
+    * moar fixes
+    
+    * more fixes
+    
+    * guess
+    
+    ---------
+    
+    Co-authored-by: Powerlax <raovishruth@gmail.com>
+    Co-authored-by: Vishruth Rao <116237865+Powerlax@users.noreply.github.com>
+
+[33mcommit 2cec98cc249b4f6eaca2d41c92d576e8f7dee71f[m
+Author: Martin Taillefer <mataille@microsoft.com>
+Date:   Sat Jan 11 11:27:10 2025 -0800
+
+    Add submodule
+
+[33mcommit 5c7a77aa61bb727d3c1c7c25c9117b3a46ea52bb[m
+Author: Martin Taillefer <mataille@microsoft.com>
+Date:   Mon Dec 9 19:23:20 2024 -0800
+
+    Make gradlew executable
+
+[33mcommit 4b51f6edd3698f4760e2cde69adb57609ab4d208[m
+Author: Martin Taillefer <mataille@microsoft.com>
+Date:   Mon Nov 18 18:48:45 2024 -0800
+
+    Bootstrap the repo

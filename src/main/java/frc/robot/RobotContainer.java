@@ -47,7 +47,7 @@ public class RobotContainer {
     public final OI oi;
 
     private final SendableChooser<Command> autoChooser;
-    public final SendableChooser<Command> scoring;
+    public final SendableChooser<Constants.SCORING_SETPOINTS> scoring;
 
     private boolean intaking;
 
@@ -65,15 +65,22 @@ public class RobotContainer {
 
         // Scoring Selecter
         scoring = new SendableChooser<>();
-        scoring.addOption("L1", elevatorScore(Constants.Elevator.SETPOINTS.L1));
-        scoring.addOption("L2", elevatorScore(Constants.Elevator.SETPOINTS.L2));
-        scoring.addOption("L3", elevatorScore(Constants.Elevator.SETPOINTS.L3));
-        scoring.addOption("L4", elevatorScore(Constants.Elevator.SETPOINTS.L4));
+        scoring.addOption("L1", Constants.SCORING_SETPOINTS.L1);
+        scoring.addOption("L2", Constants.SCORING_SETPOINTS.L2);
+        scoring.addOption("L3", Constants.SCORING_SETPOINTS.L3);
+        scoring.addOption("L4", Constants.SCORING_SETPOINTS.L4);
+
+        scoring.onChange((Constants.SCORING_SETPOINTS setpoint) -> {
+            if (manipulator.coralIn()) {
+                l4HoldManipulator().schedule();
+            }
+        });
+
         SmartDashboard.putData(scoring);
 
 
         // Get Named Commands inputed for Auto
-        NamedCommands.registerCommand("score", elevatorScore(Constants.Elevator.SETPOINTS.L3));
+        NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
         NamedCommands.registerCommand("intake", startIntaking());
 
         // Auto Selecter
@@ -109,7 +116,7 @@ public class RobotContainer {
         // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-            scoring.getSelected().schedule();
+            elevatorScore(scoring.getSelected()).schedule();
         }));
 
         oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {
@@ -125,9 +132,6 @@ public class RobotContainer {
         return new InstantCommand(() -> {
             (!intaking ? startIntaking() : stopIntaking()).schedule();
             intaking = !intaking;
-            if(intaking){
-                System.out.print("intaking");
-            }
         });
     }
 
@@ -135,7 +139,7 @@ public class RobotContainer {
        return new SequentialCommandGroup(
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
-                manipulator.run(),
+                manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
                 indexer.run(),
                 intake.run()
             )
@@ -153,13 +157,22 @@ public class RobotContainer {
         );
     }
 
-    public Command elevatorScore(Constants.Elevator.SETPOINTS setpoint) {
-        return new InstantCommand(() -> System.out.println("Setpoint Moving: " + setpoint.getSetpoint())).
-            andThen(elevator.moveElevator(setpoint.getSetpoint(), Constants.Elevator.MAX_ERROR).
-            andThen(manipulator.run()).
+    public Command l4HoldManipulator() {
+        return manipulator.moveWrist(Constants.SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR);
+    }
+
+    public Command elevatorScore(Constants.SCORING_SETPOINTS setpoint) {
+        return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
+            andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
+            alongWith(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(
+                setpoint == Constants.SCORING_SETPOINTS.L4 ? 
+                manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
+                manipulator.run()
+            ).
             andThen(new WaitCommand(1.0)).
             andThen(manipulator.stop()).
-            andThen(elevator.moveElevator(Constants.Elevator.SETPOINTS.IDLE.getSetpoint(), Constants.Elevator.MAX_ERROR))
+            andThen(elevator.moveElevator(Constants.SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR))
         );
     }
 
