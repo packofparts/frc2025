@@ -45,7 +45,7 @@ public final class Constants {
         L2(72, -90), // tuned 2/23/25
         L3(117, -90), // tuned 2/23/25
         L4(140, 72),
-        L4Hold(140, 50);
+        L4Hold(140, 35);
 
         private double elevator;
         private double manipulator;
@@ -66,7 +66,7 @@ public final class Constants {
 
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
@@ -91,7 +91,7 @@ public final class Constants {
     public static final class Manipulator {
         public enum SPEEDS {
             NORMAL(0.4),
-            INTAKE(0.07),
+            INTAKE(0.1),
             L4(1.0);
 
             double speed;
@@ -121,7 +121,7 @@ public final class Constants {
             "tempura sushi",
             40,
             false, 
-            new PIDConfig(0.05, 0.0, 0.0, 0.0), 
+            new PIDConfig(0.04, 0.0, 0.003, 0.0), 
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
@@ -135,7 +135,7 @@ public final class Constants {
             new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
 
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final int RANGE_ID = 31;
     }
@@ -230,7 +230,7 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4iL2FOC;
 
         public static final boolean SWERVE_TUNING_MODE = false;
 

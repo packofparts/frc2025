@@ -72,7 +72,11 @@ public class RobotContainer {
         scoring.addOption("L4", Constants.SCORING_SETPOINTS.L4);
 
         scoring.onChange((Constants.SCORING_SETPOINTS setpoint) -> {
-            if (manipulator.coralIn()) {
+            System.out.println("Setpoint Changing");
+
+            if (manipulator.coralIn() && setpoint == Constants.SCORING_SETPOINTS.L4) {
+                System.out.println("Setpoint Changing to reflect l4 slection");
+
                 l4HoldManipulator().schedule();
             }
         });
@@ -107,6 +111,10 @@ public class RobotContainer {
         return intaking;
     }
 
+    
+    public void turnOfIntaking() {
+        intaking = false;
+    }
 
     private void configureBindings() {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(togleIntake());
@@ -132,6 +140,7 @@ public class RobotContainer {
 
     public Command startIntaking() {
        return new SequentialCommandGroup(
+            manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR),
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             new ParallelCommandGroup(
                 manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),

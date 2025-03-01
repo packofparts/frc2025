@@ -48,6 +48,8 @@ public class Manipulator extends TalonPivot {
         CANrangeConfiguration config = new CANrangeConfiguration();
         config.ProximityParams.ProximityThreshold = 0.1;
         range.getConfigurator().apply(config);
+
+        setpoint.setDefault(Constants.SCORING_SETPOINTS.IDLE.getManipulator());
     }
 
     public Command run(){
