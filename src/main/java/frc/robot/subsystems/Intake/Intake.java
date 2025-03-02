@@ -34,6 +34,7 @@ public class Intake extends TalonPivot {
         spin = Constants.Intake.SPIN.createTalon();
         control = new DutyCycleOut(0.0);
 
+        resetToAbsolutePosition();
         setpoint.setDefault(Constants.Intake.SETPOINTS.IDLE.getSetpoint());
     }
 

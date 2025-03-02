@@ -66,11 +66,11 @@ public final class Constants {
 
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = false;
+        public static final boolean TUNNING_MODE = true;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
-            40, 
+            60, 
             true, 
             new PIDConfig(0.8, 0, 0.0, 0.02), 
             Mode.BRAKE
@@ -152,6 +152,7 @@ public final class Constants {
     }
 
     public static final class Intake {
+        // Up position: 91.653824
         public static final double GEAR_RATIO = 100.8;
 
         public static final MotorConfig PIVOT = new MotorConfig(
@@ -180,10 +181,12 @@ public final class Constants {
         public static final double SPEED = 0.8; // tbd
 
         public enum SETPOINTS {
-            IDLE(80), // tbd
-            ALGAE_PICKUP(0), // tbd
-            ALGAE_DROP(0), // tbd
-            CORAL_PICKUP(-25.5); // tbd
+            // IDLE(80), // tbd
+            // ALGAE_PICKUP(0), // tbd
+            // ALGAE_DROP(0), // tbd
+            // CORAL_PICKUP(-25.5); // tbd
+            IDLE(-15.7),
+            CORAL_PICKUP(-126.5);
 
             private double setpoint;
 

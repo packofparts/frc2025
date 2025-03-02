@@ -49,6 +49,7 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
     public final SendableChooser<Constants.SCORING_SETPOINTS> scoring;
+    public final SendableChooser<Constants.Intake.SETPOINTS> intakesp;
 
     private boolean intaking;
 
@@ -71,6 +72,10 @@ public class RobotContainer {
         scoring.addOption("L3", Constants.SCORING_SETPOINTS.L3);
         scoring.addOption("L4", Constants.SCORING_SETPOINTS.L4);
 
+        intakesp = new SendableChooser<>();
+        intakesp.addOption("INTAKE", Constants.Intake.SETPOINTS.CORAL_PICKUP);
+        intakesp.setDefaultOption("IDLE", Constants.Intake.SETPOINTS.IDLE);
+
         scoring.onChange((Constants.SCORING_SETPOINTS setpoint) -> {
             System.out.println("Setpoint Changing");
 
@@ -83,6 +88,7 @@ public class RobotContainer {
 
         SmartDashboard.putData(scoring);
 
+        SmartDashboard.putData(intakesp);
 
         // Get Named Commands inputed for Auto
         NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
@@ -119,16 +125,20 @@ public class RobotContainer {
     private void configureBindings() {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(togleIntake());
 
-        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
-        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
+        oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
+        oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
 
         // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
+
+
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
             elevatorScore(scoring.getSelected()).schedule();
         }));
 
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse());
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(manipulator.reverse());
+
+        //oi.getDriverButton(XboxController.Button.kX.value).onTrue(intake.moveWrist(intakesp.getSelected().getSetpoint(), Constants.Intake.MAX_ERROR));
     }
 
     public Command togleIntake() {

@@ -57,15 +57,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
-            if (robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4) {
-                System.out.println("Moving to L4 from teleopPeriodic");
-                robotContainer.turnOfIntaking();
-                (robotContainer.stopIntaking().andThen(robotContainer.l4HoldManipulator())).schedule();
-            } else {
-                robotContainer.stopIntaking().schedule();
-            }
-        }
+        // if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
+        //     if (robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4) {
+        //         robotContainer.turnOfIntaking();
+        //         (robotContainer.stopIntaking().andThen(robotContainer.l4HoldManipulator())).schedule();
+        //     } else {
+        //         robotContainer.stopIntaking().schedule();
+        //     }
+        // }
     }
 
     @Override
