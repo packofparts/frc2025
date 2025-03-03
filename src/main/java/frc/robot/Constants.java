@@ -302,5 +302,7 @@ public final class Constants {
 
         /** Default offset value. */
         public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.5, 0.0);
+
+        public static int ROBOT_ZONE = 3;
     }
 }
