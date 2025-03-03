@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.8048975409836068,
-        "y": 5.1182786885245894
+        "x": 3.682622950819673,
+        "y": 5.096700819672131
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5963114754098364,
-        "y": 6.87327868852459
+        "x": 3.4740368852459027,
+        "y": 6.851700819672132
       },
       "isLocked": false,
       "linkedName": "LScoreBlue"
@@ -66,10 +66,10 @@
     "rotation": -179.66973741158915
   },
   "reversed": false,
-  "folder": "Ground",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 118.0874287234013
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": false
 }

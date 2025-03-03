@@ -66,14 +66,14 @@ public final class Constants {
 
 
     public static class Elevator {
-        public static final boolean TUNNING_MODE = true;
+        public static final boolean TUNNING_MODE = false;
 
         public static final MotorConfig RIGHT_MOTOR = new MotorConfig(
             27, 
             60, 
             true, 
             new PIDConfig(0.8, 0, 0.0, 0.02), 
-            Mode.BRAKE
+            Mode.COAST
         );
 
         public static final int LIMIT_SWITCH_CHANNEL = 2;
@@ -160,7 +160,7 @@ public final class Constants {
             "",
             20, 
             false, 
-            new PIDConfig(0.02), // 0.05
+            new PIDConfig(0.016), // 0.05
             Mode.COAST,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );    
@@ -186,7 +186,7 @@ public final class Constants {
             // ALGAE_DROP(0), // tbd
             // CORAL_PICKUP(-25.5); // tbd
             IDLE(-15.7),
-            CORAL_PICKUP(-126.5);
+            CORAL_PICKUP(-123.5);
 
             private double setpoint;
 
@@ -278,8 +278,8 @@ public final class Constants {
         );
 
         public static final PPHolonomicDriveController SWERVE_AUTO_CONTROLLER = new PPHolonomicDriveController(
-            new PIDConstants(30.0, 0.0, 0.1),
-            new PIDConstants(35.0, 0.0, 0.0)
+            new PIDConstants(9.8, 0.0, 0.0), // 135, 0, 0
+            new PIDConstants(8.7, 0.0, 0.0) // 95, 0, 0
         );
         // 30, 0, 0.1
         // 30, 0, 0

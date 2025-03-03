@@ -49,9 +49,16 @@ public class Elevator extends TalonElevator {
             .andThen(stop());
     }
 
+    public Command moveElev(){
+        return runOnce(() -> {
+            setpoint.setDefault(Constants.SCORING_SETPOINTS.L3.getElevator());
+        });
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Elevator at bottom", isAtBottom());
+        SmartDashboard.putNumber("ele setpoint", setpoint.get());
         super.periodic();
     }
 }

@@ -9,12 +9,6 @@
           "data": {
             "pathName": "StartToL1"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "score"
-          }
         }
       ]
     }

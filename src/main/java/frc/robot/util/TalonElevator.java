@@ -8,6 +8,7 @@ import poplib.motor.FollowerConfig;
 import poplib.motor.MotorConfig;
 import poplib.smart_dashboard.TunableNumber;
 import poplib.subsytems.elevator.Elevator;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +19,7 @@ public class TalonElevator extends Elevator {
     private final PositionDutyCycle position;
     private final TunableNumber kG;
     protected boolean usePID;
-
+    private ElevatorFeedforward ff;
     public TalonElevator(MotorConfig motorConfig, FollowerConfig followerConfig, FFConfig ffConfig, boolean tuningMode, String subsystemName) {
         super(
             ffConfig, 
@@ -36,7 +37,7 @@ public class TalonElevator extends Elevator {
         withSlot(leadMotor.getClosedLoopSlot().getValue());
 
         kG = new TunableNumber(subsystemName + " kG", ffConfig.G, tuningMode);
-
+        ff = ffConfig.getElevatorFeedforward();
         usePID = true;
     }
 
@@ -45,7 +46,7 @@ public class TalonElevator extends Elevator {
         super.tuning.updatePID(leadMotor);
 
         if (usePID) {
-            leadMotor.setControl(position.withPosition(super.setpoint.get()).withFeedForward(kG.getDefault()));
+            leadMotor.setControl(position.withPosition(setpoint.get()));
         }
 
         SmartDashboard.putNumber("Elevator lead motor pos", getEncoderPos());

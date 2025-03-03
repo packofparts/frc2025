@@ -67,6 +67,8 @@ public class RobotContainer {
 
         // Scoring Selecter
         scoring = new SendableChooser<>();
+        scoring.setDefaultOption("IDLE", Constants.SCORING_SETPOINTS.IDLE);
+        scoring.addOption("IDLE", Constants.SCORING_SETPOINTS.IDLE);
         scoring.addOption("L1", Constants.SCORING_SETPOINTS.L1);
         scoring.addOption("L2", Constants.SCORING_SETPOINTS.L2);
         scoring.addOption("L3", Constants.SCORING_SETPOINTS.L3);
@@ -123,10 +125,13 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        oi.getDriverButton(XboxController.Button.kY.value).onTrue(togleIntake());
+        oi.getDriverButton(XboxController.Button.kY.value).onTrue(startIntaking());
+        oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
+        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveElev());
+        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.reZero());
 
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
-        oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
+        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
+        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
 
         // oi.getDriverButton(XboxController.Button.kA.value).onTrue(manipulator.reverse());
 
@@ -142,13 +147,25 @@ public class RobotContainer {
     }
 
     public Command togleIntake() {
-        return new InstantCommand(() -> {
-            (!intaking ? startIntaking() : stopIntaking()).schedule();
-            intaking = !intaking;
-        });
+        // return new InstantCommand(() -> {
+        //     intaking = !intaking;
+        //     if(intaking){
+        //         startIntaking().();;
+        //     }
+        //     else{
+        //         stopIntaking().schedule();;
+        //     }
+        // });
+        intaking = !intaking;
+        if(intaking){
+            return startIntaking();
+        }
+        return stopIntaking();
     }
 
     public Command startIntaking() {
+        intaking = true;
+        SmartDashboard.putString("test", "no work");
        return new SequentialCommandGroup(
             manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR),
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
@@ -161,6 +178,7 @@ public class RobotContainer {
     }
 
     public Command stopIntaking() {
+        intaking = false;
        return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
             andThen(
                 new ParallelCommandGroup(

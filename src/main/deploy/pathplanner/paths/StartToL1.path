@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.8048975409836068,
-        "y": 5.1182786885245894
+        "x": 3.682622950819673,
+        "y": 5.089508196721311
       },
       "prevControl": {
-        "x": 2.8384628027099543,
-        "y": 6.6985439206186275
+        "x": 2.589344262295082,
+        "y": 6.484877049180327
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LScoreBlue"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 118.0874287234013
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": null,
