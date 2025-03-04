@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reef Scoring Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #111;
+            color: white;
+        }
+
+        .hex-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 50px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Hexagon Shape */
+        .hex {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Letter Circles */
+        .position {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50%;
+            color: white;
+        }
+
+
+        .position.selected {
+            background: #007BFF;
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+        }
+
+      
+        
+        /* Adjusting Positions to Be Outside the Hexagon */
+        #A { top: 10%; left: 60%; transform: translateX(-50%); } /* Top center */
+        #B { top: 17%; left: 70%; }  /* Upper right */
+        #C { top: 35%; left: 82%; }  /* Mid upper right */
+        #D { top: 55%; left: 82%; }  /* Mid lower right */
+        #E { top: 70%; left: 70%; }  /* Lower right */
+        #F { top: 77%; left: 53%;} /* Bottom center */
+        #G { top: 77%; left: 30%; }  /* Lower left */
+        #H { top: 67%; left: 13%; }  /* Mid lower left */
+        #I { top: 55%; left: 5%; }  /* Mid upper left */
+        #J { top: 35%; left: 5%; }  /* Upper left */
+        #K { top: 17%; left: 17%; }  /* Near top left */
+        #L { top: 10%; left: 35%; }  /* Near top right */
+
+
+        .levels {
+            margin-top: 20px;
+        }
+
+        .level-btn {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            background: #888;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .level-btn.selected {
+            background: #28a745;
+        }
+
+        .submit-btn {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 18px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Select Position on the Reef</h2>
+
+    <div class="hex-container">
+        <div class="hex">
+            <div class="position" id="A" onclick="selectPosition('A')">A</div>
+            <div class="position" id="B" onclick="selectPosition('B')">B</div>
+            <div class="position" id="C" onclick="selectPosition('C')">C</div>
+            <div class="position" id="D" onclick="selectPosition('D')">D</div>
+            <div class="position" id="E" onclick="selectPosition('E')">E</div>
+            <div class="position" id="F" onclick="selectPosition('F')">F</div>
+            <div class="position" id="G" onclick="selectPosition('G')">G</div>
+            <div class="position" id="H" onclick="selectPosition('H')">H</div>
+            <div class="position" id="I" onclick="selectPosition('I')">I</div>
+            <div class="position" id="J" onclick="selectPosition('J')">J</div>
+            <div class="position" id="K" onclick="selectPosition('K')">K</div>
+            <div class="position" id="L" onclick="selectPosition('L')">L</div>
+        </div>
+    </div>
+
+    <h2>Select Scoring Level</h2>
+    <div class="levels">
+        <button class="level-btn" id="L1" onclick="selectLevel('L1')">L1</button>
+        <button class="level-btn" id="L2" onclick="selectLevel('L2')">L2</button>
+        <button class="level-btn" id="L3" onclick="selectLevel('L3')">L3</button>
+        <button class="level-btn" id="L4" onclick="selectLevel('L4')">L4</button>
+    </div>
+
+    <button class="submit-btn" onclick="submitSelection()">Submit</button>
+
+    <p id="output"></p>
+
+    <script>
+        let selectedPosition = null;
+        let selectedLevel = null;
+
+        function selectPosition(position) {
+            if (selectedPosition) {
+                document.getElementById(selectedPosition).classList.remove("selected");
+            }
+            selectedPosition = position;
+            document.getElementById(position).classList.add("selected");
+        }
+
+        function selectLevel(level) {
+            if (selectedLevel) {
+                document.getElementById(selectedLevel).classList.remove("selected");
+            }
+            selectedLevel = level;
+            document.getElementById(level).classList.add("selected");
+        }
+
+        function submitSelection() {
+            if (!selectedPosition || !selectedLevel) {
+                document.getElementById("output").innerText = "Please select both a position and a level!";
+                return;
+            }
+            document.getElementById("output").innerText = `Selected Position: ${selectedPosition}, Level: ${selectedLevel}`;
+        }
+    </script>
+
+</body>
+</html>

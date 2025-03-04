@@ -27,7 +27,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() { 
-        // robotContainer.intake.resetToAbsolutePosition();
+        // robotContainer.intake.resetToAbsPosition();
+        robotContainer.swerve.updateEncoders(); 
+        // robotContainer.swerve.updateEncoders(); 
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Robot extends TimedRobot {
         autoCommand = robotContainer.getAutonomousCommand();
 
         if (autoCommand != null) {
-            System.out.println(autoCommand.getName());
+            System.out.println("Auto running: " + autoCommand.getName());
             autoCommand.schedule();
         }
         else{
@@ -57,9 +59,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        // if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
-        //     robotContainer.stopIntaking().schedule();
-        // }
+        if (robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
+            robotContainer.stopIntaking().schedule();
+        }
     }
 
     @Override

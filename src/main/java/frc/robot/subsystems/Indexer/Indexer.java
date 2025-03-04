@@ -1,15 +1,16 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Indexer;
 
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Indexer extends SubsystemBase {
-    private final SparkMax motor;
-    private final SparkMax motor2;
-
     private static Indexer instance;
+    private final TalonFX motor;
+    private final DutyCycleOut control;
 
     public static Indexer getInstance() {
         if (instance == null) {
@@ -20,29 +21,26 @@ public class Indexer extends SubsystemBase {
     }
 
     private Indexer() {
-        motor = Constants.Indexer.MOTOR.createSparkMax();
-        motor2 = Constants.Indexer.MOTOR2.createSparkMax();
+        motor = Constants.Indexer.MOTOR.createTalon();
+        control = new DutyCycleOut(0);
     }
 
     public Command run() {
         return runOnce(() -> {
-            motor.set(Constants.Indexer.SPEED);
-            motor2.set(Constants.Indexer.SPEED * 1.0);
-        });
+            motor.setControl(control.withOutput(Constants.Indexer.SPEED));
+        }); 
     }
 
     public Command stop() {
         return runOnce(() -> {
-            motor.set(0.0);
-            motor2.set(0.0);
-        });
+            motor.setControl(control.withOutput(0.0));
+        }); 
     }
 
     public Command reverse() {
         return runOnce(() -> {
-            motor.set(-1 * Constants.Indexer.SPEED);
-            motor2.set(-1 * Constants.Indexer.SPEED * 0.1);
-        });
+            motor.setControl(control.withOutput(-1 * Constants.Indexer.SPEED));
+        }); 
     }
 
     @Override
