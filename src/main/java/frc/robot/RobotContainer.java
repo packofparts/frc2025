@@ -127,6 +127,7 @@ public class RobotContainer {
     private void configureBindings() {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(startIntaking());
         oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.resetGyroCommand());
         // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveElev());
         // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.reZero());
 
@@ -141,7 +142,7 @@ public class RobotContainer {
             elevatorScore(scoring.getSelected()).schedule();
         }));
 
-        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(manipulator.reverse());
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
 
         //oi.getDriverButton(XboxController.Button.kX.value).onTrue(intake.moveWrist(intakesp.getSelected().getSetpoint(), Constants.Intake.MAX_ERROR));
     }
@@ -164,17 +165,12 @@ public class RobotContainer {
     }
 
     public Command startIntaking() {
-        intaking = true;
-        SmartDashboard.putString("test", "no work");
-       return new SequentialCommandGroup(
-            manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR),
-            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
-            new ParallelCommandGroup(
-                manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
-                indexer.run(),
-                intake.run()
-            )
-        );
+        return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
+            .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
+            andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
+            andThen(indexer.run()).
+            andThen(intake.run());
     }
 
     public Command stopIntaking() {
