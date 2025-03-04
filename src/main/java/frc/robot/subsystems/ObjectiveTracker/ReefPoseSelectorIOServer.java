@@ -14,8 +14,6 @@ import java.nio.file.Paths;
 public class ReefPoseSelectorIOServer implements ReefPoseSelectorIO {
   private final IntegerPublisher reefPosePublisher; //change to string or character?
   private final IntegerSubscriber reefPoseSubscriber;
-  private final IntegerPublisher coralLevelPublisher;
-  private final IntegerSubscriber coralLevelSubscriber;
   private final IntegerPublisher timePublisher;
   private final BooleanPublisher isAutoPublisher;
 
@@ -26,8 +24,7 @@ public class ReefPoseSelectorIOServer implements ReefPoseSelectorIO {
     var table = NetworkTableInstance.getDefault().getTable("reefPoseSelector");
     reefPosePublisher = table.getIntegerTopic("reefPose_robot_to_dashboard").publish();
     reefPoseSubscriber = table.getIntegerTopic("reefPose_dashboard_to_robot").subscribe(-1);
-    coralLevelPublisher = table.getIntegerTopic("coral_level_robot_to_dashboard").publish();
-    coralLevelSubscriber = table.getIntegerTopic("coral_level_dashboard_to_robot").subscribe(-1);
+
     timePublisher = table.getIntegerTopic("match_time").publish();
     isAutoPublisher = table.getBooleanTopic("is_auto").publish();
 
@@ -45,23 +42,16 @@ public class ReefPoseSelectorIOServer implements ReefPoseSelectorIO {
     app.start(5800);
   }
 
-  public void updateInputs(reefPoseSelectorIOInputs inputs) {
+  public void updateInputs(ReefPoseSelectorIOInputs inputs) {
     timePublisher.set((long) Math.ceil(Math.max(0.0, DriverStation.getMatchTime())));
     isAutoPublisher.set(DriverStation.isAutonomous());
     for (var value : reefPoseSubscriber.readQueueValues()) {
       inputs.selectedReefPose = value;
     }
-    for (var value : coralLevelSubscriber.readQueueValues()) {
-      inputs.coralLevel = value;
-    }
   }
 
   public void setSelected(long selected) {
     reefPosePublisher.set(selected);
-  }
-
-  public void setCoralLevel(long level) {
-    coralLevelPublisher.set(level);
   }
 }
 

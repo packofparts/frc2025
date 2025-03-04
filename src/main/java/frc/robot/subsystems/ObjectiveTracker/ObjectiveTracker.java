@@ -8,9 +8,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-// import org.littletonrobotics.frc2023.subsystems.leds.Leds;
-// import org.littletonrobotics.frc2023.util.VirtualSubsystem;
-import org.littletonrobotics.junction.Logger;
 import frc.robot.subsystems.ObjectiveTracker.ReefPoseSelectorIO.ReefPoseSelectorIOInputs;
 
 public class ObjectiveTracker extends SubsystemBase{
@@ -22,19 +19,16 @@ public class ObjectiveTracker extends SubsystemBase{
   public static class Objective {
     public ReefLevel reefLevel;
     public ReefBranch reefBranch;
-    public ReefLocation reefLocation;
 
     public Objective(
         ReefLevel reefLevel,
-        ReefBranch reefBranch,
-        ReefLocation reefLocation) {
+        ReefBranch reefBranch) {
       this.reefLevel = reefLevel;
       this.reefBranch = reefBranch;
-      this.reefLocation = reefLocation;
     }
 
     public Objective() {
-      this(ReefLevel.ONE, ReefBranch.A, ReefLocation.MIDDLE);
+      this(ReefLevel.ONE, ReefBranch.A);
     }
   }
 
@@ -46,29 +40,17 @@ public class ObjectiveTracker extends SubsystemBase{
   @Override
   public void periodic() {
     selectorIO.updateInputs(selectorInputs);
-    Logger.getInstance().processInputs("ReefPoseSelector", selectorInputs);
+    SmartDashboard.putNumber("ReefPoseSelector", selectorInputs.selectedReefPose);
 
-    int reefsLocation = (int) selectorInputs.selectedReefPose; //between 0 to 143 or is -1
+    int reefLocation = (int) selectorInputs.selectedReefPose; //between 0 to 47 or is -1
     // Read updates from selector
-    if (reefsLocation != -1) {
-      int reef = reefsLocation / 48; //(reef 0: left, 1: middle, 2: right)
-      int reefLocation = reefsLocation % 48; //position within the reef
-      int reefLevel = reefLocation / 12;
-      int reefBranch = reefLocation % 12; //A to K
-
-      //test if there would be differences between different alliances
-      this.objective.reefLevel = ReefLevel.values()[reefLocation / 12];
-      this.objective.reefBranch = ReefBranch.values()[reefLocation % 12];
-      if (reefLocation % 3 == 0) {
-        objective.reefLocation = ReefLocation.LEFT;
-      } else if (reefLocation % 3 == 1) {
-        objective.reefLocation = ReefLocation.LEFT;
-      } else {
-        objective.reefLocation = ReefLocation.LEFT;
-      }
+    if (reefLocation != -1) {
+      //TODO: test if there would be differences between different alliances bc not implemented
+      this.objective.reefLevel = ReefLevel.values()[reefLocation / 12]; //0 to 3
+      this.objective.reefBranch = ReefBranch.values()[reefLocation % 12]; //A to K
     }
 
-    selectorIO.setSelected(reefsLocation);
+    selectorIO.setSelected(reefLocation);
 
     // Send current node as text
     {
@@ -91,16 +73,15 @@ public class ObjectiveTracker extends SubsystemBase{
     }
 
     // Log state
-    Logger.getInstance().recordOutput("ObjectiveTracker/ReefLevel", objective.reefLevel);
-    Logger.getInstance().recordOutput("ObjectiveTracker/ReefBranch", objective.reefBranch);
-    Logger.getInstance().recordOutput("ObjectiveTracker/ReefPos", objective.reefLocation);
+    SmartDashboard.putString("ReefLevel", objective.reefLevel.toString());
+    SmartDashboard.putString("ReefBranch", objective.reefBranch.toString());
   }
 
   /** Shifts the selected pos in the selector by one position. */
   public void shiftPos(Direction direction) {
     switch (direction) {
       case UP:
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
           switch(objective.reefLevel) {
             case ONE: objective.reefLevel = ReefLevel.TWO; 
             case TWO: objective.reefLevel = ReefLevel.THREE;
@@ -119,7 +100,7 @@ public class ObjectiveTracker extends SubsystemBase{
         break;
 
       case DOWN:
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
           switch(objective.reefLevel) {
             case ONE: {}; 
             case TWO: objective.reefLevel = ReefLevel.TWO;
@@ -138,7 +119,7 @@ public class ObjectiveTracker extends SubsystemBase{
         break;
 
       case LEFT:
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
           switch(objective.reefBranch) {
             case A: {};
             case B: objective.reefBranch = ReefBranch.A; 
@@ -151,7 +132,7 @@ public class ObjectiveTracker extends SubsystemBase{
             case I: objective.reefBranch = ReefBranch.H; 
             case J: objective.reefBranch = ReefBranch.I; 
             case K: objective.reefBranch = ReefBranch.J;
-
+            case L: objective.reefBranch = ReefBranch.K;
           }
         } else {
           switch(objective.reefBranch) {
@@ -165,13 +146,14 @@ public class ObjectiveTracker extends SubsystemBase{
             case H: objective.reefBranch = ReefBranch.I; 
             case I: objective.reefBranch = ReefBranch.J; 
             case J: objective.reefBranch = ReefBranch.K; 
-            case K: {};
+            case K: objective.reefBranch = ReefBranch.L;
+            case L: {};
           }
         }
         break;
 
       case RIGHT:
-        if (DriverStation.getAlliance() == Alliance.Blue) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
           switch(objective.reefBranch) {
             case A: objective.reefBranch = ReefBranch.B; 
             case B: objective.reefBranch = ReefBranch.C; 
@@ -183,7 +165,8 @@ public class ObjectiveTracker extends SubsystemBase{
             case H: objective.reefBranch = ReefBranch.I; 
             case I: objective.reefBranch = ReefBranch.J; 
             case J: objective.reefBranch = ReefBranch.K; 
-            case K: {};
+            case K: objective.reefBranch = ReefBranch.L;
+            case L: {};
           }
         } else {
           switch(objective.reefBranch) {
@@ -198,6 +181,7 @@ public class ObjectiveTracker extends SubsystemBase{
             case I: objective.reefBranch = ReefBranch.H; 
             case J: objective.reefBranch = ReefBranch.I; 
             case K: objective.reefBranch = ReefBranch.J;
+            case L: objective.reefBranch = ReefBranch.K;
           }
         }
         break;
@@ -219,11 +203,14 @@ public class ObjectiveTracker extends SubsystemBase{
   }
 
   public static enum ReefBranch {
-    A, B, C, D, E, F, G, H, I, J, K
+    A, B, C, D, E, F, G, H, I, J, K, L
   }
 
-  public static enum ReefLocation {
-    LEFT, MIDDLE, RIGHT
+  public static enum Direction {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
   }
 
 }
