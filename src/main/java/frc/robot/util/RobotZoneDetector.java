@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import java.awt.geom.Path2D;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.Constants;
+
 public class RobotZoneDetector {
     
     private static final double[][][] BLUE_ZONES = {
@@ -60,5 +63,22 @@ public class RobotZoneDetector {
             case 6: return isLeft ? "PathToK" : "PathToL";
         }
         return null;
+    }
+
+    public static Pose2d getReefTag(int zoneID, boolean isBlueSide){
+        switch (zoneID){
+            case 1: return isBlueSide ? getTagPose(18): getTagPose(7);
+            case 2: return isBlueSide ? getTagPose(17): getTagPose(8);
+            case 3: return isBlueSide ? getTagPose(22): getTagPose(9);
+            case 4: return isBlueSide ? getTagPose(21): getTagPose(10);
+            case 5: return isBlueSide ? getTagPose(20): getTagPose(11);
+            case 6: return isBlueSide ? getTagPose(19): getTagPose(6);
+            case -1: return isBlueSide ? getTagPose(18): getTagPose(7); // robot is outside all zones, which shouldn't be happening on field
+            default: return isBlueSide ? getTagPose(18): getTagPose(7); // this case should never occur, but just here for safety
+        }
+    }
+
+    public static Pose2d getTagPose(int tagID){
+        return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d();
     }
 }

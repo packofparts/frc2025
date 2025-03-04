@@ -13,6 +13,8 @@ import poplib.motor.MotorConfig;
 import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 
 import com.pathplanner.lib.config.ModuleConfig;
@@ -24,6 +26,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 
 /**
@@ -304,5 +307,13 @@ public final class Constants {
         public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.5, 0.0);
 
         public static int ROBOT_ZONE = 3;
+        public static boolean IS_BLUE = true;
+
+        public static double OUTWARDS_OFFSET = 0.5;
+        public static double LATERAL_OFFSET = 0.3; // in meters
+
+        public static TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(180), Math.toRadians(180));
+
+        public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     }
 }

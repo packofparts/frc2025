@@ -80,7 +80,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("intaking", robotContainer.getIntaking());
 
         Pose2d currPose = robotContainer.swerve.getOdomPose();
-        Constants.AutoAlign.ROBOT_ZONE = RobotZoneDetector.getZone(currPose.getX(), currPose.getY(), DriverStation.getAlliance().get() == DriverStation.Alliance.Blue);
+        Constants.AutoAlign.IS_BLUE = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+        Constants.AutoAlign.ROBOT_ZONE = RobotZoneDetector.getZone(currPose.getX(), currPose.getY(), Constants.AutoAlign.IS_BLUE);
     }
 
     @Override
