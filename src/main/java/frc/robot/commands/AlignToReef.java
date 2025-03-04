@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlignToReef extends Command {
   private final Swerve drive;
   private final Pose2d targetPose;
@@ -69,7 +68,6 @@ public class AlignToReef extends Command {
         targetPose.getRotation().getRadians()
     );
 
-    // swerve.drive(xSpeed, ySpeed, rotationSpeed); // Field-oriented drive
     drive.driveRobotOriented(new Translation2d(xVelo, yVelo), thetaVelo);
   }
 

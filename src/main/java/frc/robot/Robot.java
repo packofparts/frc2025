@@ -71,9 +71,7 @@ public class Robot extends TimedRobot {
         // }
 
         if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()){
-            //System.out.println("wsp");
             robotContainer.stopIntaking().schedule();
-            SmartDashboard.putString("test", "pls work");
             if(robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4){
                 robotContainer.l4HoldManipulator().schedule();;
             }
@@ -81,9 +79,15 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putBoolean("intaking", robotContainer.getIntaking());
 
+        // alliance color update
         Pose2d currPose = robotContainer.swerve.getOdomPose();
         Constants.AutoAlign.IS_BLUE = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
-        Constants.AutoAlign.ROBOT_ZONE = RobotZoneDetector.getZone(currPose.getX(), currPose.getY(), Constants.AutoAlign.IS_BLUE);
+        SmartDashboard.putBoolean("isBlue", Constants.AutoAlign.IS_BLUE);
+
+        // robot zone update
+        Constants.AutoAlign.ROBOT_ZONE =
+        RobotZoneDetector.getZone(currPose.getX(), currPose.getY(), Constants.AutoAlign.IS_BLUE);
+        SmartDashboard.putNumber("zone", Constants.AutoAlign.ROBOT_ZONE);
     }
 
     @Override
