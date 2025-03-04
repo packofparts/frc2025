@@ -69,7 +69,7 @@ public class Manipulator extends TalonPivot {
     }
 
     public Command reverse() {
-        return reverse(Constants.Manipulator.SPEEDS.NORMAL);
+        return reverse(Constants.Manipulator.SPEEDS.REVERSE);
     }
 
     public Command reverse(Constants.Manipulator.SPEEDS speed) {

@@ -40,12 +40,12 @@ public final class Constants {
     }
 
     public enum SCORING_SETPOINTS {
-        IDLE(0, -90),
-        L1(30, -90), // tuned 2/23/25
-        L2(72, -90), // tuned 2/23/25
-        L3(117, -90), // tuned 2/23/25
-        L4(140, 72),
-        L4Hold(140, 35);
+        IDLE(0, -89),
+        L1(30, -89), // tuned 2/23/25
+        L2(72, -89), // tuned 2/23/25
+        L3(117, -89), // tuned 2/23/25
+        L4(140, 73),
+        L4Hold(140, 36);
 
         private double elevator;
         private double manipulator;
@@ -92,7 +92,8 @@ public final class Constants {
         public enum SPEEDS {
             NORMAL(0.4),
             INTAKE(0.1),
-            L4(1.0);
+            L4(1.0),
+            REVERSE(0.1);
 
             double speed;
 
@@ -185,8 +186,8 @@ public final class Constants {
             // ALGAE_PICKUP(0), // tbd
             // ALGAE_DROP(0), // tbd
             // CORAL_PICKUP(-25.5); // tbd
-            IDLE(-15.7),
-            CORAL_PICKUP(-123.5);
+            IDLE(127),
+            CORAL_PICKUP(12);
 
             private double setpoint;
 

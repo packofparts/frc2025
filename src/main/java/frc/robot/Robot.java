@@ -66,7 +66,9 @@ public class Robot extends TimedRobot {
         //         // robotContainer.stopIntaking().schedule();
         //     }
         // }
+
         if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()){
+            //System.out.println("wsp");
             robotContainer.stopIntaking().schedule();
             SmartDashboard.putString("test", "pls work");
             if(robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4){
