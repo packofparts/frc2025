@@ -43,12 +43,12 @@ public final class Constants {
     }
 
     public enum SCORING_SETPOINTS {
-        IDLE(0, -89),
-        L1(30, -89), // tuned 2/23/25
-        L2(72, -89), // tuned 2/23/25
-        L3(117, -89), // tuned 2/23/25
-        L4(140, 73),
-        L4Hold(140, 36);
+        IDLE(0, -86),
+        L1(30, -86), // tuned 2/23/25
+        L2(72, -86), // tuned 2/23/25
+        L3(117, -86), // tuned 2/23/25
+        L4(140, 75),
+        L4Hold(140, 38);
 
         private double elevator;
         private double manipulator;
@@ -81,11 +81,11 @@ public final class Constants {
 
         public static final int LIMIT_SWITCH_CHANNEL = 2;
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 26); // tbd
 
         public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0);
 
-        public static final double MOTOR_SPEED = 0.8; // tbd
+        public static final double MOTOR_SPEED = 0.2; // tbd
         public static final double MAX_ERROR = 1.0;
 
         public static final double RESET_SPEED = 0.3;
@@ -96,7 +96,8 @@ public final class Constants {
             NORMAL(0.4),
             INTAKE(0.1),
             L4(1.0),
-            REVERSE(0.1);
+            REVERSE(0.1),
+            ALGAE(0.2);
 
             double speed;
 
@@ -189,8 +190,8 @@ public final class Constants {
             // ALGAE_PICKUP(0), // tbd
             // ALGAE_DROP(0), // tbd
             // CORAL_PICKUP(-25.5); // tbd
-            IDLE(127),
-            CORAL_PICKUP(12);
+            IDLE(122),
+            CORAL_PICKUP(-3);
 
             private double setpoint;
 
@@ -313,7 +314,7 @@ public final class Constants {
         public static double OUTWARDS_OFFSET = 0.5;
         public static double LATERAL_OFFSET = 0.3; // in meters
 
-        public static TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(180), Math.toRadians(180));
+        public static TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(360), Math.toRadians(540));
 
         public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     }

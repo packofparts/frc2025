@@ -7,8 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
@@ -20,22 +23,28 @@ public class AlignToReef extends Command {
   private final PIDController yController;
   private final ProfiledPIDController thetaController;
 
-  private static final double POSITION_TOLERANCE = 0.05;  // Meters
-  private static final double ANGLE_TOLERANCE = Math.toRadians(2.0);  // Radians
+  private static final double POSITION_TOLERANCE = 0.02;  // Meters
+  private static final double ANGLE_TOLERANCE = Math.toRadians(1.0);  // Radians
+
+  private final CommandGenericHID driverController;
 
   /** Creates a new AlignToReef. */
-  public AlignToReef(Swerve swerve, Pose2d targetPose) {
+  public AlignToReef(Swerve swerve, Pose2d targetPose, CommandGenericHID theDriverController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drive = swerve;
     this.targetPose = targetPose;
 
     xController = new PIDController(1.0, 0.0, 0.0);
     yController = new PIDController(1.0, 0.0, 0.0);
-    thetaController = new ProfiledPIDController(1.0, 0.0, 0.0, Constants.AutoAlign.constraints);
+    thetaController = new ProfiledPIDController(2.0, 0.0, 0.0, Constants.AutoAlign.constraints);
+
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     xController.setTolerance(POSITION_TOLERANCE);
     yController.setTolerance(POSITION_TOLERANCE);
     thetaController.setTolerance(ANGLE_TOLERANCE);
+
+    this.driverController = theDriverController;
 
     addRequirements(this.drive);
   }
@@ -43,17 +52,15 @@ public class AlignToReef extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Pose2d currentPose = this.drive.getOdomPose();  // Get the robot's current position
-
-    double xVelo = xController.calculate(currentPose.getX(), targetPose.getX());
-    double yVelo = yController.calculate(currentPose.getY(), targetPose.getY());
-    double thetaVelo = thetaController.calculate(
-        currentPose.getRotation().getRadians(), 
-        targetPose.getRotation().getRadians()
-    );
-
-    drive.driveRobotOriented(new Translation2d(xVelo, yVelo), thetaVelo);
-    // drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xVelo, yVelo, thetaVelo, drive.getGyroRotation()));
+    // Reset controllers
+    xController.reset();
+    yController.reset();
+    thetaController.reset(drive.getOdomPose().getRotation().getRadians());
+    
+    // Log initial values for debugging
+    SmartDashboard.putNumber("Target X", targetPose.getX());
+    SmartDashboard.putNumber("Target Y", targetPose.getY());
+    SmartDashboard.putNumber("Target Theta", targetPose.getRotation().getDegrees());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,18 +75,30 @@ public class AlignToReef extends Command {
         targetPose.getRotation().getRadians()
     );
 
-    drive.driveRobotOriented(new Translation2d(xVelo, yVelo), thetaVelo);
+    // Convert from field-relative to robot-relative speeds
+    ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+      xVelo, yVelo, thetaVelo,
+      currentPose.getRotation()
+    );
+
+    drive.driveChassis(chassisSpeeds);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.driveRobotOriented(new Translation2d(0.0, 0.0), 0.0); // Stop the robot when finished
+    drive.driveChassis(new ChassisSpeeds(0, 0, 0)); // Stop when done
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return xController.atSetpoint() && yController.atSetpoint() && thetaController.atGoal();
+    // Check if the driver is giving input (adjust threshold if needed)
+    boolean manualOverride = Math.abs(driverController.getRawAxis(XboxController.Axis.kLeftX.value)) > 0.25 || // Left/Right
+    Math.abs(driverController.getRawAxis(XboxController.Axis.kLeftY.value)) > 0.25 || // Forward/Backward
+    Math.abs(driverController.getRawAxis(XboxController.Axis.kRightX.value)) > 0.25;   // Rotation
+
+    boolean reachedSetpoints = xController.atSetpoint() && yController.atSetpoint() && thetaController.atGoal();
+    return reachedSetpoints || manualOverride;
   }
 }

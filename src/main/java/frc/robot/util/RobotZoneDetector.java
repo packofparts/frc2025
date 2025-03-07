@@ -3,6 +3,7 @@ package frc.robot.util;
 import java.awt.geom.Path2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants;
 
 public class RobotZoneDetector {
@@ -80,5 +81,31 @@ public class RobotZoneDetector {
 
     public static Pose2d getTagPose(int tagID){
         return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d();
+    }
+
+    public static Pose2d getLeftAlignPose(int zoneID, boolean isBlue){
+        switch (zoneID){
+            case 1: return isBlue ? new Pose2d(3.149, 4.190, new Rotation2d(0.0)) : new Pose2d(14.394, 3.865, new Rotation2d(0.0));
+            case 2: return isBlue ? new Pose2d(3.680, 2.950, new Rotation2d(Math.PI/3)) : new Pose2d(13.864, 5.096, new Rotation2d(Math.PI/3));
+            case 3: return isBlue ? new Pose2d(5.010, 2.780, new Rotation2d((2*Math.PI)/3)) : new Pose2d(12.543, 5.275, new Rotation2d((2*Math.PI)/3));
+            case 4: return isBlue ? new Pose2d(5.820, 3.860, new Rotation2d(Math.PI)) : new Pose2d(11.722, 4.185, new Rotation2d(Math.PI));
+            case 5: return isBlue ? new Pose2d(5.305, 5.096, new Rotation2d(-(2*Math.PI)/3)) : new Pose2d(12.260, 2.954, new Rotation2d(-(2*Math.PI)/3));
+            case 6: return isBlue ? new Pose2d(3.962, 5.260, new Rotation2d(-Math.PI/3)) : new Pose2d(13.580, 2.775, new Rotation2d(-Math.PI/3));
+            case -1: return isBlue ? new Pose2d(3.149, 4.190, new Rotation2d(0.0)) : new Pose2d();
+            default: return isBlue ? new Pose2d(3.149, 4.190, new Rotation2d(0.0)) : new Pose2d();
+        }
+    }
+
+    public static Pose2d getRightAlignPose(int zoneID, boolean isBlue){
+        switch (zoneID){
+            case 1: return isBlue ? new Pose2d(3.149, 3.872, new Rotation2d(0.0)) : new Pose2d(14.394, 4.190, new Rotation2d(0.0));
+            case 2: return isBlue ? new Pose2d(3.970, 2.790, new Rotation2d(Math.PI/3)) : new Pose2d(13.573, 5.267, new Rotation2d(Math.PI/3));
+            case 3: return isBlue ? new Pose2d(5.298, 2.954, new Rotation2d((2*Math.PI)/3)) : new Pose2d(12.252, 5.096, new Rotation2d((2*Math.PI)/3));
+            case 4: return isBlue ? new Pose2d(5.820, 4.178, new Rotation2d(Math.PI)) : new Pose2d(11.722, 3.860, new Rotation2d(Math.PI));
+            case 5: return isBlue ? new Pose2d(5.014, 5.260, new Rotation2d(-(2*Math.PI)/3)) : new Pose2d(12.550, 2.790, new Rotation2d(-(2*Math.PI)/3));
+            case 6: return isBlue ? new Pose2d(3.679, 5.096, new Rotation2d(-Math.PI/3)) : new Pose2d(13.870, 2.950, new Rotation2d(-Math.PI/3));
+            case -1: return isBlue ? new Pose2d(3.149, 3.872, new Rotation2d(0.0)) : new Pose2d(14.394, 4.190, new Rotation2d(0.0));
+            default: return isBlue ? new Pose2d(3.149, 3.872, new Rotation2d(0.0)) : new Pose2d(14.394, 4.190, new Rotation2d(0.0));
+        }
     }
 }
