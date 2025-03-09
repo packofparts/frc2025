@@ -80,7 +80,7 @@ public class Manipulator extends TalonPivot {
 
     public Command autoScore(boolean isL4){
         if(isL4){
-            return run(Constants.Manipulator.SPEEDS.L4);
+            return reverse(Constants.Manipulator.SPEEDS.L4);
         }
         return run(Constants.Manipulator.SPEEDS.NORMAL);
     }

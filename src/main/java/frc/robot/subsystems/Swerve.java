@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -12,13 +14,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
-import frc.robot.Robot;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
@@ -55,7 +57,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, ""),
-            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(), new ArrayList<LimelightConfig>()
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(Constants.AutoAlign.camera)),new ArrayList<LimelightConfig>()
         );
 
         xaxisPid = Constants.AutoAlign.X_PID_CONTROLLER;
@@ -75,7 +77,7 @@ public class Swerve extends VisionBaseSwerve {
         try{
             config = RobotConfig.fromGUISettings();
         } catch(Exception E){
-            System.out.print("u r cooked");
+            System.out.print("u r cooked lil bro");
         }
 
         AutoBuilder.configure(
@@ -142,8 +144,8 @@ public class Swerve extends VisionBaseSwerve {
             thetaPid.setSetpoint(0.0);
 
             SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getX());
-            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getY());
-            SmartDashboard.putNumber("odom x", odom.getEstimatedPosition().getRotation().getRadians());
+            SmartDashboard.putNumber("odom y", odom.getEstimatedPosition().getY());
+            SmartDashboard.putNumber("odom theta", odom.getEstimatedPosition().getRotation().getRadians());
             xaxisPid.calculate(odom.getEstimatedPosition().getX());
             yaxisPid.calculate(odom.getEstimatedPosition().getY());
             thetaPid.calculate(odom.getEstimatedPosition().getRotation().getRadians());
@@ -167,6 +169,16 @@ public class Swerve extends VisionBaseSwerve {
         );
     }
 
+    // public Command thingy(double offset) {
+    //     return runOnce(() -> {
+    //         yaxisPid.setSetpoint(relativePosition.getY() + offset);
+    //         yaxisPid.calculate(relativePosition.getY());
+    //     }).andThen(run(() -> {
+    //         driveRobotOriented(new Translation2d(0.0, yaxisPid.calculate(relativePosition.getY())), 0.0);
+    //     })).until(yaxisPid::atSetpoint).andThen(() -> {
+    //         yaxisPid.close();
+    //     });
+    // }
 
     public Command moveToPoseVision(Translation2d newOffset) {
         return runOnce(() -> {
@@ -207,7 +219,7 @@ public class Swerve extends VisionBaseSwerve {
     @Override
     public void periodic() {
         super.periodic();
-
+        SmartDashboard.putNumber("raw pigeon value", getGyro().getYaw().in(edu.wpi.first.units.Units.Degrees));
         Pose2d newRelativePosition = getFirstRelativeVisionPose();
 
         if (newRelativePosition != null) {

@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
             }
         }
 
+
         SmartDashboard.putBoolean("intaking", robotContainer.getIntaking());
 
         // alliance color update

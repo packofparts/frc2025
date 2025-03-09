@@ -14,6 +14,7 @@ import frc.robot.subsystems.Manipulator.Manipulator;
 import frc.robot.util.RobotZoneDetector;
 import poplib.controllers.oi.OI;
 import poplib.controllers.oi.XboxOI;
+import poplib.smart_dashboard.TunableNumber;
 import poplib.swerve.commands.SysIdSwerve;
 import poplib.swerve.commands.TeleopSwerveDrive;
 
@@ -22,6 +23,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +54,9 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
     public final SendableChooser<Constants.SCORING_SETPOINTS> scoring;
     public final SendableChooser<Constants.Intake.SETPOINTS> intakesp;
+    //UsbCamera camera = CameraServer.startAutomaticCapture(0);
+
+
 
     private boolean intaking;
 
@@ -64,6 +71,8 @@ public class RobotContainer {
         sys = new SysIdSwerve(swerve);
         oi = XboxOI.getInstance();
 
+        //camera.setResolution(640, 480);
+
 
         // Scoring Selecter
         scoring = new SendableChooser<>();
@@ -73,6 +82,8 @@ public class RobotContainer {
         scoring.addOption("L2", Constants.SCORING_SETPOINTS.L2);
         scoring.addOption("L3", Constants.SCORING_SETPOINTS.L3);
         scoring.addOption("L4", Constants.SCORING_SETPOINTS.L4);
+        scoring.addOption("AlageL1", Constants.SCORING_SETPOINTS.ALGAEL1);
+        scoring.addOption("AlgaeL2", Constants.SCORING_SETPOINTS.ALGAEL2);
 
         intakesp = new SendableChooser<>();
         intakesp.addOption("INTAKE", Constants.Intake.SETPOINTS.CORAL_PICKUP);
@@ -87,6 +98,7 @@ public class RobotContainer {
             }
         });
 
+
         // Auto Selecter
         autoChooser = AutoBuilder.buildAutoChooser();    
         autoChooser.addOption("none", new InstantCommand(() -> {}));
@@ -95,10 +107,16 @@ public class RobotContainer {
         autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
         autoChooser.addOption("square", new PathPlannerAuto("square"));
         autoChooser.addOption("test", new PathPlannerAuto("test"));
+        autoChooser.addOption("center_left_score", new PathPlannerAuto("center_left_score"));
 
         // Get Named Commands inputed for Auto
         NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
         NamedCommands.registerCommand("intake", startIntaking());
+        NamedCommands.registerCommand("L4_hold", l4HoldManipulator());
+        NamedCommands.registerCommand("goToL4", goToScoringPosition(Constants.SCORING_SETPOINTS.L4));
+        NamedCommands.registerCommand("scoreL3", goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
+        NamedCommands.registerCommand("launch_coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
+        NamedCommands.registerCommand("resetEle", goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE));
 
         PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
 
@@ -126,25 +144,32 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(startIntaking());
         oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(swerve.resetGyroCommand());
-
-        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(new AlignToReef(swerve, RobotZoneDetector.getLeftAlignPose(Constants.AutoAlign.ROBOT_ZONE, Constants.AutoAlign.IS_BLUE), oi.getDriverController()));
-        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new AlignToReef(swerve, RobotZoneDetector.getRightAlignPose(Constants.AutoAlign.ROBOT_ZONE, Constants.AutoAlign.IS_BLUE), oi.getDriverController()));
-
-        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveElev());
-        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.reZero());
-        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(elevator.moveUp(0.4)).onFalse(elevator.stop());
-        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(elevator.moveDown(0.4)).onFalse(elevator.stop());
+        // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).whileFalse(manipulator.stop());
+        oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-            elevatorScore(scoring.getSelected()).schedule();
+            // elevatorScore(scoring.getSelected()).schedule();
+            goToScoringPosition(scoring.getSelected()).schedule();
         }));
-        // oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
-        //oi.getDriverButton(XboxController.Button.kX.value).onTrue(intake.moveWrist(intakesp.getSelected().getSetpoint(), Constants.Intake.MAX_ERROR));
+        // oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(elevatorScore(scoring.getSelected()));
+        // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
+        
+
 
         // Operator Controls
+        // oi.getOperatorButton(XboxController.Button.kA.value).onTrue(elevator.moveDown(0.1)).onFalse(elevator.stop());
+        // oi.getOperatorController().
+
         oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(scoring.getSelected() == SCORING_SETPOINTS.L4));
-        oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).whileFalse(manipulator.stop());
-        oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.ALGAE)).whileFalse(manipulator.stop());
-        oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(elevator.reZero());
+        oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse()).onFalse((manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.REVERSE)).onFalse((manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kY.value).onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(scoring.getSelected()));
+        oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
+        oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
+        oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).onFalse(manipulator.stop());
+        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
+        //XboxController.Axis.
+        
     }
 
     public Command togleIntake() {
@@ -192,7 +217,7 @@ public class RobotContainer {
     public Command elevatorScore(Constants.SCORING_SETPOINTS setpoint) {
         return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
             andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
-            alongWith(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
             andThen(
                 setpoint == Constants.SCORING_SETPOINTS.L4 ? 
                 manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
@@ -207,8 +232,16 @@ public class RobotContainer {
     public Command goToScoringPosition(Constants.SCORING_SETPOINTS setpoint){
         return new InstantCommand(() -> System.out.println("going to setpoint " + setpoint.toString())).
             andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
-            alongWith(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR))
+            andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR))
         );
+    }
+
+    public Command goToIdleFromL4(){
+        return new InstantCommand(() -> System.out.println("going idle from l4")).
+        andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
+        andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
+        andThen(manipulator.moveWrist(SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+        andThen(elevator.moveElevator(SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR));
     }
 
     public Command getAutonomousCommand() {

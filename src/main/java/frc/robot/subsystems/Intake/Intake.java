@@ -34,7 +34,8 @@ public class Intake extends TalonPivot {
         spin = Constants.Intake.SPIN.createTalon();
         control = new DutyCycleOut(0.0);
 
-        resetToAbsolutePosition();
+        this.leadMotor.setPosition(0.0);
+        // deleted reset to abs enc
         setpoint.setDefault(Constants.Intake.SETPOINTS.IDLE.getSetpoint());
     }
 

@@ -11,6 +11,8 @@ import poplib.motor.FollowerConfig;
 import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
 import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
+import poplib.sensors.camera.CameraConfig;
+import poplib.sensors.camera.StdDevStategy;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -23,6 +25,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -44,11 +48,13 @@ public final class Constants {
 
     public enum SCORING_SETPOINTS {
         IDLE(0, -86),
-        L1(30, -86), // tuned 2/23/25
-        L2(72, -86), // tuned 2/23/25
-        L3(117, -86), // tuned 2/23/25
-        L4(140, 75),
-        L4Hold(140, 38);
+        L1(40, -86), // tuned 2/23/25
+        L2(75, -86), // tuned 2/23/25
+        L3(121, -86), // tuned 2/23/25
+        L4(142, 78),
+        L4Hold(140, 23),
+        ALGAEL1(48, -50),
+        ALGAEL2(124, -50);
 
         private double elevator;
         private double manipulator;
@@ -75,17 +81,17 @@ public final class Constants {
             27, 
             60, 
             true, 
-            new PIDConfig(0.8, 0, 0.0, 0.02), 
-            Mode.COAST
+            new PIDConfig(0.1, 0, 0.0, 0.02), 
+            Mode.BRAKE
         );
 
         public static final int LIMIT_SWITCH_CHANNEL = 2;
 
-        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, false, 26); // tbd
+        public static final FollowerConfig LEFT_MOTOR = new FollowerConfig(RIGHT_MOTOR, true, 26); // tbd
 
-        public static final FFConfig FF_CONFIG = new FFConfig(0.015, 0, 0);
+        public static final FFConfig FF_CONFIG = new FFConfig(0.012, 0, 0);
 
-        public static final double MOTOR_SPEED = 0.2; // tbd
+        public static final double MOTOR_SPEED = 0.08; // tbd
         public static final double MAX_ERROR = 1.0;
 
         public static final double RESET_SPEED = 0.3;
@@ -97,7 +103,7 @@ public final class Constants {
             INTAKE(0.1),
             L4(1.0),
             REVERSE(0.1),
-            ALGAE(0.2);
+            ALGAE(0.8);
 
             double speed;
 
@@ -190,8 +196,9 @@ public final class Constants {
             // ALGAE_PICKUP(0), // tbd
             // ALGAE_DROP(0), // tbd
             // CORAL_PICKUP(-25.5); // tbd
-            IDLE(122),
-            CORAL_PICKUP(-3);
+            IDLE(0),
+            CORAL_PICKUP(-121);
+            
 
             private double setpoint;
 
@@ -317,5 +324,14 @@ public final class Constants {
         public static TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(360), Math.toRadians(540));
 
         public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+        public static CameraConfig camera = new CameraConfig("RaoVisionFLCam", 
+        new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
+        edu.wpi.first.math.util.Units.inchesToMeters(10), 
+        edu.wpi.first.math.util.Units.inchesToMeters(9), 
+        new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(180))), 
+        0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
     }
 }
