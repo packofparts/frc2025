@@ -182,7 +182,7 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4iL2FOC;
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
