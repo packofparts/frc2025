@@ -43,7 +43,7 @@ import edu.wpi.first.units.Units;
  */
 public final class Constants {
     public static class Ports {
-        public static final String CANIVORE_NAME = "tempura sushi";
+        public static final String CANIVORE_NAME = "cantBUS";
     }
 
     public enum SCORING_SETPOINTS {
@@ -298,6 +298,32 @@ public final class Constants {
     }
 
     public static class AutoAlign {
+
+        public enum POSITIONS {
+            // IDLE(80), // tbd
+            // ALGAE_PICKUP(0), // tbd
+            // ALGAE_DROP(0), // tbd
+            // CORAL_PICKUP(-25.5); // tbd
+            RIGHT(0, 1.0),
+            LEFT(1, 1.0);
+            
+            private int cameraID;
+            private double yOffset;
+
+            private POSITIONS(int cameraID, double yOffset) {
+                this.cameraID = cameraID;
+                this.yOffset = yOffset;
+            }
+
+            public int getID() {
+                return this.cameraID;
+            }
+
+            public double getOffset() {
+                return this.yOffset;
+            }
+        }
+
         /** PID tolerance. */ 
         public static final double X_TOLERANCE = 0.1;
         public static final double Y_TOLERANCE = 0.1;
