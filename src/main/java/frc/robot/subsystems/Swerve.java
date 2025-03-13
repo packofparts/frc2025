@@ -53,13 +53,14 @@ public class Swerve extends VisionBaseSwerve {
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, Constants.Ports.CANIVORE_NAME),
             Constants.Swerve.SWERVE_KINEMATICS,
-            new ArrayList<CameraConfig>(Arrays.asList(new CameraConfig("RaoVisionFLCam", 
-                new Transform3d(
-                    Units.inchesToMeters(-10.8), //-12.521
-                    Units.inchesToMeters(-11.056), //10.4
-                    Units.inchesToMeters(10.1), 
-                    new Rotation3d(0, Units.degreesToRadians(2.0), Units.degreesToRadians(180-19.5))), //0,4,15
-                    0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
+            // new ArrayList<CameraConfig>(Arrays.asList(new CameraConfig("RaoVisionFLCam", 
+            //     new Transform3d(
+            //         Units.inchesToMeters(-10.8), //-12.521
+            //         Units.inchesToMeters(-11.056), //10.4
+            //         Units.inchesToMeters(10.1), 
+            //         new Rotation3d(0, Units.degreesToRadians(2.0), Units.degreesToRadians(180-19.5))), //0,4,15
+            //         0.3, 5, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape))),
+            new ArrayList<CameraConfig>(),
             new ArrayList<LimelightConfig>()
         );
 

@@ -32,7 +32,7 @@ import edu.wpi.first.units.Units;
  */
 public final class Constants {
     public static class Ports {
-        public static final String CANIVORE_NAME = "tempura sushi";
+        public static final String CANIVORE_NAME = "cantBUS";
     }
 
     public static class Elevator {
@@ -182,7 +182,7 @@ public final class Constants {
             Mode.BRAKE
         );
 
-        public static final SDSModules MODULE_TYPE = SDSModules.MK4i;
+        public static final SDSModules MODULE_TYPE = SDSModules.MK4iL2FOC;
 
         public static final boolean SWERVE_TUNING_MODE = false;
 
