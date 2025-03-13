@@ -108,6 +108,7 @@ public class RobotContainer {
         autoChooser.addOption("square", new PathPlannerAuto("square"));
         autoChooser.addOption("test", new PathPlannerAuto("test"));
         autoChooser.addOption("center_left_score", new PathPlannerAuto("center_left_score"));
+        autoChooser.addOption("systems_test", new PathPlannerAuto("systems_test"));
 
         // Get Named Commands inputed for Auto
         NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
@@ -115,7 +116,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("L4_hold", l4HoldManipulator());
         NamedCommands.registerCommand("goToL4", goToScoringPosition(Constants.SCORING_SETPOINTS.L4));
         NamedCommands.registerCommand("scoreL3", goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
-        NamedCommands.registerCommand("launch_coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
+        NamedCommands.registerCommand("launch_ coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
         NamedCommands.registerCommand("resetEle", goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE));
 
         PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
