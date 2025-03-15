@@ -84,6 +84,17 @@ public abstract class VisionBaseSwerve extends BaseSwerve {
         return null;
     }
 
+    public Pose2d getRelativeVisionPose(int cameraID) {
+        if (cameraID < cameras.size()) {
+            Optional<Pose2d> pose = cameras.get(cameraID).relativeDistanceFromCameraToAprilTag();
+            if (pose.isPresent()) {
+                return pose.get();
+            }
+        }
+        
+        return null;
+    }
+
     /**
      * TODO: TEST
      * Method that will return an adjusted vector to nudge the robot closer to a game piece.

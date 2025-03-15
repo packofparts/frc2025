@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.AutoAlign.POSITIONS;
 import frc.robot.util.VisionBaseSwerve;
 
 
@@ -35,6 +36,7 @@ public class Swerve extends VisionBaseSwerve {
     private Pose2d relativePosition;
     private int timeSinceLastValid;
     private Translation2d offset;
+    private int chosenCameraID;
     
     public static Swerve getInstance() {
         if (instance == null) {
@@ -76,6 +78,8 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         timeSinceLastValid = 0;
+
+        chosenCameraID = 0;
     }
 
     public void turnCommand(Rotation2d rot) {
@@ -147,37 +151,63 @@ public class Swerve extends VisionBaseSwerve {
     }
 
 
-    public Command moveToPoseVision(Translation2d newOffset) {
-        return runOnce(() -> {
-            System.out.println("RUn Once Running");
-            if (AllianceColor.getInstance().isRed() == true) {
-                color = Alliance.Red;
-            }
-            else {
-                color = Alliance.Blue;
-            }
+    // public Command moveToPoseVision(Translation2d newOffset) {
+    //     return runOnce(() -> {
+    //         System.out.println("RUn Once Running");
+    //         if (AllianceColor.getInstance().isRed() == true) {
+    //             color = Alliance.Red;
+    //         }
+    //         else {
+    //             color = Alliance.Blue;
+    //         }
     
-            offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+    //         offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
-            xaxisPid.setSetpoint(offset.getX());
-            yaxisPid.setSetpoint(offset.getY());
+    //         xaxisPid.setSetpoint(offset.getX());
+    //         yaxisPid.setSetpoint(offset.getY());
+    //         thetaPid.setSetpoint(Units.degreesToRadians(180)-relativePosition.getRotation().getRadians());
+
+    //         xaxisPid.calculate(relativePosition.getX());
+    //         yaxisPid.calculate(relativePosition.getY());
+    //         thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
+    //     }).andThen(run(
+    //         () -> {
+    //             driveRobotOriented(
+    //                 new Translation2d(
+    //                     xaxisPid.calculate(relativePosition.getX()),
+    //                     yaxisPid.calculate(relativePosition.getY())),
+    //                     thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
+    //         }
+    //     )).until(
+    //         () -> (xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
+    //     ).andThen(() -> {
+    //         xaxisPid.close();
+    //         yaxisPid.close();
+    //         thetaPid.close(); 
+    //        }
+    //     );
+    // }
+
+    public Command moveToPoseVision(POSITIONS position) {
+        return runOnce(() -> {
+            yaxisPid.setSetpoint(position.getOffset());
             thetaPid.setSetpoint(Units.degreesToRadians(180)-relativePosition.getRotation().getRadians());
 
-            xaxisPid.calculate(relativePosition.getX());
+            chosenCameraID = position.getID();
+
             yaxisPid.calculate(relativePosition.getY());
             thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
         }).andThen(run(
             () -> {
                 driveRobotOriented(
                     new Translation2d(
-                        xaxisPid.calculate(relativePosition.getX()),
+                        0.0,
                         yaxisPid.calculate(relativePosition.getY())),
                         thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
             }
         )).until(
-            () -> (xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
+            () -> (yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
         ).andThen(() -> {
-            xaxisPid.close();
             yaxisPid.close();
             thetaPid.close(); 
            }
@@ -188,7 +218,7 @@ public class Swerve extends VisionBaseSwerve {
     public void periodic() {
         super.periodic();
 
-        Pose2d newRelativePosition = getFirstRelativeVisionPose();
+        Pose2d newRelativePosition = getRelativeVisionPose(chosenCameraID);
 
         if (newRelativePosition != null) {
             relativePosition = newRelativePosition;
@@ -198,7 +228,7 @@ public class Swerve extends VisionBaseSwerve {
         }
 
         if (relativePosition != null) {
-            SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
+            // SmartDashboard.putNumber("Relataive Pose X", relativePosition.getX());
             SmartDashboard.putNumber("Relataive Pose Y", relativePosition.getY());
             SmartDashboard.putNumber("Relataive Pose Degrees", relativePosition.getRotation().getDegrees());
         }

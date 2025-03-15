@@ -12,11 +12,14 @@ import poplib.motor.Mode;
 import poplib.motor.MotorConfig;
 import poplib.sensors.absolute_encoder.AbsoluteEncoderConfig;
 import poplib.sensors.beam_break.BeamBreakConfig;
+import poplib.sensors.camera.CameraConfig;
 import poplib.swerve.swerve_constants.SDSModules;
 import poplib.swerve.swerve_constants.SwerveModuleConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.units.Units;
@@ -213,7 +216,26 @@ public final class Constants {
         public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
 
+        public enum POSITIONS {
+            RIGHT(0, 1.0),
+            LEFT(1, 1.0);
+            
+            private int cameraID;
+            private double yOffset;
 
+            private POSITIONS(int cameraID, double yOffset) {
+                this.cameraID = cameraID;
+                this.yOffset = yOffset;
+            }
+
+            public int getID() {
+                return this.cameraID;
+            }
+
+            public double getOffset() {
+                return this.yOffset;
+            }
+         }
 
         public static final double ERROR = 0.0;
 

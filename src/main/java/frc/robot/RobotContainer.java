@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoAlign.POSITIONS;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -57,6 +58,8 @@ public class RobotContainer {
         swerve.setDefaultCommand(new TeleopSwerveDrive(swerve, oi));
 
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(thing());
+
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(POSITIONS.RIGHT));
 
         intaking = false;
         // configureBindings();
