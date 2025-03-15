@@ -306,8 +306,8 @@ public final class Constants {
             // ALGAE_PICKUP(0), // tbd
             // ALGAE_DROP(0), // tbd
             // CORAL_PICKUP(-25.5); // tbd
-            RIGHT(0, 1.0),
-            LEFT(1, 1.0);
+            LEFT(0, 0.0),
+            RIGHT(1, 0.0);
             
             private int cameraID;
             private double yOffset;
@@ -353,13 +353,13 @@ public final class Constants {
 
         public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-        // public static CameraConfig camera = new CameraConfig("RaoVisionFLCam", 
-        // new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
-        // edu.wpi.first.math.util.Units.inchesToMeters(10), 
-        // edu.wpi.first.math.util.Units.inchesToMeters(9), 
-        // new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
-        // edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
-        // edu.wpi.first.math.util.Units.degreesToRadians(180))), 
-        // 0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
+        public static CameraConfig camera = new CameraConfig("PC_Camera", 
+        new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
+        edu.wpi.first.math.util.Units.inchesToMeters(10), 
+        edu.wpi.first.math.util.Units.inchesToMeters(9), 
+        new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(180))), 
+        0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
     }
 }

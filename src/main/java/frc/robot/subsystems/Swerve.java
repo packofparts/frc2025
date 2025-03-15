@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
+import frc.robot.Constants.AutoAlign;
 import frc.robot.Constants.AutoAlign.POSITIONS;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
@@ -61,7 +62,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, "cantBUS"),
-            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(),new ArrayList<LimelightConfig>()
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(AutoAlign.camera)),new ArrayList<LimelightConfig>()
         );
         //Arrays.asList(Constants.AutoAlign.camera)
 
@@ -265,13 +266,13 @@ public class Swerve extends VisionBaseSwerve {
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("raw pigeon value", getGyro().getYaw().in(edu.wpi.first.units.Units.Degrees));
-        // Pose2d newRelativePosition = getFirstRelativeVisionPose(addressedCamera);
+        Pose2d newRelativePosition = getFirstRelativeVisionPose(addressedCamera);
 
-        // if (newRelativePosition != null) {
-        //     relativePosition = newRelativePosition;  
-        //     timeSinceLastValid = 0;
-        // } else {
-        //     timeSinceLastValid++;
-        // }
+        if (newRelativePosition != null) {
+            relativePosition = newRelativePosition;  
+            timeSinceLastValid = 0;
+        } else {
+            timeSinceLastValid++;
+        }
     }
 }
