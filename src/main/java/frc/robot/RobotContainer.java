@@ -164,7 +164,8 @@ public class RobotContainer {
         oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(scoring.getSelected() == SCORING_SETPOINTS.L4));
         oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse()).onFalse((manipulator.stop()));
         oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.REVERSE)).onFalse((manipulator.stop()));
-        oi.getOperatorButton(XboxController.Button.kY.value).onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kY.value)
+        .onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
         oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(scoring.getSelected()));
         oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
         oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
@@ -177,7 +178,7 @@ public class RobotContainer {
     }
 
     public Command funnyElevator() {
-        return goToScoringPosition(SCORING_SETPOINTS.L4).andThen(goToIdleFromL4()).repeatedly();
+        return (goToScoringPosition(SCORING_SETPOINTS.L4).andThen(goToIdleFromL4())).repeatedly();
     }
 
     public Command toggleIntake() {

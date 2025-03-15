@@ -46,12 +46,13 @@ public final class Constants {
         public static final String CANIVORE_NAME = "tempura sushi";
     }
 
+
     public enum SCORING_SETPOINTS {
         IDLE(0, -86),
-        L1(40, -86), // tuned 2/23/25
-        L2(75, -86), // tuned 2/23/25
-        L3(121, -86), // tuned 2/23/25
-        L4(142, 78),
+        L1(45, -86), // tuned 2/23/25
+        L2(70, -86), // tuned 2/23/25
+        L3(120, -86), // tuned 2/23/25
+        L4(141, 77),
         L4Hold(140, 23),
         ALGAEL1(48, -35),
         ALGAEL2(110, -35);
@@ -97,6 +98,7 @@ public final class Constants {
         public static final double RESET_SPEED = 0.3;
     }
 
+
     public static final class Manipulator {
         public enum SPEEDS {
             NORMAL(0.4),
@@ -125,14 +127,14 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 48;
 
-        public static final double ERROR = 0.5;
+        public static final double ERROR = 0.75;
 
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
             25,
             "tempura sushi",
             40,
             false, 
-            new PIDConfig(0.04, 0.0, 0.003, 0.0), 
+            new PIDConfig(0.02, 0.0, 0.005, 0.0), 
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
@@ -146,7 +148,7 @@ public final class Constants {
             new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
 
-        public static final boolean TUNNING_MODE = false;
+        public static final boolean TUNING_MODE = false;
 
         public static final int RANGE_ID = 31;
     }
