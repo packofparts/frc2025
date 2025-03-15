@@ -217,8 +217,8 @@ public final class Constants {
         public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
 
         public enum POSITIONS {
-            RIGHT(0, 1.0),
-            LEFT(1, 1.0);
+            LEFT(0, 1.0),
+            RIGHT(1, 1.0);
             
             private int cameraID;
             private double yOffset;
