@@ -300,6 +300,32 @@ public final class Constants {
     }
 
     public static class AutoAlign {
+
+        public enum POSITIONS {
+            // IDLE(80), // tbd
+            // ALGAE_PICKUP(0), // tbd
+            // ALGAE_DROP(0), // tbd
+            // CORAL_PICKUP(-25.5); // tbd
+            LEFT(0, 0.0),
+            RIGHT(1, 0.0);
+            
+            private int cameraID;
+            private double yOffset;
+
+            private POSITIONS(int cameraID, double yOffset) {
+                this.cameraID = cameraID;
+                this.yOffset = yOffset;
+            }
+
+            public int getID() {
+                return this.cameraID;
+            }
+
+            public double getOffset() {
+                return this.yOffset;
+            }
+        }
+
         /** PID tolerance. */ 
         public static final double X_TOLERANCE = 0.1;
         public static final double Y_TOLERANCE = 0.1;
@@ -312,7 +338,7 @@ public final class Constants {
 
 
 
-        public static final double ERROR = 0.0;
+        public static final double ERROR = 0.3;
 
         /** Default offset value. */
         public static final Translation2d DEFAULT_OFFSET = new Translation2d(0.5, 0.0);
@@ -327,13 +353,14 @@ public final class Constants {
 
         public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
-        // public static CameraConfig camera = new CameraConfig("RaoVisionFLCam", 
-        // new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
-        // edu.wpi.first.math.util.Units.inchesToMeters(10), 
-        // edu.wpi.first.math.util.Units.inchesToMeters(9), 
-        // new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
-        // edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
-        // edu.wpi.first.math.util.Units.degreesToRadians(180))), 
-        // 0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
+        public static CameraConfig camera = new CameraConfig("PC_Camera", 
+        new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
+        edu.wpi.first.math.util.Units.inchesToMeters(10), 
+        edu.wpi.first.math.util.Units.inchesToMeters(9), 
+        new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(180))), 
+        0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
     }
+
 }

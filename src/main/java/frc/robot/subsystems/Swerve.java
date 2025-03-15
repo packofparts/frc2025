@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -15,18 +16,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
+import frc.robot.Constants.AutoAlign;
+import frc.robot.Constants.AutoAlign.POSITIONS;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import poplib.swerve.swerve_templates.VisionBaseSwerve;
+import frc.robot.util.VisionBaseSwerve;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
@@ -39,6 +43,8 @@ public class Swerve extends VisionBaseSwerve {
     private Pose2d relativePosition;
     private int timeSinceLastValid;
     private Translation2d offset;
+    private int addressedCamera;
+    
 
     public static Swerve getInstance() {
         if (instance == null) {
@@ -56,8 +62,8 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[2]),
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
-            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, ""),
-            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(),new ArrayList<LimelightConfig>()
+            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, "cantBUS"),
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(AutoAlign.camera)),new ArrayList<LimelightConfig>()
         );
         //Arrays.asList(Constants.AutoAlign.camera)
 
@@ -73,6 +79,7 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         timeSinceLastValid = 0;
+        addressedCamera = 0;
 
         RobotConfig config = null;
         try{
@@ -181,53 +188,99 @@ public class Swerve extends VisionBaseSwerve {
     //     });
     // }
 
-    public Command moveToPoseVision(Translation2d newOffset) {
-        return runOnce(() -> {
-            if (AllianceColor.getInstance().isRed() == true) {
-                color = Alliance.Red;
-            }
-            else {
-                color = Alliance.Blue;
-            }
+    // public Command moveToPoseVision(Translation2d newOffset) {
+    //     return runOnce(() -> {
+    //         if (AllianceColor.getInstance().isRed() == true) {
+    //             color = Alliance.Red;
+    //         }
+    //         else {
+    //             color = Alliance.Blue;
+    //         }
     
-            offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+    //         offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
 
-            xaxisPid.setSetpoint(offset.getX());
-            yaxisPid.setSetpoint(offset.getY());
-            thetaPid.setSetpoint(Units.degreesToRadians(180)-relativePosition.getRotation().getRadians());
+    //         xaxisPid.setSetpoint(offset.getX());
+    //         yaxisPid.setSetpoint(offset.getY());
+    //         thetaPid.setSetpoint(Units.degreesToRadians(180)-relativePosition.getRotation().getRadians());
 
-            xaxisPid.calculate(relativePosition.getX());
+    //         xaxisPid.calculate(relativePosition.getX());
+    //         yaxisPid.calculate(relativePosition.getY());
+    //         thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
+    //     }).andThen(run(
+    //         () -> {
+    //             driveRobotOriented(
+    //                 new Translation2d(
+    //                     xaxisPid.calculate(relativePosition.getX()),
+    //                     yaxisPid.calculate(relativePosition.getY())),
+    //                     thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
+    //         }
+    //     )).until(
+    //         () -> (xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
+    //     ).andThen(() -> {
+    //         xaxisPid.close();
+    //         yaxisPid.close();
+    //         thetaPid.close(); 
+    //        }
+    //     );
+    // }
+
+    public Command moveToPoseVision(POSITIONS position) {
+        return runOnce(() -> {
+            //offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+
+            addressedCamera = position.getID();
+
+            //xaxisPid.setSetpoint(offset.getX());
+            yaxisPid.setSetpoint(position.getOffset());
+            thetaPid.setSetpoint(relativePosition.getRotation().getRadians());
+
+            //xaxisPid.calculate(relativePosition.getX());
             yaxisPid.calculate(relativePosition.getY());
             thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
         }).andThen(run(
             () -> {
                 driveRobotOriented(
                     new Translation2d(
-                        xaxisPid.calculate(relativePosition.getX()),
+                        0,
                         yaxisPid.calculate(relativePosition.getY())),
                         thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
             }
         )).until(
-            () -> (xaxisPid.atSetpoint() && yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
+            () -> (yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
         ).andThen(() -> {
-            xaxisPid.close();
+            // xaxisPid.close();
             yaxisPid.close();
             thetaPid.close(); 
-           }
+            }
         );
+    }
+
+    public Pose2d getFirstRelativeVisionPose(int i) {
+        Optional<Pose2d> pose = cameras.get(i).relativeDistanceFromCameraToAprilTag();
+        if (pose.isPresent()) {
+            return pose.get();
+        }
+        return null;
     }
 
     @Override
     public void periodic() {
         super.periodic();
         SmartDashboard.putNumber("raw pigeon value", getGyro().getYaw().in(edu.wpi.first.units.Units.Degrees));
-        Pose2d newRelativePosition = getFirstRelativeVisionPose();
+        Pose2d newRelativePosition = getFirstRelativeVisionPose(addressedCamera);
 
         if (newRelativePosition != null) {
-            relativePosition = newRelativePosition;
+            relativePosition = newRelativePosition;  
             timeSinceLastValid = 0;
         } else {
             timeSinceLastValid++;
         }
+
+        if (relativePosition != null) {
+            SmartDashboard.putNumber("y camera", relativePosition.getY());
+            SmartDashboard.putNumber("theta camera", relativePosition.getRotation().getDegrees());
+        }
+
+        //SmartDashboard.putNumber("gyro thing", );
     }
 }

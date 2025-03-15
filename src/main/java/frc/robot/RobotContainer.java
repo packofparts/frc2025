@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.SCORING_SETPOINTS;
+import frc.robot.Constants.AutoAlign.POSITIONS;
 import frc.robot.commands.AlignToReef;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -155,6 +156,7 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
             goToScoringPosition(Constants.SCORING_SETPOINTS.L4).schedule();
         }));
+        oi.getDriverTrigger(XboxController.Axis.kLeftTrigger.value).onTrue(swerve.moveToPoseVision(POSITIONS.LEFT));
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
 
         // Operator Controls
