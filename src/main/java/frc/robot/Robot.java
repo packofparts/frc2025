@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.SCORING_SETPOINTS;
 import frc.robot.util.RobotZoneDetector;
 
 public class Robot extends TimedRobot {
@@ -70,7 +71,7 @@ public class Robot extends TimedRobot {
         //     }
         // }
 
-        if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()){
+        if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
             robotContainer.stopIntaking().schedule();
             if(robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4){
                 robotContainer.l4HoldManipulator().schedule();;
@@ -97,9 +98,12 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+        robotContainer.elevatorScore(SCORING_SETPOINTS.L4);
+        CommandScheduler.getInstance().schedule(robotContainer.goToScoringPosition(SCORING_SETPOINTS.L4));
+        
 
-    @Override
+    }
     public void simulationInit() {}
 
     @Override

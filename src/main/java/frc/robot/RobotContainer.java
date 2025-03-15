@@ -151,10 +151,11 @@ public class RobotContainer {
             // elevatorScore(scoring.getSelected()).schedule();
             goToScoringPosition(scoring.getSelected()).schedule();
         }));
-        // oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(elevatorScore(scoring.getSelected()));
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());;
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+            goToScoringPosition(Constants.SCORING_SETPOINTS.L4).schedule();
+        }));
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
-        
-
 
         // Operator Controls
         // oi.getOperatorButton(XboxController.Button.kA.value).onTrue(elevator.moveDown(0.1)).onFalse(elevator.stop());
@@ -168,12 +169,18 @@ public class RobotContainer {
         oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
         oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
         oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).onFalse(manipulator.stop());
-        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
+        // oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
         //XboxController.Axis.
+
+        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(funnyElevator()).onFalse(goToIdleFromL4());
         
     }
 
-    public Command togleIntake() {
+    public Command funnyElevator() {
+        return goToScoringPosition(SCORING_SETPOINTS.L4).andThen(goToIdleFromL4()).repeatedly();
+    }
+
+    public Command toggleIntake() {
         // return new InstantCommand(() -> {
         //     intaking = !intaking;
         //     if(intaking){
@@ -239,8 +246,8 @@ public class RobotContainer {
 
     public Command goToIdleFromL4(){
         return new InstantCommand(() -> System.out.println("going idle from l4")).
-        andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
-        andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
+        // andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
+        // andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
         andThen(manipulator.moveWrist(SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
         andThen(elevator.moveElevator(SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR));
     }
