@@ -38,7 +38,7 @@ public class Manipulator extends TalonPivot {
             Constants.Manipulator.GEAR_RATIO, 
             Constants.Manipulator.FF, 
             Constants.Manipulator.ABSOLUTE_ENCODER, 
-            Constants.Manipulator.TUNNING_MODE,
+            Constants.Manipulator.TUNING_MODE,
             "Manipulator"
         );
         spin = Constants.Manipulator.MANIPULATOR_MOTOR.createTalon();

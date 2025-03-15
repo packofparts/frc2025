@@ -146,104 +146,113 @@ public class RobotContainer {
         // oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(swerve.resetGyroCommand());
         // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).whileFalse(manipulator.stop());
-        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
-        // oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
-        //     // elevatorScore(scoring.getSelected()).schedule();
-        //     goToScoringPosition(scoring.getSelected()).schedule();
-        // }));
-        // oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(elevatorScore(scoring.getSelected()));
+        oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
+        oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
+            // elevatorScore(scoring.getSelected()).schedule();
+            goToScoringPosition(scoring.getSelected()).schedule();
+        }));
+        oi.getDriverButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());;
+        oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
+            goToScoringPosition(Constants.SCORING_SETPOINTS.L4).schedule();
+        }));
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
-        
-
 
         // Operator Controls
         // oi.getOperatorButton(XboxController.Button.kA.value).onTrue(elevator.moveDown(0.1)).onFalse(elevator.stop());
         // oi.getOperatorController().
 
-        // oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(scoring.getSelected() == SCORING_SETPOINTS.L4));
-        // oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse()).onFalse((manipulator.stop()));
-        // oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.REVERSE)).onFalse((manipulator.stop()));
-        // oi.getOperatorButton(XboxController.Button.kY.value).onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
-        // oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(scoring.getSelected()));
-        // oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
-        // oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
-        // oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).onFalse(manipulator.stop());
+        oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(scoring.getSelected() == SCORING_SETPOINTS.L4));
+        oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse()).onFalse((manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.REVERSE)).onFalse((manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kY.value)
+        .onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
+        oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(scoring.getSelected()));
+        oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
+        oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
+        oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).onFalse(manipulator.stop());
         // oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
         //XboxController.Axis.
+
+        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(funnyElevator()).onFalse(goToIdleFromL4());
         
     }
 
-    // public Command togleIntake() {
-    //     // return new InstantCommand(() -> {
-    //     //     intaking = !intaking;
-    //     //     if(intaking){
-    //     //         startIntaking().();;
-    //     //     }
-    //     //     else{
-    //     //         stopIntaking().schedule();;
-    //     //     }
-    //     // });
-    //     intaking = !intaking;
-    //     if(intaking){
-    //         return startIntaking();
-    //     }
-    //     return stopIntaking();
-    // }
 
-    // public Command startIntaking() {
-    //     return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
-    //         .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
-    //         andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
-    //         andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
-    //         andThen(indexer.run()).
-    //         andThen(intake.run());
-    // }
+    public Command funnyElevator() {
+        return (goToScoringPosition(SCORING_SETPOINTS.L4).andThen(goToIdleFromL4())).repeatedly();
+    }
 
-    // public Command stopIntaking() {
-    //     intaking = false;
-    //    return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
-    //         andThen(
-    //             new ParallelCommandGroup(
-    //                 manipulator.stop(),
-    //                 indexer.stop(),
-    //                 intake.stop()
-    //             )
-    //     );
-    // }
+    public Command toggleIntake() {
+        // return new InstantCommand(() -> {
+        //     intaking = !intaking;
+        //     if(intaking){
+        //         startIntaking().();;
+        //     }
+        //     else{
+        //         stopIntaking().schedule();;
+        //     }
+        // });
+        intaking = !intaking;
+        if(intaking){
+            return startIntaking();
+        }
+        return stopIntaking();
+    }
 
-    // public Command l4HoldManipulator() {
-    //     return manipulator.moveWrist(Constants.SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR);
-    // }
+    public Command startIntaking() {
+        return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
+            .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
+            andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
+            andThen(indexer.run()).
+            andThen(intake.run());
+    }
 
-    // public Command elevatorScore(Constants.SCORING_SETPOINTS setpoint) {
-    //     return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
-    //         andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
-    //         andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
-    //         andThen(
-    //             setpoint == Constants.SCORING_SETPOINTS.L4 ? 
-    //             manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
-    //             manipulator.run()
-    //         ).
-    //         andThen(new WaitCommand(1.0)).
-    //         andThen(manipulator.stop()).
-    //         andThen(elevator.moveElevator(Constants.SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR))
-    //     );
-    // }
+    public Command stopIntaking() {
+        intaking = false;
+       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
+            andThen(
+                new ParallelCommandGroup(
+                    manipulator.stop(),
+                    indexer.stop(),
+                    intake.stop()
+                )
+        );
+    }
 
-    // public Command goToScoringPosition(Constants.SCORING_SETPOINTS setpoint){
-    //     return new InstantCommand(() -> System.out.println("going to setpoint " + setpoint.toString())).
-    //         andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
-    //         andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR))
-    //     );
-    // }
+    public Command l4HoldManipulator() {
+        return manipulator.moveWrist(Constants.SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR);
+    }
 
-    // public Command goToIdleFromL4(){
-    //     return new InstantCommand(() -> System.out.println("going idle from l4")).
-    //     andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
-    //     andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
-    //     andThen(manipulator.moveWrist(SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
-    //     andThen(elevator.moveElevator(SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR));
-    // }
+    public Command elevatorScore(Constants.SCORING_SETPOINTS setpoint) {
+        return new InstantCommand(() -> System.out.println("Setpoint Moving to  " + setpoint.toString())).
+            andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
+            andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR)).
+            andThen(
+                setpoint == Constants.SCORING_SETPOINTS.L4 ? 
+                manipulator.reverse(Constants.Manipulator.SPEEDS.L4) : 
+                manipulator.run()
+            ).
+            andThen(new WaitCommand(1.0)).
+            andThen(manipulator.stop()).
+            andThen(elevator.moveElevator(Constants.SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR))
+        );
+    }
+
+    public Command goToScoringPosition(Constants.SCORING_SETPOINTS setpoint){
+        return new InstantCommand(() -> System.out.println("going to setpoint " + setpoint.toString())).
+            andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
+            andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR))
+        );
+    }
+
+    public Command goToIdleFromL4(){
+        return new InstantCommand(() -> System.out.println("going idle from l4")).
+        // andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
+        // andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
+        andThen(manipulator.moveWrist(SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+        andThen(elevator.moveElevator(SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR));
+    }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
