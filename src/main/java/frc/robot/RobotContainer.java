@@ -200,17 +200,33 @@ public class RobotContainer {
         return stopIntaking();
     }
 
+    // public Command startIntaking() {
+    //     intaking = true;
+    //     return new InstantCommand(() -> 
+    //         .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+    //         andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
+    //         andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
+    //         andThen(indexer.run()).
+    //         andThen(intake.run());
+    // }
+
     public Command startIntaking() {
-        return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
-            .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
-            andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
-            andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
-            andThen(indexer.run()).
-            andThen(intake.run());
+        intaking = true;
+        System.out.println("start intkaing");
+       return intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(),Constants.Intake.MAX_ERROR).
+            andThen(
+                new ParallelCommandGroup(
+                    manipulator.run(),
+                    indexer.run(),
+                    intake.run()
+                )
+        );
     }
+
 
     public Command stopIntaking() {
         intaking = false;
+        System.out.println("stop intkaing");
        return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
             andThen(
                 new ParallelCommandGroup(

@@ -49,13 +49,13 @@ public final class Constants {
 
     public enum SCORING_SETPOINTS {
         IDLE(0, -86),
-        L1(45, -86), // tuned 2/23/25
+        L1(45, -80), // tuned 2/23/25
         L2(70, -86), // tuned 2/23/25
         L3(120, -86), // tuned 2/23/25
-        L4(141, 77),
-        L4Hold(140, 23),
-        ALGAEL1(48, -35),
-        ALGAEL2(110, -35);
+        L4(141, 76),
+        L4Hold(140, 22),
+        ALGAEL1(48, -36),
+        ALGAEL2(110, -36);
 
         private double elevator;
         private double manipulator;
@@ -134,7 +134,7 @@ public final class Constants {
             "tempura sushi",
             40,
             false, 
-            new PIDConfig(0.02, 0.0, 0.005, 0.0), 
+            new PIDConfig(0.009, 0.0, 0.00, 0.0), 
             Mode.BRAKE,
             new ConversionConfig(GEAR_RATIO, Units.Degrees)
         );
@@ -254,10 +254,14 @@ public final class Constants {
         // tbd
         public static final SwerveModuleConstants[] SWERVE_MODULE_CONSTANTS = SwerveModuleConstants.generateConstants(
             new Rotation2d[] {
-                Rotation2d.fromDegrees(42.099609), 
-                Rotation2d.fromDegrees(283.007812),
-                Rotation2d.fromDegrees(162.421875),
-                Rotation2d.fromDegrees(173.408203)
+                // Rotation2d.fromDegrees(42.099609), 
+                // Rotation2d.fromDegrees(283.007812),
+                // Rotation2d.fromDegrees(162.421875),
+                // Rotation2d.fromDegrees(173.408203)
+                Rotation2d.fromDegrees(38.7), 
+                Rotation2d.fromDegrees(281.074),
+                Rotation2d.fromDegrees(165.0),
+                Rotation2d.fromDegrees(177.6)
             },
             MODULE_TYPE, 
             SWERVE_TUNING_MODE, 
@@ -302,18 +306,16 @@ public final class Constants {
     public static class AutoAlign {
 
         public enum POSITIONS {
-            // IDLE(80), // tbd
-            // ALGAE_PICKUP(0), // tbd
-            // ALGAE_DROP(0), // tbd
-            // CORAL_PICKUP(-25.5); // tbd
-            LEFT(0, 0.0),
-            RIGHT(1, 0.0);
+            LEFT(0, 0.39, 0.1),
+            RIGHT(1, -0.39, -0.1);
             
             private int cameraID;
+            private double xOffset;
             private double yOffset;
 
-            private POSITIONS(int cameraID, double yOffset) {
+            private POSITIONS(int cameraID, double xOffset, double yOffset) {
                 this.cameraID = cameraID;
+                this.xOffset = xOffset;
                 this.yOffset = yOffset;
             }
 
@@ -321,20 +323,24 @@ public final class Constants {
                 return this.cameraID;
             }
 
-            public double getOffset() {
+            public double getXOffset() {
+                return this.xOffset;
+            }
+
+            public double getYOffset() {
                 return this.yOffset;
             }
         }
 
         /** PID tolerance. */ 
-        public static final double X_TOLERANCE = 0.1;
-        public static final double Y_TOLERANCE = 0.1;
-        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(2.0);
+        public static final double X_TOLERANCE = 0.05;
+        public static final double Y_TOLERANCE = 0.05;
+        public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(1.0);
 
         /* Pid Controllers */ 
         public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
         public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
-        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(1.3, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(9.6, 0.0, 0.0, 0.0).getPIDController(); //0.5
 
 
 

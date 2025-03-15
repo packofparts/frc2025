@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,7 +63,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[2]),
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
-            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, "cantBUS"),
+            new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, ""),
             Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(AutoAlign.camera)),new ArrayList<LimelightConfig>()
         );
         //Arrays.asList(Constants.AutoAlign.camera)
@@ -230,27 +231,49 @@ public class Swerve extends VisionBaseSwerve {
 
             addressedCamera = position.getID();
 
-            //xaxisPid.setSetpoint(offset.getX());
-            yaxisPid.setSetpoint(position.getOffset());
+            xaxisPid.setSetpoint(position.getXOffset());
+            yaxisPid.setSetpoint(position.getYOffset());
             thetaPid.setSetpoint(relativePosition.getRotation().getRadians());
 
-            //xaxisPid.calculate(relativePosition.getX());
+            xaxisPid.calculate(relativePosition.getX());
             yaxisPid.calculate(relativePosition.getY());
             thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
         }).andThen(run(
             () -> {
                 driveRobotOriented(
+                    new Translation2d(0, 0),
+                    thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians))
+                );
+            }
+        )).until(() -> (thetaPid.atSetpoint()) || timeSinceLastValid > 5).andThen(() -> {thetaPid.close();}).
+        andThen(run(
+            () -> {
+                driveRobotOriented(
                     new Translation2d(
                         0,
                         yaxisPid.calculate(relativePosition.getY())),
-                        thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians)));
+                        0);
             }
         )).until(
-            () -> (yaxisPid.atSetpoint() && thetaPid.atSetpoint()) || timeSinceLastValid > 5
+            () -> (yaxisPid.atSetpoint()) || timeSinceLastValid > 5
         ).andThen(() -> {
             // xaxisPid.close();
             yaxisPid.close();
-            thetaPid.close(); 
+            }
+        ).
+        andThen(run(
+            () -> {
+                driveRobotOriented(
+                    new Translation2d(
+                        xaxisPid.calculate(relativePosition.getX()),
+                        0),
+                        0);
+            }
+        )).until(
+            () -> (xaxisPid.atSetpoint()) || timeSinceLastValid > 5
+        ).andThen(() -> {
+            // xaxisPid.close();
+            xaxisPid.close();
             }
         );
     }
@@ -278,9 +301,14 @@ public class Swerve extends VisionBaseSwerve {
 
         if (relativePosition != null) {
             SmartDashboard.putNumber("y camera", relativePosition.getY());
+            SmartDashboard.putNumber("y-setpoint", 0.1);
+
+            SmartDashboard.putNumber("x camera", relativePosition.getX());
+            SmartDashboard.putNumber("x-setpoint", 0.0);
             SmartDashboard.putNumber("theta camera", relativePosition.getRotation().getDegrees());
         }
 
+        SmartDashboard.putNumber("thing angle maybe", MathUtil.inputModulus(getGyro().getNormalizedAngle().in(edu.wpi.first.units.Units.Degrees), 0.0, 360.0));
         //SmartDashboard.putNumber("gyro thing", );
     }
 }

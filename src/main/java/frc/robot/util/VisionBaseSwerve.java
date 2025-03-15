@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
+
+import poplib.sensors.camera.Camera;
 import poplib.sensors.camera.CameraConfig;
 import poplib.sensors.camera.DetectedObject;
 import poplib.sensors.camera.Limelight;
