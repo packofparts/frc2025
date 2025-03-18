@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
         //     }
         // }
 
-        if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()) {
+        if(robotContainer.getIntaking() && robotContainer.manipulator.coralIn()){
             robotContainer.stopIntaking().schedule();
             if(robotContainer.scoring.getSelected() == Constants.SCORING_SETPOINTS.L4){
                 robotContainer.l4HoldManipulator().schedule();;

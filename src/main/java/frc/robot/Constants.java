@@ -333,8 +333,8 @@ public final class Constants {
         }
 
         /** PID tolerance. */ 
-        public static final double X_TOLERANCE = 0.05;
-        public static final double Y_TOLERANCE = 0.05;
+        public static final double X_TOLERANCE = 0.03;
+        public static final double Y_TOLERANCE = 0.03;
         public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(1.0);
 
         /* Pid Controllers */ 

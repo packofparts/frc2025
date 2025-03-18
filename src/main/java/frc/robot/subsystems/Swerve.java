@@ -64,7 +64,7 @@ public class Swerve extends VisionBaseSwerve {
                     new SwerveModuleTalon(Constants.Swerve.SWERVE_MODULE_CONSTANTS[3]),
             },
             new Pigeon(Constants.Swerve.PIGEON_ID, Constants.Swerve.GYRO_INVERSION, ""),
-            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(AutoAlign.camera)),new ArrayList<LimelightConfig>()
+            Constants.Swerve.SWERVE_KINEMATICS, new ArrayList<CameraConfig>(Arrays.asList(AutoAlign.camera)), new ArrayList<LimelightConfig>()
         );
         //Arrays.asList(Constants.AutoAlign.camera)
 
@@ -225,6 +225,58 @@ public class Swerve extends VisionBaseSwerve {
     //     );
     // }
 
+    // public Command moveToPoseVision(POSITIONS position) {
+    //     return runOnce(() -> {
+    //         //offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
+
+    //         addressedCamera = position.getID();
+
+    //         xaxisPid.setSetpoint(position.getXOffset());
+    //         yaxisPid.setSetpoint(position.getYOffset());
+    //         thetaPid.setSetpoint(relativePosition.getRotation().getRadians());
+
+    //         xaxisPid.calculate(relativePosition.getX());
+    //         yaxisPid.calculate(relativePosition.getY());
+    //         thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians));
+    //     }).andThen(run(
+    //         () -> {
+    //             driveRobotOriented(
+    //                 new Translation2d(0, 0),
+    //                 thetaPid.calculate(getGyro().getYaw().in(edu.wpi.first.units.Units.Radians))
+    //             );
+    //         }
+    //     )).until(() -> (thetaPid.atSetpoint()) || timeSinceLastValid > 5).andThen(() -> {thetaPid.close();}).
+    //     andThen(run(
+    //         () -> {
+    //             driveRobotOriented(
+    //                 new Translation2d(
+    //                     0,
+    //                     yaxisPid.calculate(relativePosition.getY())),
+    //                     0);
+    //         }
+    //     )).until(
+    //         () -> (yaxisPid.atSetpoint()) || timeSinceLastValid > 5
+    //     ).andThen(() -> {
+    //         // xaxisPid.close();
+    //         yaxisPid.close();
+    //         }
+    //     ).
+    //     andThen(run(
+    //         () -> {
+    //             driveRobotOriented(
+    //                 new Translation2d(
+    //                     xaxisPid.calculate(relativePosition.getX()),
+    //                     0),
+    //                     0);
+    //         }
+    //     )).until(
+    //         () -> (xaxisPid.atSetpoint()) || timeSinceLastValid > 5
+    //     ).andThen(() -> {
+    //         xaxisPid.close();
+    //         }
+    //     );
+    // }
+
     public Command moveToPoseVision(POSITIONS position) {
         return runOnce(() -> {
             //offset = newOffset == null ? Constants.AutoAlign.DEFAULT_OFFSET : newOffset;
@@ -250,30 +302,15 @@ public class Swerve extends VisionBaseSwerve {
             () -> {
                 driveRobotOriented(
                     new Translation2d(
-                        0,
+                        xaxisPid.calculate(relativePosition.getX()),
                         yaxisPid.calculate(relativePosition.getY())),
                         0);
             }
         )).until(
-            () -> (yaxisPid.atSetpoint()) || timeSinceLastValid > 5
+            () -> (yaxisPid.atSetpoint() && xaxisPid.atSetpoint()) || timeSinceLastValid > 5
         ).andThen(() -> {
-            // xaxisPid.close();
-            yaxisPid.close();
-            }
-        ).
-        andThen(run(
-            () -> {
-                driveRobotOriented(
-                    new Translation2d(
-                        xaxisPid.calculate(relativePosition.getX()),
-                        0),
-                        0);
-            }
-        )).until(
-            () -> (xaxisPid.atSetpoint()) || timeSinceLastValid > 5
-        ).andThen(() -> {
-            // xaxisPid.close();
             xaxisPid.close();
+            yaxisPid.close();
             }
         );
     }
