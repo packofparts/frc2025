@@ -43,6 +43,7 @@ public class Swerve extends VisionBaseSwerve {
 
     private Pose2d relativePosition;
     private int timeSinceLastValid;
+    private int autoAlignloopTimer;
     private Translation2d offset;
     private int addressedCamera;
     
@@ -80,6 +81,7 @@ public class Swerve extends VisionBaseSwerve {
         thetaPid.enableContinuousInput(0, 2 * Math.PI);
 
         timeSinceLastValid = 0;
+        autoAlignloopTimer = 0;
         addressedCamera = 0;
 
         RobotConfig config = null;

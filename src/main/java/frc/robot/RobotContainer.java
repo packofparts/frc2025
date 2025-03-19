@@ -156,7 +156,7 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {
             goToScoringPosition(Constants.SCORING_SETPOINTS.L4).schedule();
         }));
-        oi.getDriverTrigger(XboxController.Axis.kLeftTrigger.value).onTrue(swerve.moveToPoseVision(POSITIONS.LEFT));
+        oi.getDriverTrigger(XboxController.Axis.kLeftTrigger.value).onTrue(swerve.moveToPoseVision(POSITIONS.LEFT).withTimeout(5));
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
 
         // Operator Controls
@@ -200,13 +200,24 @@ public class RobotContainer {
         return stopIntaking();
     }
 
-    public Command startIntaking() {
-        return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
-            .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
-            andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
-            andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
-            andThen(indexer.run()).
-            andThen(intake.run());
+    // public Command startIntaking() {
+    //     return new InstantCommand(() -> {this.intaking = true; SmartDashboard.putString("test", "no work");})
+    //         .andThen(manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
+    //         andThen(intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR)).
+    //         andThen(manipulator.run(Constants.Manipulator.SPEEDS.INTAKE)).
+    //         andThen(indexer.run()).
+    //         andThen(intake.run());
+    // }
+
+    public Command startIntaking(){
+        intaking = true;
+        return new SequentialCommandGroup(
+            intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
+            manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
+            indexer.run(),
+            intake.run(),
+            manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)
+        );
     }
 
     public Command stopIntaking() {

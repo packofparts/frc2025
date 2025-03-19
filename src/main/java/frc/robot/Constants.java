@@ -49,7 +49,7 @@ public final class Constants {
 
     public enum SCORING_SETPOINTS {
         IDLE(0, -86),
-        L1(45, -80), // tuned 2/23/25
+        L1(45, -86), // tuned 2/23/25
         L2(70, -86), // tuned 2/23/25
         L3(120, -86), // tuned 2/23/25
         L4(141, 76),
@@ -127,7 +127,7 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 48;
 
-        public static final double ERROR = 0.75;
+        public static final double ERROR = 3.5;
 
         public static final MotorConfig PIVOT_MOTOR = new MotorConfig(
             25,
@@ -143,7 +143,7 @@ public final class Constants {
 
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
             9,
-            Rotation2d.fromDegrees(8.0), 
+            Rotation2d.fromDegrees(-48.0), 
             true,
             new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
@@ -307,7 +307,7 @@ public final class Constants {
 
         public enum POSITIONS {
             LEFT(0, 0.39, 0.1),
-            RIGHT(1, -0.39, -0.1);
+            RIGHT(1, -0.39, 0.1);
             
             private int cameraID;
             private double xOffset;
@@ -338,9 +338,9 @@ public final class Constants {
         public static final double THETA_TOLERANCE = edu.wpi.first.math.util.Units.degreesToRadians(1.0);
 
         /* Pid Controllers */ 
-        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
-        public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.5, 0.0, 0.0, 0.0).getPIDController(); //0.5
-        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(9.6, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController Y_PID_CONTROLLER = new PIDConfig(2.2, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController X_PID_CONTROLLER = new PIDConfig(1.6, 0.0, 0.0, 0.0).getPIDController(); //0.5
+        public static final PIDController THETA_PID_CONTROLLER = new PIDConfig(12, 0.0, 0.0, 0.0).getPIDController(); //9.6
 
 
 
