@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.018
+        "x": 7.18,
+        "y": 4.19
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.560573770491804,
-        "y": 1.9751024590163921
+        "x": 6.676054222662558,
+        "y": 4.19
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 2.054
+        "x": 5.811639344262295,
+        "y": 4.19
       },
       "prevControl": {
-        "x": 4.732745901639345,
-        "y": 2.097377049180328
+        "x": 6.070574128076443,
+        "y": 4.19
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,32 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "goToL3ANDScore",
+      "waypointRelativePos": 0.8203661327231128,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "goToL3"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "launch_coral"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.7,
     "maxAcceleration": 4.0,

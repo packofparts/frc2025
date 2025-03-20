@@ -104,7 +104,7 @@ public final class Constants {
             NORMAL(0.4),
             INTAKE(0.1),
             L4(1.0),
-            REVERSE(0.1),
+            REVERSE(0.2),
             ALGAE(0.8);
 
             double speed;

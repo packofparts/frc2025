@@ -5,27 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "L4_hold"
+            "pathName": "center_right_go"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "center_right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "goToL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "score"
+            "pathName": "center_right_back"
           }
         }
       ]
