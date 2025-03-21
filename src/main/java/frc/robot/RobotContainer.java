@@ -149,7 +149,7 @@ public class RobotContainer {
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(startIntaking());
         oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
         oi.getDriverButton(XboxController.Button.kX.value).onTrue(swerve.resetGyroCommand());
-        oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
+        // oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
             goToScoringPosition(scoring.getSelected()).schedule();
         }));
@@ -172,7 +172,82 @@ public class RobotContainer {
         // oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
 
         oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(funnyElevator()).onFalse(goToIdleFromL4());
-        
+
+        // Gajula's Ultrainstinct controls
+
+        // Left Bumper L4
+        oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(new SequentialCommandGroup(
+            l4HoldManipulator(),
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.LEFT),
+                goToScoringPosition(SCORING_SETPOINTS.L4)
+            ),
+            manipulator.autoScore(true)
+        ));
+
+        // Left Trigger L3
+        oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.LEFT),
+                goToScoringPosition(SCORING_SETPOINTS.L3)
+            ),
+            manipulator.autoScore(false)
+        ));
+
+        // Left Upper Paddle L2
+        oi.getOperatorController().povUp().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.LEFT),
+                goToScoringPosition(SCORING_SETPOINTS.L2)
+            ),
+            manipulator.autoScore(false)
+        ));
+
+        // Left Lower Paddle L1
+        oi.getOperatorController().povLeft().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.LEFT),
+                goToScoringPosition(SCORING_SETPOINTS.L1)
+            ),
+            manipulator.autoScore(false)
+        ));
+
+        // Right Bumper L4
+        oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(new SequentialCommandGroup(
+            l4HoldManipulator(),
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.RIGHT),
+                goToScoringPosition(SCORING_SETPOINTS.L4)
+            ),
+            manipulator.autoScore(true)
+        ));
+
+        // Right Bumper L3
+        oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.LEFT),
+                goToScoringPosition(SCORING_SETPOINTS.L3)
+            ),
+            manipulator.autoScore(false)
+        ));
+
+        // Right Upper Paddle L2
+        oi.getOperatorController().povDown().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.RIGHT),
+                goToScoringPosition(SCORING_SETPOINTS.L2)
+            ),
+            manipulator.autoScore(false)
+        ));
+
+        // Right Lower Paddle L1
+        oi.getOperatorController().povRight().onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                swerve.moveToPoseVision(POSITIONS.RIGHT),
+                goToScoringPosition(SCORING_SETPOINTS.L1)
+            ),
+            manipulator.autoScore(false)
+        ));
     }
 
     public Command funnyElevator() {
