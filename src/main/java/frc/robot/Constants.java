@@ -48,14 +48,14 @@ public final class Constants {
 
 
     public enum SCORING_SETPOINTS {
-        IDLE(0, -86),
-        L1(45, -86), // tuned 2/23/25
-        L2(70, -86), // tuned 2/23/25
-        L3(120, -86), // tuned 2/23/25
-        L4(141, 76),
-        L4Hold(140, 22),
-        ALGAEL1(48, -36),
-        ALGAEL2(110, -36);
+        IDLE(0, -82),
+        L1(50, -75), // tuned 2/23/25
+        L2(72, -82), // tuned 2/23/25
+        L3(120, -82), // tuned 2/23/25
+        L4(141, 84),
+        L4Hold(140, 26),
+        ALGAEL1(48, -32),
+        ALGAEL2(110, -32);
 
         private double elevator;
         private double manipulator;
@@ -307,7 +307,9 @@ public final class Constants {
 
         public enum POSITIONS {
             LEFT(0, 0.39, 0.1),
-            RIGHT(1, -0.39, 0.1);
+            RIGHT(1, 0.39  , -0.1),
+            LEFT_L4(0, 0.50, 0.1),
+            RIGHT_L4(1, 0.50, -0.1);
             
             private int cameraID;
             private double xOffset;
@@ -360,6 +362,15 @@ public final class Constants {
         public static AprilTagFieldLayout APRIL_TAG_FIELD = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
         public static CameraConfig camera = new CameraConfig("PC_Camera", 
+        new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
+        edu.wpi.first.math.util.Units.inchesToMeters(10), 
+        edu.wpi.first.math.util.Units.inchesToMeters(9), 
+        new Rotation3d(edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(0.0), 
+        edu.wpi.first.math.util.Units.degreesToRadians(180))), 
+        0.5, 5.0, StdDevStategy.AMBIGUITY, AprilTagFields.k2025Reefscape);
+
+        public static CameraConfig camera1 = new CameraConfig("AgniVision2", 
         new Transform3d(edu.wpi.first.math.util.Units.inchesToMeters(0.0), 
         edu.wpi.first.math.util.Units.inchesToMeters(10), 
         edu.wpi.first.math.util.Units.inchesToMeters(9), 

@@ -9,6 +9,24 @@
           "data": {
             "pathName": "StartToL1"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "goToL3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "launch_coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
         }
       ]
     }

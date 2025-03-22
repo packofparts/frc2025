@@ -28,6 +28,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.LEDPattern.IndexMapper;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -106,8 +107,8 @@ public class RobotContainer {
         autoChooser.addOption("One Score", new PathPlannerAuto("One Piece"));
         autoChooser.addOption("One Score Far", new PathPlannerAuto("One Score Far"));
         autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
-        autoChooser.addOption("square", new PathPlannerAuto("square"));
-        autoChooser.addOption("test", new PathPlannerAuto("test"));
+        // autoChooser.addOption("square", new PathPlannerAuto("square"));
+        // autoChooser.addOption("test", new PathPlannerAuto("test"));
         autoChooser.addOption("center_left_score", new PathPlannerAuto("center_left_score"));
         autoChooser.addOption("systems_test", new PathPlannerAuto("systems_test"));
 
@@ -116,9 +117,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("intake", startIntaking());
         NamedCommands.registerCommand("L4_hold", l4HoldManipulator());
         NamedCommands.registerCommand("goToL4", goToScoringPosition(Constants.SCORING_SETPOINTS.L4));
-        NamedCommands.registerCommand("scoreL3", goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
-        NamedCommands.registerCommand("launch_ coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
-        NamedCommands.registerCommand("resetEle", goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE));
+        NamedCommands.registerCommand("goToL3", goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
+        NamedCommands.registerCommand("launch_coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
+        NamedCommands.registerCommand("goToIdle", goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE));
 
         PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
 
@@ -157,26 +158,42 @@ public class RobotContainer {
             goToScoringPosition(Constants.SCORING_SETPOINTS.L4).schedule();
         }));
         oi.getDriverTrigger(XboxController.Axis.kLeftTrigger.value).onTrue(swerve.moveToPoseVision(POSITIONS.LEFT).withTimeout(5));
+        oi.getDriverTrigger(XboxController.Axis.kRightTrigger.value).onTrue(
+            swerve.moveToPoseVision(POSITIONS.LEFT_L4).withTimeout(3.0)
+        );
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
 
         // Operator Controls
         // oi.getOperatorButton(XboxController.Button.kA.value).onTrue(elevator.moveDown(0.1)).onFalse(elevator.stop());
         // oi.getOperatorController().
 
-        oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(scoring.getSelected() == SCORING_SETPOINTS.L4));
+        oi.getOperatorButton(XboxController.Button.kA.value).onTrue(manipulator.autoScore(false));
         oi.getOperatorButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse()).onFalse((manipulator.stop()));
         oi.getOperatorButton(XboxController.Button.kX.value).whileTrue(manipulator.run(Constants.Manipulator.SPEEDS.REVERSE)).onFalse((manipulator.stop()));
         oi.getOperatorButton(XboxController.Button.kY.value)
         .onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE).andThen(manipulator.stop()));
-        oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(scoring.getSelected()));
+        oi.getOperatorButton(XboxController.Button.kRightBumper.value).onTrue(goToScoringPosition(SCORING_SETPOINTS.L4Hold).andThen(goToScoringPosition(SCORING_SETPOINTS.L4)));
         oi.getOperatorButton(XboxController.Button.kLeftBumper.value).onTrue(goToIdleFromL4());
         oi.getOperatorrigger(XboxController.Axis.kRightTrigger.value).onTrue(manipulator.run(Constants.Manipulator.SPEEDS.L4)).onFalse(manipulator.stop());
         oi.getOperatorrigger(XboxController.Axis.kLeftTrigger.value).onTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).onFalse(manipulator.stop());
         // oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(elevator.reZero());
-        //XboxController.Axis.
-
-        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(funnyElevator()).onFalse(goToIdleFromL4());
         
+        oi.getOperatorController().povUp().onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.ALGAEL1));
+        oi.getOperatorController().povDown().onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.ALGAEL2));
+        oi.getOperatorController().povLeft().onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.L1));
+        oi.getOperatorController().povRight().onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.L2));
+
+        oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
+
+        // oi.getOperatorButton(XboxController.Button.kLeftStick.value).onTrue(new ParallelCommandGroup(
+        //     intake.run(),
+        //     indexer.run(),
+        //     manipulator.run()
+        // ).raceWith(new WaitCommand(0.5)).andThen(new ParallelCommandGroup(
+        //     manipulator.stop(),
+        //     indexer.stop(),
+        //     intake.stop()
+        // )));
     }
 
     public Command funnyElevator() {
@@ -210,8 +227,8 @@ public class RobotContainer {
     // }
 
     public Command startIntaking(){
-        intaking = true;
         return new SequentialCommandGroup(
+            new InstantCommand(() -> {intaking = true;}),
             intake.moveWrist(Constants.Intake.SETPOINTS.CORAL_PICKUP.getSetpoint(), Constants.Intake.MAX_ERROR),
             manipulator.run(Constants.Manipulator.SPEEDS.INTAKE),
             indexer.run(),
@@ -221,14 +238,13 @@ public class RobotContainer {
     }
 
     public Command stopIntaking() {
-        intaking = false;
-       return intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(),Constants.Intake.MAX_ERROR).
-            andThen(
-                new ParallelCommandGroup(
-                    manipulator.stop(),
-                    indexer.stop(),
-                    intake.stop()
-                )
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {intaking = false;}),
+            manipulator.stop(),
+            indexer.stop(),
+            intake.stop(),
+            intake.moveWrist(Constants.Intake.SETPOINTS.IDLE.getSetpoint(), Constants.Intake.MAX_ERROR),
+            manipulator.moveWrist(Constants.SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)
         );
     }
 

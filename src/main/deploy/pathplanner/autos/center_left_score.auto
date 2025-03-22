@@ -11,6 +11,30 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "goToL3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "launch_coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "goToIdle"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "center_left_back"
