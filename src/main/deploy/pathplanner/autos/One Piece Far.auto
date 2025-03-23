@@ -21,12 +21,6 @@
           "data": {
             "name": "launch_coral"
           }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
         }
       ]
     }

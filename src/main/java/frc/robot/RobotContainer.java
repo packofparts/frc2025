@@ -100,18 +100,6 @@ public class RobotContainer {
             }
         });
 
-
-        // Auto Selecter
-        autoChooser = AutoBuilder.buildAutoChooser();    
-        autoChooser.addOption("none", new InstantCommand(() -> {}));
-        autoChooser.addOption("One Score", new PathPlannerAuto("One Piece"));
-        autoChooser.addOption("One Score Far", new PathPlannerAuto("One Score Far"));
-        autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
-        // autoChooser.addOption("square", new PathPlannerAuto("square"));
-        // autoChooser.addOption("test", new PathPlannerAuto("test"));
-        autoChooser.addOption("center_left_score", new PathPlannerAuto("center_left_score"));
-        autoChooser.addOption("systems_test", new PathPlannerAuto("systems_test"));
-
         // Get Named Commands inputed for Auto
         NamedCommands.registerCommand("score", elevatorScore(Constants.SCORING_SETPOINTS.L3));
         NamedCommands.registerCommand("intake", startIntaking());
@@ -120,6 +108,18 @@ public class RobotContainer {
         NamedCommands.registerCommand("goToL3", goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
         NamedCommands.registerCommand("launch_coral", manipulator.run(Constants.Manipulator.SPEEDS.L4));
         NamedCommands.registerCommand("goToIdle", goToScoringPosition(Constants.SCORING_SETPOINTS.IDLE));
+
+        // Auto Selecter
+        autoChooser = AutoBuilder.buildAutoChooser();    
+        autoChooser.addOption("none", new InstantCommand(() -> {}));
+        autoChooser.setDefaultOption("line_2meters", new PathPlannerAuto("line_2meters"));
+        autoChooser.addOption("One Score", new PathPlannerAuto("One Piece"));
+        autoChooser.addOption("One Score Far", new PathPlannerAuto("One Piece Far"));
+        autoChooser.addOption("line_2meters", new PathPlannerAuto("line_2meters"));
+        // autoChooser.addOption("square", new PathPlannerAuto("square"));
+        // autoChooser.addOption("test", new PathPlannerAuto("test"));
+        autoChooser.addOption("center_left_score", new PathPlannerAuto("center_left_score"));
+        autoChooser.addOption("systems_test", new PathPlannerAuto("systems_test"));
 
         PathPlannerLogging.setLogActivePathCallback(swerve::setAutoTrajector);
 
@@ -146,7 +146,8 @@ public class RobotContainer {
         // Driver Controls
         oi.getDriverButton(XboxController.Button.kY.value).onTrue(startIntaking());
         oi.getDriverButton(XboxController.Button.kStart.value).onTrue(stopIntaking());
-        oi.getDriverButton(XboxController.Button.kX.value).onTrue(swerve.resetGyroCommand());
+        // oi.getDriverButton(XboxController.Button.kX.value).onTrue(swerve.resetGyroCommand());
+        oi.getDriverController().povDown().onTrue(swerve.resetGyroCommand());
         // oi.getDriverButton(XboxController.Button.kB.value).whileTrue(manipulator.reverse(Constants.Manipulator.SPEEDS.ALGAE)).whileFalse(manipulator.stop());
         oi.getDriverButton(XboxController.Button.kB.value).onTrue(manipulator.reverse()).onFalse(manipulator.stop());
         oi.getDriverButton(XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {
@@ -159,7 +160,7 @@ public class RobotContainer {
         }));
         oi.getDriverTrigger(XboxController.Axis.kLeftTrigger.value).onTrue(swerve.moveToPoseVision(POSITIONS.LEFT).withTimeout(5));
         oi.getDriverTrigger(XboxController.Axis.kRightTrigger.value).onTrue(
-            swerve.moveToPoseVision(POSITIONS.LEFT_L4).withTimeout(3.0)
+            swerve.moveToPoseVision(POSITIONS.RIGHT).withTimeout(4.0)
         );
         // oi.getDriverButton(XboxController.Button.kRightBumper.value).onTrue(swerve.moveToPoseVision(new Translation2d(0.0, 1.0)));
 
@@ -185,15 +186,16 @@ public class RobotContainer {
 
         oi.getOperatorButton(XboxController.Button.kStart.value).onTrue(goToScoringPosition(Constants.SCORING_SETPOINTS.L3));
 
-        // oi.getOperatorButton(XboxController.Button.kLeftStick.value).onTrue(new ParallelCommandGroup(
-        //     intake.run(),
-        //     indexer.run(),
-        //     manipulator.run()
-        // ).raceWith(new WaitCommand(0.5)).andThen(new ParallelCommandGroup(
-        //     manipulator.stop(),
-        //     indexer.stop(),
-        //     intake.stop()
-        // )));
+        oi.getOperatorButton(XboxController.Button.kLeftStick.value).onTrue(new ParallelCommandGroup(
+            intake.run(),
+            indexer.run(),
+            manipulator.run()
+        )).onFalse(new ParallelCommandGroup(
+            manipulator.stop(),
+            indexer.stop(),
+            intake.stop()
+        ));
+
     }
 
     public Command funnyElevator() {
@@ -240,6 +242,7 @@ public class RobotContainer {
     public Command stopIntaking() {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {intaking = false;}),
+            new WaitCommand(0.5),
             manipulator.stop(),
             indexer.stop(),
             intake.stop(),
@@ -267,7 +270,8 @@ public class RobotContainer {
         );
     }
 
-    public Command goToScoringPosition(Constants.SCORING_SETPOINTS setpoint){
+    public Command 
+    goToScoringPosition(Constants.SCORING_SETPOINTS setpoint){
         return new InstantCommand(() -> System.out.println("going to setpoint " + setpoint.toString())).
             andThen(elevator.moveElevator(setpoint.getElevator(), Constants.Elevator.MAX_ERROR).
             andThen(manipulator.moveWrist(setpoint.getManipulator(), Constants.Manipulator.ERROR))
@@ -278,6 +282,7 @@ public class RobotContainer {
         return new InstantCommand(() -> System.out.println("going idle from l4")).
         // andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
         // andThen(elevator.moveElevator(SCORING_SETPOINTS.L1.getElevator(), Constants.Elevator.MAX_ERROR)).
+        andThen(manipulator.moveWrist(SCORING_SETPOINTS.L4Hold.getManipulator(), Constants.Manipulator.ERROR)).
         andThen(manipulator.moveWrist(SCORING_SETPOINTS.IDLE.getManipulator(), Constants.Manipulator.ERROR)).
         andThen(elevator.moveElevator(SCORING_SETPOINTS.IDLE.getElevator(), Constants.Elevator.MAX_ERROR));
     }

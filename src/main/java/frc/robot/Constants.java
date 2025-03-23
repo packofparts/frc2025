@@ -48,14 +48,14 @@ public final class Constants {
 
 
     public enum SCORING_SETPOINTS {
-        IDLE(0, -82),
-        L1(50, -75), // tuned 2/23/25
-        L2(72, -82), // tuned 2/23/25
-        L3(120, -82), // tuned 2/23/25
-        L4(141, 84),
-        L4Hold(140, 26),
-        ALGAEL1(48, -32),
-        ALGAEL2(110, -32);
+        IDLE(0, -86),
+        L1(50, -79), // tuned 2/23/25
+        L2(72, -86), // tuned 2/23/25
+        L3(120, -86), // tuned 2/23/25
+        L4(143, 80),
+        L4Hold(143, 22),
+        ALGAEL1(48, -36),
+        ALGAEL2(110, -36);
 
         private double elevator;
         private double manipulator;
@@ -143,7 +143,7 @@ public final class Constants {
 
         public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER = new AbsoluteEncoderConfig(
             9,
-            Rotation2d.fromDegrees(-48.0), 
+            Rotation2d.fromDegrees(-43.3), 
             true,
             new ConversionConfig(1.0 / 1.5, Units.Rotations)
         );
@@ -307,7 +307,7 @@ public final class Constants {
 
         public enum POSITIONS {
             LEFT(0, 0.39, 0.1),
-            RIGHT(1, 0.39  , -0.1),
+            RIGHT(1, 0.39  , -0.22),
             LEFT_L4(0, 0.50, 0.1),
             RIGHT_L4(1, 0.50, -0.1);
             
