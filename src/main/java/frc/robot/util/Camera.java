@@ -51,6 +51,11 @@ public class Camera {
     }
 
     public Optional<Pose2d> relativeDistanceFromCameraToAprilTag() {
+        if (!camera.isConnected()) {
+            DriverStation.reportError("Camera named: " + config.cameraName + " is not connected!!!!!!!!", false);
+            // the above code should save to the log file that you can view in the DS Log Viewer
+            return Optional.empty();
+        }
         ArrayList<PhotonTrackedTarget> poses = new ArrayList<>();
         
         Optional<PhotonTrackedTarget> ret1 = Optional.empty();

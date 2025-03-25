@@ -15,12 +15,6 @@
           "data": {
             "name": "goToL3"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "launch_coral"
-          }
         }
       ]
     }

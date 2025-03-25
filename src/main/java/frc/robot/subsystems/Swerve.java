@@ -73,7 +73,7 @@ public class Swerve extends VisionBaseSwerve {
         yaxisPid = Constants.AutoAlign.Y_PID_CONTROLLER;
         thetaPid = Constants.AutoAlign.THETA_PID_CONTROLLER;
 
-        
+        relativePosition = new Pose2d(0.39, 0.0, odom.getEstimatedPosition().getRotation());
         xaxisPid.setTolerance(Constants.AutoAlign.X_TOLERANCE);
         yaxisPid.setTolerance(Constants.AutoAlign.Y_TOLERANCE);
         thetaPid.setTolerance(Constants.AutoAlign.THETA_TOLERANCE);

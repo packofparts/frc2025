@@ -196,6 +196,16 @@ public class RobotContainer {
             intake.stop()
         ));
 
+        oi.getOperatorButton(XboxController.Button.kRightStick.value).onTrue(new ParallelCommandGroup(
+            intake.reverse(),
+            indexer.reverse(),
+            manipulator.reverse(Constants.Manipulator.SPEEDS.REVERSE_SPIT_OUT)
+        )).onFalse(new ParallelCommandGroup(
+            manipulator.stop(),
+            indexer.stop(),
+            intake.stop()
+        ));
+
     }
 
     public Command funnyElevator() {
