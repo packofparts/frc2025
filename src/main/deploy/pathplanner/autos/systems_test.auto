@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "scoreL3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "launch_coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "goToIdle"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
