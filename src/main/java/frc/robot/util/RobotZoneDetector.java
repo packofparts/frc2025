@@ -81,10 +81,7 @@ public class RobotZoneDetector {
     }
 
     public static Pose2d getTagPose(int tagID){
-        if (Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).isPresent()) {
-            return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d();
-        }
-        return new Pose2d();
+        return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).isPresent() ? Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d() : null;
     }
 
     public static Pose2d getLeftAlignPose(int zoneID, boolean isBlue){
