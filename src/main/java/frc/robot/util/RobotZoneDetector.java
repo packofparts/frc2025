@@ -4,6 +4,7 @@ import java.awt.geom.Path2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 
 public class RobotZoneDetector {
@@ -80,7 +81,10 @@ public class RobotZoneDetector {
     }
 
     public static Pose2d getTagPose(int tagID){
-        return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d();
+        if (Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).isPresent()) {
+            return Constants.AutoAlign.APRIL_TAG_FIELD.getTagPose(tagID).get().toPose2d();
+        }
+        return new Pose2d();
     }
 
     public static Pose2d getLeftAlignPose(int zoneID, boolean isBlue){

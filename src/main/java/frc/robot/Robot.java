@@ -87,7 +87,9 @@ public class Robot extends TimedRobot {
 
         // alliance color update
         Pose2d currPose = robotContainer.swerve.getOdomPose();
-        Constants.AutoAlign.IS_BLUE = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+        if (DriverStation.getAlliance().isPresent()) {
+            Constants.AutoAlign.IS_BLUE = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+        }
         SmartDashboard.putBoolean("isBlue", Constants.AutoAlign.IS_BLUE);
 
         // robot zone update
