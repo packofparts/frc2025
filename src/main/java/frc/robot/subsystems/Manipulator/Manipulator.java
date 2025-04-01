@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.util.TalonPivot;
+import poplib.subsytems.pivot.TalonPivot;
 
 public class Manipulator extends TalonPivot {
     private final TalonFX spin;

@@ -31,7 +31,7 @@ import poplib.sensors.camera.LimelightConfig;
 import poplib.sensors.gyro.Pigeon;
 import poplib.smart_dashboard.AllianceColor;
 import poplib.swerve.swerve_modules.SwerveModuleTalon;
-import frc.robot.util.VisionBaseSwerve;
+import poplib.swerve.swerve_templates.VisionBaseSwerve;
 
 public class Swerve extends VisionBaseSwerve {
     private static Swerve instance;
