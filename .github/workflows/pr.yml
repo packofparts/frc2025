@@ -85,4 +85,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         PACKAGE_FETCH_ACTOR: ${{ github.actor }}
-        PACKAGE_FETCH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PACKAGE_FETCH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
